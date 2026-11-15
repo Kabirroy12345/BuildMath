@@ -1,0 +1,1430 @@
+[
+  {
+    "slug": "alabama",
+    "name": "Alabama",
+    "abbr": "AL",
+    "rpp": 89.9,
+    "wages": {
+      "47-2061": 18.82,
+      "47-2181": 20.2,
+      "47-2141": 19.4,
+      "47-2031": 22.55,
+      "47-2051": 21.29,
+      "47-2044": 20.66,
+      "47-2042": 20.29,
+      "47-2041": 19.15,
+      "47-2081": 21.92
+    },
+    "climateZone": "IECC Zone 3A (Warm-Humid)",
+    "climateConsiderations": "High summer humidity, heavy Gulf Coast wind/rain loads in mobile/coastal counties, and termite pressure require pressure-treated sill plates and mildew-resistant exterior coatings.",
+    "licensingBoardName": "Alabama Home Builders Licensure Board",
+    "licensingBoardUrl": "https://hblb.alabama.gov/",
+    "permitNote": "Residential projects exceeding $10,000 require a state-licensed residential home builder or Specialty contractor.",
+    "neighbors": [
+      "georgia",
+      "tennessee",
+      "mississippi",
+      "florida"
+    ]
+  },
+  {
+    "slug": "alaska",
+    "name": "Alaska",
+    "abbr": "AK",
+    "rpp": 104.8,
+    "wages": {
+      "47-2061": 30.02,
+      "47-2181": 32.23,
+      "47-2141": 30.95,
+      "47-2031": 35.98,
+      "47-2051": 33.97,
+      "47-2044": 32.96,
+      "47-2042": 32.36,
+      "47-2041": 30.55,
+      "47-2081": 34.97
+    },
+    "climateZone": "IECC Zones 7–8 (Subarctic / Arctic)",
+    "climateConsiderations": "Deep frost lines (60–100+ inches), heavy snow loads, permafrost heave, and short summer building windows increase concrete footing and roofing material requirements.",
+    "licensingBoardName": "Alaska Division of Corporations, Business and Professional Licensing",
+    "licensingBoardUrl": "https://www.commerce.alaska.gov/web/cbpl/ProfessionalLicensing/ConstructionContractors.aspx",
+    "permitNote": "All residential and specialty contractors in Alaska must hold active state registration and bonding.",
+    "neighbors": [
+      "washington",
+      "oregon",
+      "idaho",
+      "montana"
+    ]
+  },
+  {
+    "slug": "arizona",
+    "name": "Arizona",
+    "abbr": "AZ",
+    "rpp": 101.1,
+    "wages": {
+      "47-2061": 21.5,
+      "47-2181": 23.09,
+      "47-2141": 22.18,
+      "47-2031": 25.78,
+      "47-2051": 24.34,
+      "47-2044": 23.62,
+      "47-2042": 23.18,
+      "47-2041": 21.89,
+      "47-2081": 25.06
+    },
+    "climateZone": "IECC Zones 2B–5B (Hot-Dry to Mixed-Dry)",
+    "climateConsiderations": "Intense UV radiation, 110°F+ summer slab curing temperatures, and expansive desert caliche soils require UV-stable elastomeric coatings and early-morning concrete pours.",
+    "licensingBoardName": "Arizona Registrar of Contractors (AZ ROC)",
+    "licensingBoardUrl": "https://roc.az.gov/",
+    "permitNote": "An AZ ROC license is required for any residential project where labor and materials exceed $1,000 or require a building permit.",
+    "neighbors": [
+      "california",
+      "nevada",
+      "utah",
+      "new-mexico"
+    ]
+  },
+  {
+    "slug": "arkansas",
+    "name": "Arkansas",
+    "abbr": "AR",
+    "rpp": 88.6,
+    "wages": {
+      "47-2061": 18.14,
+      "47-2181": 19.48,
+      "47-2141": 18.71,
+      "47-2031": 21.75,
+      "47-2051": 20.53,
+      "47-2044": 19.93,
+      "47-2042": 19.56,
+      "47-2041": 18.47,
+      "47-2081": 21.14
+    },
+    "climateZone": "IECC Zones 3A–4A (Mixed-Humid)",
+    "climateConsiderations": "Seasonal severe thunderstorms, hail impact risk, and high clay moisture shifts demand impact-rated roof shingles and compacted gravel sub-bases.",
+    "licensingBoardName": "Arkansas Contractors Licensing Board",
+    "licensingBoardUrl": "https://www.aclb.arkansas.gov/",
+    "permitNote": "Home improvement projects over $2,000 are regulated by the Residential Contractors Committee.",
+    "neighbors": [
+      "missouri",
+      "tennessee",
+      "mississippi",
+      "texas"
+    ]
+  },
+  {
+    "slug": "california",
+    "name": "California",
+    "abbr": "CA",
+    "rpp": 112.6,
+    "wages": {
+      "47-2061": 29.57,
+      "47-2181": 31.75,
+      "47-2141": 30.49,
+      "47-2031": 35.44,
+      "47-2051": 33.46,
+      "47-2044": 32.47,
+      "47-2042": 31.88,
+      "47-2041": 30.1,
+      "47-2081": 34.45
+    },
+    "climateZone": "IECC Zones 3B–3C / California Title 24 Zones 1–16",
+    "climateConsiderations": "Seismic bracing codes, Wildland-Urban Interface (WUI) Class A fire-rated roofing/siding rules, Title 24 cool-roof reflectance mandates, and strict South Coast AQMD low-VOC paint limits.",
+    "licensingBoardName": "California Contractors State License Board (CSLB)",
+    "licensingBoardUrl": "https://www.cslb.ca.gov/",
+    "permitNote": "California law requires a CSLB license for any construction job totaling $500 or more in combined labor and materials.",
+    "neighbors": [
+      "oregon",
+      "nevada",
+      "arizona",
+      "washington"
+    ]
+  },
+  {
+    "slug": "colorado",
+    "name": "Colorado",
+    "abbr": "CO",
+    "rpp": 102.9,
+    "wages": {
+      "47-2061": 23.52,
+      "47-2181": 25.25,
+      "47-2141": 24.26,
+      "47-2031": 28.19,
+      "47-2051": 26.62,
+      "47-2044": 25.83,
+      "47-2042": 25.36,
+      "47-2041": 23.94,
+      "47-2081": 27.41
+    },
+    "climateZone": "IECC Zones 5B–7 (Cool-Dry / Alpine)",
+    "climateConsiderations": "Severe Front Range hailstorms (Class 4 UL 2218 impact shingles recommended), high-altitude UV exposure, 36-inch+ frost lines, and bentonite swelling clay soils.",
+    "licensingBoardName": "Colorado Department of Regulatory Agencies (Local Municipal Licensing)",
+    "licensingBoardUrl": "https://dora.colorado.gov/",
+    "permitNote": "General contractors are licensed at the city or county level (e.g., Denver, Colorado Springs, Boulder); roofers must comply with state consumer protection statutes.",
+    "neighbors": [
+      "wyoming",
+      "nebraska",
+      "kansas",
+      "new-mexico"
+    ]
+  },
+  {
+    "slug": "connecticut",
+    "name": "Connecticut",
+    "abbr": "CT",
+    "rpp": 105.7,
+    "wages": {
+      "47-2061": 26.43,
+      "47-2181": 28.38,
+      "47-2141": 27.26,
+      "47-2031": 31.68,
+      "47-2051": 29.91,
+      "47-2044": 29.03,
+      "47-2042": 28.5,
+      "47-2041": 26.9,
+      "47-2081": 30.8
+    },
+    "climateZone": "IECC Zone 5A (Cool-Humid)",
+    "climateConsiderations": "42-inch frost depth code for deck and fence footings, winter ice-damming requiring 6 feet of eave ice-and-water shield, and coastal wind uplift along Long Island Sound.",
+    "licensingBoardName": "Connecticut Department of Consumer Protection (DCP)",
+    "licensingBoardUrl": "https://portal.ct.gov/dcp",
+    "permitNote": "All residential remodeling contractors must hold a Connecticut Home Improvement Contractor (HIC) registration.",
+    "neighbors": [
+      "new-york",
+      "massachusetts",
+      "rhode-island",
+      "new-jersey"
+    ]
+  },
+  {
+    "slug": "delaware",
+    "name": "Delaware",
+    "abbr": "DE",
+    "rpp": 98.4,
+    "wages": {
+      "47-2061": 22.85,
+      "47-2181": 24.53,
+      "47-2141": 23.56,
+      "47-2031": 27.39,
+      "47-2051": 25.86,
+      "47-2044": 25.09,
+      "47-2042": 24.63,
+      "47-2041": 23.26,
+      "47-2081": 26.62
+    },
+    "climateZone": "IECC Zone 4A (Mixed-Humid)",
+    "climateConsiderations": "Coastal salt-air corrosion in Sussex County, high water tables, and mid-Atlantic freeze-thaw cycles require stainless or hot-dipped galvanized exterior fasteners.",
+    "licensingBoardName": "Delaware Division of Revenue (Contractor Registration)",
+    "licensingBoardUrl": "https://revenue.delaware.gov/",
+    "permitNote": "Contractors must register with the Delaware Division of Revenue and obtain county/municipal building permits in New Castle, Kent, or Sussex County.",
+    "neighbors": [
+      "maryland",
+      "pennsylvania",
+      "new-jersey",
+      "virginia"
+    ]
+  },
+  {
+    "slug": "district-of-columbia",
+    "name": "District of Columbia",
+    "abbr": "DC",
+    "rpp": 111.8,
+    "wages": {
+      "47-2061": 27.33,
+      "47-2181": 29.34,
+      "47-2141": 28.18,
+      "47-2031": 32.76,
+      "47-2051": 30.93,
+      "47-2044": 30.01,
+      "47-2042": 29.46,
+      "47-2041": 27.82,
+      "47-2081": 31.84
+    },
+    "climateZone": "IECC Zone 4A (Mixed-Humid)",
+    "climateConsiderations": "Historic preservation board rules in rowhouse districts, tight urban staging/parking permits, and EPA RRP lead-paint compliance on pre-1978 masonry homes.",
+    "licensingBoardName": "DC Department of Buildings (DOB)",
+    "licensingBoardUrl": "https://dob.dc.gov/",
+    "permitNote": "Home improvement contractors must hold a DC Basic Business License in the Home Improvement Contractor category.",
+    "neighbors": [
+      "maryland",
+      "virginia",
+      "delaware",
+      "pennsylvania"
+    ]
+  },
+  {
+    "slug": "florida",
+    "name": "Florida",
+    "abbr": "FL",
+    "rpp": 102.3,
+    "wages": {
+      "47-2061": 20.38,
+      "47-2181": 21.89,
+      "47-2141": 21.02,
+      "47-2031": 24.43,
+      "47-2051": 23.07,
+      "47-2044": 22.39,
+      "47-2042": 21.98,
+      "47-2041": 20.75,
+      "47-2081": 23.75
+    },
+    "climateZone": "IECC Zones 1A–2A (Hot-Humid / Subtropical)",
+    "climateConsiderations": "Florida Building Code (FBC) High-Velocity Hurricane Zone (HVHZ) wind ratings (130–175+ MPH), secondary water barriers, ring-shank roof deck re-nailing, and intense humidity/mildew.",
+    "licensingBoardName": "Florida Department of Business and Professional Regulation (DBPR)",
+    "licensingBoardUrl": "https://www.myfloridalicense.com/",
+    "permitNote": "Structural, roofing, and major remodeling require a Florida Certified or Registered Contractor license through the CILB.",
+    "neighbors": [
+      "georgia",
+      "alabama",
+      "south-carolina",
+      "mississippi"
+    ]
+  },
+  {
+    "slug": "georgia",
+    "name": "Georgia",
+    "abbr": "GA",
+    "rpp": 96.2,
+    "wages": {
+      "47-2061": 20.16,
+      "47-2181": 21.65,
+      "47-2141": 20.79,
+      "47-2031": 24.17,
+      "47-2051": 22.82,
+      "47-2044": 22.14,
+      "47-2042": 21.74,
+      "47-2041": 20.52,
+      "47-2081": 23.49
+    },
+    "climateZone": "IECC Zones 2A–4A (Warm-Humid)",
+    "climateConsiderations": "Heavy red clay expansion, Formosan and subterranean termite activity, and high summer humidity demand ground-contact UC4A treated lumber and vapor barriers.",
+    "licensingBoardName": "Georgia State Licensing Board for Residential and General Contractors",
+    "licensingBoardUrl": "https://sos.ga.gov/state-licensing-board-residential-and-general-contractors",
+    "permitNote": "Residential-Basic or Residential-Light Commercial licenses are required for projects exceeding $2,500 involving structural work.",
+    "neighbors": [
+      "florida",
+      "alabama",
+      "tennessee",
+      "south-carolina"
+    ]
+  },
+  {
+    "slug": "hawaii",
+    "name": "Hawaii",
+    "abbr": "HI",
+    "rpp": 113.2,
+    "wages": {
+      "47-2061": 30.91,
+      "47-2181": 33.19,
+      "47-2141": 31.88,
+      "47-2031": 37.05,
+      "47-2051": 34.98,
+      "47-2044": 33.95,
+      "47-2042": 33.33,
+      "47-2041": 31.46,
+      "47-2081": 36.02
+    },
+    "climateZone": "IECC Zone 1A (Tropical)",
+    "climateConsiderations": "Ocean freight surcharges on bulk building materials, severe coastal salt spray corrosion (316 stainless fasteners required), trade-wind uplift, and borate-treated framing lumber codes.",
+    "licensingBoardName": "Hawaii Contractors License Board (DCCA)",
+    "licensingBoardUrl": "https://cca.hawaii.gov/pvl/boards/contractor/",
+    "permitNote": "A Hawaii contractor license is mandatory for any project where labor and materials exceed $1,500 or require a building permit.",
+    "neighbors": [
+      "california",
+      "washington",
+      "oregon",
+      "alaska"
+    ]
+  },
+  {
+    "slug": "idaho",
+    "name": "Idaho",
+    "abbr": "ID",
+    "rpp": 94.8,
+    "wages": {
+      "47-2061": 20.61,
+      "47-2181": 22.13,
+      "47-2141": 21.25,
+      "47-2031": 24.7,
+      "47-2051": 23.32,
+      "47-2044": 22.63,
+      "47-2042": 22.22,
+      "47-2041": 20.98,
+      "47-2081": 24.01
+    },
+    "climateZone": "IECC Zones 5B–6B (Cool-Dry)",
+    "climateConsiderations": "Deep mountain frost lines (36–48 inches), snow load roof engineering, and dry summer cure conditions requiring curing compound on exterior flatwork.",
+    "licensingBoardName": "Idaho Division of Occupational and Professional Licenses (DOPL)",
+    "licensingBoardUrl": "https://dopl.idaho.gov/",
+    "permitNote": "All contractors working on projects valued over $2,000 must register with the Idaho Contractors Board.",
+    "neighbors": [
+      "washington",
+      "oregon",
+      "montana",
+      "utah"
+    ]
+  },
+  {
+    "slug": "illinois",
+    "name": "Illinois",
+    "abbr": "IL",
+    "rpp": 98.9,
+    "wages": {
+      "47-2061": 27.78,
+      "47-2181": 29.82,
+      "47-2141": 28.64,
+      "47-2031": 33.29,
+      "47-2051": 31.43,
+      "47-2044": 30.5,
+      "47-2042": 29.95,
+      "47-2041": 28.27,
+      "47-2081": 32.36
+    },
+    "climateZone": "IECC Zones 4A–5A (Cool-Humid)",
+    "climateConsiderations": "42-inch Chicago-metro frost footing depth, heavy winter road-salt exposure on concrete driveways (air-entrained 4000+ PSI concrete required), and state-mandated roofing licensing.",
+    "licensingBoardName": "Illinois Department of Financial and Professional Regulation (IDFPR)",
+    "licensingBoardUrl": "https://idfpr.illinois.gov/",
+    "permitNote": "Roofing contractors must hold a state IDFPR license; general remodeling is licensed at the municipal level.",
+    "neighbors": [
+      "indiana",
+      "wisconsin",
+      "iowa",
+      "missouri"
+    ]
+  },
+  {
+    "slug": "indiana",
+    "name": "Indiana",
+    "abbr": "IN",
+    "rpp": 91.8,
+    "wages": {
+      "47-2061": 21.95,
+      "47-2181": 23.57,
+      "47-2141": 22.64,
+      "47-2031": 26.31,
+      "47-2051": 24.84,
+      "47-2044": 24.11,
+      "47-2042": 23.67,
+      "47-2041": 22.34,
+      "47-2081": 25.58
+    },
+    "climateZone": "IECC Zones 4A–5A (Cool-Humid)",
+    "climateConsiderations": "40+ annual freeze-thaw cycles require air-entrained exterior concrete, 36-inch frost footings, and ice-and-water shield along roof eaves.",
+    "licensingBoardName": "Indiana Professional Licensing Agency (County/City Contractor Licensing)",
+    "licensingBoardUrl": "https://www.in.gov/pla/",
+    "permitNote": "Contractor licensing is administered by local county and city building departments (e.g., Indianapolis/Marion County).",
+    "neighbors": [
+      "illinois",
+      "ohio",
+      "michigan",
+      "kentucky"
+    ]
+  },
+  {
+    "slug": "iowa",
+    "name": "Iowa",
+    "abbr": "IA",
+    "rpp": 89.7,
+    "wages": {
+      "47-2061": 21.28,
+      "47-2181": 22.85,
+      "47-2141": 21.95,
+      "47-2031": 25.51,
+      "47-2051": 24.08,
+      "47-2044": 23.37,
+      "47-2042": 22.94,
+      "47-2041": 21.66,
+      "47-2081": 24.8
+    },
+    "climateZone": "IECC Zones 5A–6A (Cold-Humid)",
+    "climateConsiderations": "42–48 inch frost line code, straight-line wind/derecho shingle uplift resistance, and expansive glacial till subgrades.",
+    "licensingBoardName": "Iowa Division of Labor — Contractor Registration",
+    "licensingBoardUrl": "https://dial.iowa.gov/",
+    "permitNote": "Every construction contractor earning at least $2,000 annually in Iowa must register with the state.",
+    "neighbors": [
+      "illinois",
+      "minnesota",
+      "nebraska",
+      "missouri"
+    ]
+  },
+  {
+    "slug": "kansas",
+    "name": "Kansas",
+    "abbr": "KS",
+    "rpp": 90.2,
+    "wages": {
+      "47-2061": 20.61,
+      "47-2181": 22.13,
+      "47-2141": 21.25,
+      "47-2031": 24.7,
+      "47-2051": 23.32,
+      "47-2044": 22.63,
+      "47-2042": 22.22,
+      "47-2041": 20.98,
+      "47-2081": 24.01
+    },
+    "climateZone": "IECC Zones 4A–5A (Mixed-Humid)",
+    "climateConsiderations": "High wind and hail frequency across the Great Plains (impact-resistant Class 4 shingles earn insurance discounts) and seasonal shrink-swell clay soils.",
+    "licensingBoardName": "Kansas Attorney General — Roofing Registration & Local Building Codes",
+    "licensingBoardUrl": "https://ag.ks.gov/",
+    "permitNote": "Roofing contractors must register with the Kansas Attorney General; general contractors are licensed by city/county.",
+    "neighbors": [
+      "missouri",
+      "nebraska",
+      "colorado",
+      "oklahoma"
+    ]
+  },
+  {
+    "slug": "kentucky",
+    "name": "Kentucky",
+    "abbr": "KY",
+    "rpp": 89.4,
+    "wages": {
+      "47-2061": 20.38,
+      "47-2181": 21.89,
+      "47-2141": 21.02,
+      "47-2031": 24.43,
+      "47-2051": 23.07,
+      "47-2044": 22.39,
+      "47-2042": 21.98,
+      "47-2041": 20.75,
+      "47-2081": 23.75
+    },
+    "climateZone": "IECC Zone 4A (Mixed-Humid)",
+    "climateConsiderations": "Karst limestone terrain drainage, humid summers, and winter freeze-thaw transitions require proper gutter drainage away from foundations.",
+    "licensingBoardName": "Kentucky Department of Housing, Buildings and Construction",
+    "licensingBoardUrl": "https://dhbc.ky.gov/",
+    "permitNote": "Local municipalities (such as Louisville Metro and Lexington) issue residential contractor licenses and permits.",
+    "neighbors": [
+      "indiana",
+      "ohio",
+      "tennessee",
+      "virginia"
+    ]
+  },
+  {
+    "slug": "louisiana",
+    "name": "Louisiana",
+    "abbr": "LA",
+    "rpp": 90.8,
+    "wages": {
+      "47-2061": 19.26,
+      "47-2181": 20.68,
+      "47-2141": 19.87,
+      "47-2031": 23.09,
+      "47-2051": 21.8,
+      "47-2044": 21.16,
+      "47-2042": 20.77,
+      "47-2041": 19.61,
+      "47-2081": 22.45
+    },
+    "climateZone": "IECC Zones 2A–3A (Hot-Humid)",
+    "climateConsiderations": "Hurricane wind uplift codes (FORTIFIED Roof standards incentivize insurance savings), expansive alluvial clay soils, and Formosan termite protection.",
+    "licensingBoardName": "Louisiana State Licensing Board for Contractors (LSLBC)",
+    "licensingBoardUrl": "https://lslbc.louisiana.gov/",
+    "permitNote": "Home improvement projects exceeding $7,500 require LSLBC registration; projects over $50,000 require a residential license.",
+    "neighbors": [
+      "texas",
+      "arkansas",
+      "mississippi",
+      "alabama"
+    ]
+  },
+  {
+    "slug": "maine",
+    "name": "Maine",
+    "abbr": "ME",
+    "rpp": 98.6,
+    "wages": {
+      "47-2061": 22.18,
+      "47-2181": 23.81,
+      "47-2141": 22.87,
+      "47-2031": 26.58,
+      "47-2051": 25.1,
+      "47-2044": 24.35,
+      "47-2042": 23.91,
+      "47-2041": 22.57,
+      "47-2081": 25.84
+    },
+    "climateZone": "IECC Zones 6A–7 (Cold / Very Cold)",
+    "climateConsiderations": "48–60 inch frost depth for deck piers, 50–90 psf ground snow load roof framing, coastal salt exposure, and deep winter ice-dam protection.",
+    "licensingBoardName": "Maine Office of Professional and Occupational Regulation",
+    "licensingBoardUrl": "https://www.maine.gov/pfr/professionallicensing/",
+    "permitNote": "Maine requires written home construction contracts for any residential job exceeding $3,000 under the Home Construction Contracts Act.",
+    "neighbors": [
+      "new-hampshire",
+      "massachusetts",
+      "vermont",
+      "connecticut"
+    ]
+  },
+  {
+    "slug": "maryland",
+    "name": "Maryland",
+    "abbr": "MD",
+    "rpp": 105.2,
+    "wages": {
+      "47-2061": 23.97,
+      "47-2181": 25.73,
+      "47-2141": 24.72,
+      "47-2031": 28.73,
+      "47-2051": 27.12,
+      "47-2044": 26.32,
+      "47-2042": 25.84,
+      "47-2041": 24.4,
+      "47-2081": 27.93
+    },
+    "climateZone": "IECC Zone 4A (Mixed-Humid)",
+    "climateConsiderations": "Chesapeake Bay critical-area impervious surface limits (permeable pavers often favored), humid summers, and 30-inch frost footings.",
+    "licensingBoardName": "Maryland Home Improvement Commission (MHIC)",
+    "licensingBoardUrl": "https://www.dllr.state.md.us/license/mhic/",
+    "permitNote": "Anyone performing residential remodeling in Maryland must hold an active MHIC license.",
+    "neighbors": [
+      "virginia",
+      "pennsylvania",
+      "delaware",
+      "district-of-columbia"
+    ]
+  },
+  {
+    "slug": "massachusetts",
+    "name": "Massachusetts",
+    "abbr": "MA",
+    "rpp": 109.4,
+    "wages": {
+      "47-2061": 28.9,
+      "47-2181": 31.02,
+      "47-2141": 29.8,
+      "47-2031": 34.64,
+      "47-2051": 32.7,
+      "47-2044": 31.73,
+      "47-2042": 31.15,
+      "47-2041": 29.41,
+      "47-2081": 33.67
+    },
+    "climateZone": "IECC Zone 5A (Cool-Humid)",
+    "climateConsiderations": "Strict Massachusetts 780 CMR building code, 48-inch frost footings, coastal Nor’easter wind loads, and mandatory lead-safe renovation rules on older housing stock.",
+    "licensingBoardName": "Massachusetts Office of Consumer Affairs and Business Regulation (OCABR)",
+    "licensingBoardUrl": "https://www.mass.gov/home-improvement-contractor-program",
+    "permitNote": "Most residential work requires both a Construction Supervisor License (CSL) and a Home Improvement Contractor (HIC) registration.",
+    "neighbors": [
+      "connecticut",
+      "rhode-island",
+      "new-hampshire",
+      "new-york"
+    ]
+  },
+  {
+    "slug": "michigan",
+    "name": "Michigan",
+    "abbr": "MI",
+    "rpp": 93.7,
+    "wages": {
+      "47-2061": 23.07,
+      "47-2181": 24.77,
+      "47-2141": 23.79,
+      "47-2031": 27.66,
+      "47-2051": 26.11,
+      "47-2044": 25.34,
+      "47-2042": 24.87,
+      "47-2041": 23.48,
+      "47-2081": 26.88
+    },
+    "climateZone": "IECC Zones 5A–7 (Cold-Humid)",
+    "climateConsiderations": "42-inch minimum frost depth statewide, heavy lake-effect snow loads, and severe freeze-thaw cycles requiring 6-inch compacted gravel bases under patios and driveways.",
+    "licensingBoardName": "Michigan Department of Licensing and Regulatory Affairs (LARA)",
+    "licensingBoardUrl": "https://www.michigan.gov/lara",
+    "permitNote": "A Michigan Residential Builder or Maintenance & Alteration (M&A) license is required for projects of $600 or more.",
+    "neighbors": [
+      "ohio",
+      "indiana",
+      "wisconsin",
+      "illinois"
+    ]
+  },
+  {
+    "slug": "minnesota",
+    "name": "Minnesota",
+    "abbr": "MN",
+    "rpp": 98.1,
+    "wages": {
+      "47-2061": 26.66,
+      "47-2181": 28.62,
+      "47-2141": 27.49,
+      "47-2031": 31.95,
+      "47-2051": 30.17,
+      "47-2044": 29.27,
+      "47-2042": 28.74,
+      "47-2041": 27.13,
+      "47-2081": 31.06
+    },
+    "climateZone": "IECC Zones 6A–7 (Cold / Very Cold)",
+    "climateConsiderations": "42–60 inch frost footing requirements, strict attic vapor barrier and ice-dam ventilation rules, and sub-zero winter thermal expansion gaps on exterior siding and decking.",
+    "licensingBoardName": "Minnesota Department of Labor and Industry (DLI)",
+    "licensingBoardUrl": "https://www.dli.mn.gov/",
+    "permitNote": "Residential building contractors and remodelers must be licensed by Minnesota DLI if they perform two or more trade skills.",
+    "neighbors": [
+      "wisconsin",
+      "iowa",
+      "north-dakota",
+      "south-dakota"
+    ]
+  },
+  {
+    "slug": "mississippi",
+    "name": "Mississippi",
+    "abbr": "MS",
+    "rpp": 87.3,
+    "wages": {
+      "47-2061": 17.7,
+      "47-2181": 19,
+      "47-2141": 18.25,
+      "47-2031": 21.21,
+      "47-2051": 20.03,
+      "47-2044": 19.43,
+      "47-2042": 19.08,
+      "47-2041": 18.01,
+      "47-2081": 20.62
+    },
+    "climateZone": "IECC Zones 2A–3A (Warm-Humid)",
+    "climateConsiderations": "Expansive Yazoo clay soils in central Mississippi, Gulf Coast hurricane wind codes, and high year-round moisture requiring mildew-algicide roof shingles.",
+    "licensingBoardName": "Mississippi State Board of Contractors (MSBOC)",
+    "licensingBoardUrl": "https://www.msboc.us/",
+    "permitNote": "A Mississippi Residential Remodeling license is required when project costs exceed $10,000.",
+    "neighbors": [
+      "alabama",
+      "louisiana",
+      "tennessee",
+      "arkansas"
+    ]
+  },
+  {
+    "slug": "missouri",
+    "name": "Missouri",
+    "abbr": "MO",
+    "rpp": 91.5,
+    "wages": {
+      "47-2061": 22.62,
+      "47-2181": 24.29,
+      "47-2141": 23.33,
+      "47-2031": 27.12,
+      "47-2051": 25.6,
+      "47-2044": 24.85,
+      "47-2042": 24.39,
+      "47-2041": 23.03,
+      "47-2081": 26.36
+    },
+    "climateZone": "IECC Zones 4A–5A (Mixed-Humid)",
+    "climateConsiderations": "Wide seasonal temperature swings (-10°F to 100°F+), severe spring hail, and plastic clay subsoils requiring reinforced concrete slabs and 30–36 inch footings.",
+    "licensingBoardName": "Missouri Division of Professional Registration (Local Municipal Licensing)",
+    "licensingBoardUrl": "https://pr.mo.gov/",
+    "permitNote": "Contractor licensing and permits are issued by local jurisdictions such as St. Louis County, Kansas City, and Springfield.",
+    "neighbors": [
+      "illinois",
+      "kansas",
+      "iowa",
+      "arkansas"
+    ]
+  },
+  {
+    "slug": "montana",
+    "name": "Montana",
+    "abbr": "MT",
+    "rpp": 95.4,
+    "wages": {
+      "47-2061": 21.5,
+      "47-2181": 23.09,
+      "47-2141": 22.18,
+      "47-2031": 25.78,
+      "47-2051": 24.34,
+      "47-2044": 23.62,
+      "47-2042": 23.18,
+      "47-2041": 21.89,
+      "47-2081": 25.06
+    },
+    "climateZone": "IECC Zone 6B (Cold-Dry)",
+    "climateConsiderations": "48-inch frost lines, high Chinook wind gusts along the Rocky Mountain Front, and heavy mountain snow loads.",
+    "licensingBoardName": "Montana Department of Labor & Industry — Construction Contractor Registration",
+    "licensingBoardUrl": "https://erd.dli.mt.gov/",
+    "permitNote": "All construction contractors with employees or independent contractor exemptions must register with Montana DLI.",
+    "neighbors": [
+      "idaho",
+      "wyoming",
+      "north-dakota",
+      "south-dakota"
+    ]
+  },
+  {
+    "slug": "nebraska",
+    "name": "Nebraska",
+    "abbr": "NE",
+    "rpp": 91.1,
+    "wages": {
+      "47-2061": 20.83,
+      "47-2181": 22.37,
+      "47-2141": 21.48,
+      "47-2031": 24.97,
+      "47-2051": 23.58,
+      "47-2044": 22.88,
+      "47-2042": 22.46,
+      "47-2041": 21.2,
+      "47-2081": 24.27
+    },
+    "climateZone": "IECC Zone 5A (Cool-Humid / Plains)",
+    "climateConsiderations": "High plains hail frequency, 42-inch frost depth, and wind-driven rain requiring starter strip adhesive and Class 4 impact shingles.",
+    "licensingBoardName": "Nebraska Department of Labor — Contractor Registration",
+    "licensingBoardUrl": "https://dol.nebraska.gov/LaborStandards/ContractorRegistration",
+    "permitNote": "All contractors doing business in Nebraska must register with the Nebraska Department of Labor.",
+    "neighbors": [
+      "iowa",
+      "kansas",
+      "colorado",
+      "south-dakota"
+    ]
+  },
+  {
+    "slug": "nevada",
+    "name": "Nevada",
+    "abbr": "NV",
+    "rpp": 98.8,
+    "wages": {
+      "47-2061": 24.42,
+      "47-2181": 26.21,
+      "47-2141": 25.18,
+      "47-2031": 29.27,
+      "47-2051": 27.63,
+      "47-2044": 26.81,
+      "47-2042": 26.32,
+      "47-2041": 24.85,
+      "47-2081": 28.45
+    },
+    "climateZone": "IECC Zones 3B–5B (Hot-Dry to Cool-Dry)",
+    "climateConsiderations": "Extreme desert heat and low humidity in Clark County cause rapid concrete surface evaporation (plastic shrinkage cracking) unless evaporation retarders and wet curing are used.",
+    "licensingBoardName": "Nevada State Contractors Board (NSCB)",
+    "licensingBoardUrl": "https://www.nvcontractorsboard.com/",
+    "permitNote": "A Nevada contractor license is required for any job over $1,000 or any project requiring a building permit.",
+    "neighbors": [
+      "california",
+      "arizona",
+      "utah",
+      "oregon"
+    ]
+  },
+  {
+    "slug": "new-hampshire",
+    "name": "New Hampshire",
+    "abbr": "NH",
+    "rpp": 102.7,
+    "wages": {
+      "47-2061": 23.3,
+      "47-2181": 25.01,
+      "47-2141": 24.02,
+      "47-2031": 27.92,
+      "47-2051": 26.36,
+      "47-2044": 25.58,
+      "47-2042": 25.12,
+      "47-2041": 23.71,
+      "47-2081": 27.14
+    },
+    "climateZone": "IECC Zones 5A–6A (Cold-Humid)",
+    "climateConsiderations": "48-inch deep frost footings, granite ledge excavation challenges, and 60+ psf snow load requirements on roofs and decks.",
+    "licensingBoardName": "New Hampshire Office of Professional Licensure and Certification",
+    "licensingBoardUrl": "https://www.oplc.nh.gov/",
+    "permitNote": "General contractors are regulated via local town building permits following the New Hampshire State Building Code.",
+    "neighbors": [
+      "maine",
+      "massachusetts",
+      "vermont",
+      "connecticut"
+    ]
+  },
+  {
+    "slug": "new-jersey",
+    "name": "New Jersey",
+    "abbr": "NJ",
+    "rpp": 108.9,
+    "wages": {
+      "47-2061": 28,
+      "47-2181": 30.06,
+      "47-2141": 28.88,
+      "47-2031": 33.56,
+      "47-2051": 31.69,
+      "47-2044": 30.75,
+      "47-2042": 30.19,
+      "47-2041": 28.5,
+      "47-2081": 32.63
+    },
+    "climateZone": "IECC Zones 4A–5A (Mixed/Cool-Humid)",
+    "climateConsiderations": "Coastal windborne debris zones along the Jersey Shore, 36-inch frost lines, and strict municipal zoning/impervious coverage caps on patios and driveways.",
+    "licensingBoardName": "New Jersey Division of Consumer Affairs",
+    "licensingBoardUrl": "https://www.njconsumeraffairs.gov/hic",
+    "permitNote": "Every residential contractor must register as a New Jersey Home Improvement Contractor (HIC) and display their registration number.",
+    "neighbors": [
+      "new-york",
+      "pennsylvania",
+      "delaware",
+      "connecticut"
+    ]
+  },
+  {
+    "slug": "new-mexico",
+    "name": "New Mexico",
+    "abbr": "NM",
+    "rpp": 91.2,
+    "wages": {
+      "47-2061": 20.16,
+      "47-2181": 21.65,
+      "47-2141": 20.79,
+      "47-2031": 24.17,
+      "47-2051": 22.82,
+      "47-2044": 22.14,
+      "47-2042": 21.74,
+      "47-2041": 20.52,
+      "47-2081": 23.49
+    },
+    "climateZone": "IECC Zones 3B–5B (Hot/Cool-Dry)",
+    "climateConsiderations": "High-altitude UV degradation on stains and paints, stucco/adobe elastomeric crack bridging, and monsoon flash drainage.",
+    "licensingBoardName": "New Mexico Regulation and Licensing Department — Construction Industries Division (CID)",
+    "licensingBoardUrl": "https://www.rld.nm.gov/construction-industries/",
+    "permitNote": "New Mexico CID requires GB-2 residential or specialty contractor licensing for nearly all construction work.",
+    "neighbors": [
+      "texas",
+      "arizona",
+      "colorado",
+      "oklahoma"
+    ]
+  },
+  {
+    "slug": "new-york",
+    "name": "New York",
+    "abbr": "NY",
+    "rpp": 108.4,
+    "wages": {
+      "47-2061": 28.45,
+      "47-2181": 30.54,
+      "47-2141": 29.34,
+      "47-2031": 34.1,
+      "47-2051": 32.19,
+      "47-2044": 31.24,
+      "47-2042": 30.67,
+      "47-2041": 28.96,
+      "47-2081": 33.15
+    },
+    "climateZone": "IECC Zones 4A–6A (Mixed to Cold-Humid)",
+    "climateConsiderations": "Upstate lake-effect snow loads (up to 70+ psf) and 48-inch frost depths vs NYC/Long Island high labor rates, co-op insurance requirements, and coastal wind codes.",
+    "licensingBoardName": "New York Department of State / Local County Consumer Affairs",
+    "licensingBoardUrl": "https://dos.ny.gov/",
+    "permitNote": "Home improvement licenses are strictly enforced at the county/city level (NYC DCWP, Nassau, Suffolk, Westchester, Putnam, Rockland, Erie).",
+    "neighbors": [
+      "new-jersey",
+      "pennsylvania",
+      "connecticut",
+      "massachusetts"
+    ]
+  },
+  {
+    "slug": "north-carolina",
+    "name": "North Carolina",
+    "abbr": "NC",
+    "rpp": 94.9,
+    "wages": {
+      "47-2061": 19.94,
+      "47-2181": 21.4,
+      "47-2141": 20.56,
+      "47-2031": 23.9,
+      "47-2051": 22.56,
+      "47-2044": 21.89,
+      "47-2042": 21.49,
+      "47-2041": 20.29,
+      "47-2081": 23.23
+    },
+    "climateZone": "IECC Zones 3A–4A (Warm/Mixed-Humid)",
+    "climateConsiderations": "Piedmont red clay grading, coastal 130+ MPH wind zones on the Outer Banks/Wilmington, and high summer humidity requiring breathable exterior finishes.",
+    "licensingBoardName": "North Carolina Licensing Board for General Contractors (NCLBGC)",
+    "licensingBoardUrl": "https://nclbgc.org/",
+    "permitNote": "A North Carolina General Contractor license is required for any project costing $40,000 or more.",
+    "neighbors": [
+      "virginia",
+      "south-carolina",
+      "tennessee",
+      "georgia"
+    ]
+  },
+  {
+    "slug": "north-dakota",
+    "name": "North Dakota",
+    "abbr": "ND",
+    "rpp": 90.4,
+    "wages": {
+      "47-2061": 22.18,
+      "47-2181": 23.81,
+      "47-2141": 22.87,
+      "47-2031": 26.58,
+      "47-2051": 25.1,
+      "47-2044": 24.35,
+      "47-2042": 23.91,
+      "47-2041": 22.57,
+      "47-2081": 25.84
+    },
+    "climateZone": "IECC Zones 6A–7 (Very Cold)",
+    "climateConsiderations": "Extreme winter lows (-30°F), 48–72 inch frost footing depths, expansive Red River Valley clay, and short exterior concrete/painting seasons.",
+    "licensingBoardName": "North Dakota Secretary of State — Contractor Licensing",
+    "licensingBoardUrl": "https://sos.nd.gov/business/contractors/",
+    "permitNote": "A North Dakota Contractor License (Class A, B, C, or D) is required for any job exceeding $4,000.",
+    "neighbors": [
+      "minnesota",
+      "south-dakota",
+      "montana",
+      "iowa"
+    ]
+  },
+  {
+    "slug": "ohio",
+    "name": "Ohio",
+    "abbr": "OH",
+    "rpp": 92.1,
+    "wages": {
+      "47-2061": 22.62,
+      "47-2181": 24.29,
+      "47-2141": 23.33,
+      "47-2031": 27.12,
+      "47-2051": 25.6,
+      "47-2044": 24.85,
+      "47-2042": 24.39,
+      "47-2041": 23.03,
+      "47-2081": 26.36
+    },
+    "climateZone": "IECC Zone 5A (Cool-Humid)",
+    "climateConsiderations": "32–42 inch frost line depth from south to north, Lake Erie wind and snow loads, and de-icing salt scaling protection on concrete flatwork.",
+    "licensingBoardName": "Ohio Construction Industry Licensing Board (OCILB) & Local Municipalities",
+    "licensingBoardUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/ohio-construction-industry-licensing-board",
+    "permitNote": "General remodeling contractors register with local city/county building departments (Columbus, Cleveland, Cincinnati).",
+    "neighbors": [
+      "pennsylvania",
+      "michigan",
+      "indiana",
+      "kentucky"
+    ]
+  },
+  {
+    "slug": "oklahoma",
+    "name": "Oklahoma",
+    "abbr": "OK",
+    "rpp": 88.9,
+    "wages": {
+      "47-2061": 19.26,
+      "47-2181": 20.68,
+      "47-2141": 19.87,
+      "47-2031": 23.09,
+      "47-2051": 21.8,
+      "47-2044": 21.16,
+      "47-2042": 20.77,
+      "47-2041": 19.61,
+      "47-2081": 22.45
+    },
+    "climateZone": "IECC Zone 3A (Warm-Humid / Plains)",
+    "climateConsiderations": "Severe spring hail and tornado corridor wind uplift (high-wind 6-nail shingle fastening and Class 4 impact shingles strongly recommended) and expansive red clay.",
+    "licensingBoardName": "Oklahoma Construction Industries Board (CIB)",
+    "licensingBoardUrl": "https://oklahoma.gov/cib.html",
+    "permitNote": "Roofing contractors must be registered and endorsed by the Oklahoma CIB; general contractors follow municipal permit rules.",
+    "neighbors": [
+      "texas",
+      "kansas",
+      "arkansas",
+      "missouri"
+    ]
+  },
+  {
+    "slug": "oregon",
+    "name": "Oregon",
+    "abbr": "OR",
+    "rpp": 104.2,
+    "wages": {
+      "47-2061": 26.21,
+      "47-2181": 28.14,
+      "47-2141": 27.03,
+      "47-2031": 31.41,
+      "47-2051": 29.66,
+      "47-2044": 28.78,
+      "47-2042": 28.26,
+      "47-2041": 26.68,
+      "47-2081": 30.54
+    },
+    "climateZone": "IECC Zones 4C–5B (Marine West Coast to Cool-Dry)",
+    "climateConsiderations": "Persistent Willamette Valley and coastal rain requires rainscreen siding drainage gaps, moss-resistant zinc/copper roof strips, and moisture-tolerant deck stains.",
+    "licensingBoardName": "Oregon Construction Contractors Board (CCB)",
+    "licensingBoardUrl": "https://www.oregon.gov/ccb/",
+    "permitNote": "Anyone working for compensation on any home improvement activity in Oregon must hold an active CCB license and bond.",
+    "neighbors": [
+      "washington",
+      "california",
+      "idaho",
+      "nevada"
+    ]
+  },
+  {
+    "slug": "pennsylvania",
+    "name": "Pennsylvania",
+    "abbr": "PA",
+    "rpp": 97.6,
+    "wages": {
+      "47-2061": 23.74,
+      "47-2181": 25.49,
+      "47-2141": 24.49,
+      "47-2031": 28.46,
+      "47-2051": 26.87,
+      "47-2044": 26.08,
+      "47-2042": 25.6,
+      "47-2041": 24.17,
+      "47-2081": 27.67
+    },
+    "climateZone": "IECC Zones 4A–6A (Mixed to Cold-Humid)",
+    "climateConsiderations": "36–48 inch frost footing depths, historic stone/brick masonry pointing considerations, and winter freeze-thaw cycles.",
+    "licensingBoardName": "Pennsylvania Office of Attorney General — Home Improvement Contractor Registration (HICPA)",
+    "licensingBoardUrl": "https://www.attorneygeneral.gov/resources/home-improvement-contractor-registration/",
+    "permitNote": "Contractors performing more than $5,000 of residential work per year must register under HICPA with the PA Attorney General.",
+    "neighbors": [
+      "new-york",
+      "new-jersey",
+      "ohio",
+      "maryland"
+    ]
+  },
+  {
+    "slug": "rhode-island",
+    "name": "Rhode Island",
+    "abbr": "RI",
+    "rpp": 103.5,
+    "wages": {
+      "47-2061": 25.54,
+      "47-2181": 27.42,
+      "47-2141": 26.33,
+      "47-2031": 30.61,
+      "47-2051": 28.9,
+      "47-2044": 28.04,
+      "47-2042": 27.53,
+      "47-2041": 25.99,
+      "47-2081": 29.75
+    },
+    "climateZone": "IECC Zone 5A (Cool-Humid / Coastal)",
+    "climateConsiderations": "120–140 MPH coastal wind design speeds in Narragansett Bay communities, salt-air fastener corrosion, and 40-inch frost lines.",
+    "licensingBoardName": "Rhode Island Contractors’ Registration and Licensing Board (CRLB)",
+    "licensingBoardUrl": "https://crb.ri.gov/",
+    "permitNote": "All residential contractors and remodelers must register with the Rhode Island CRLB and carry required liability insurance.",
+    "neighbors": [
+      "massachusetts",
+      "connecticut",
+      "new-york",
+      "new-hampshire"
+    ]
+  },
+  {
+    "slug": "south-carolina",
+    "name": "South Carolina",
+    "abbr": "SC",
+    "rpp": 93.8,
+    "wages": {
+      "47-2061": 19.49,
+      "47-2181": 20.92,
+      "47-2141": 20.1,
+      "47-2031": 23.36,
+      "47-2051": 22.05,
+      "47-2044": 21.4,
+      "47-2042": 21.01,
+      "47-2041": 19.84,
+      "47-2081": 22.71
+    },
+    "climateZone": "IECC Zone 3A (Warm-Humid)",
+    "climateConsiderations": "Coastal hurricane wind and seismic zones around Charleston, high summer humidity, and sandy coastal vs Upstate red clay soil prep.",
+    "licensingBoardName": "South Carolina Residential Builders Commission (LLR)",
+    "licensingBoardUrl": "https://llr.sc.gov/res/",
+    "permitNote": "A South Carolina Residential Builder license or specialty registration is required for jobs exceeding $200.",
+    "neighbors": [
+      "north-carolina",
+      "georgia",
+      "florida",
+      "tennessee"
+    ]
+  },
+  {
+    "slug": "south-dakota",
+    "name": "South Dakota",
+    "abbr": "SD",
+    "rpp": 90.1,
+    "wages": {
+      "47-2061": 19.94,
+      "47-2181": 21.4,
+      "47-2141": 20.56,
+      "47-2031": 23.9,
+      "47-2051": 22.56,
+      "47-2044": 21.89,
+      "47-2042": 21.49,
+      "47-2041": 20.29,
+      "47-2081": 23.23
+    },
+    "climateZone": "IECC Zones 5A–6A (Cold)",
+    "climateConsiderations": "48-inch frost lines, frequent hailstorms across the plains and Black Hills, and high wind uplift.",
+    "licensingBoardName": "South Dakota Municipal Building Departments (Sioux Falls, Rapid City)",
+    "licensingBoardUrl": "https://dlr.sd.gov/",
+    "permitNote": "Residential contractor licenses are issued at the municipal level and require state excise tax registration.",
+    "neighbors": [
+      "north-dakota",
+      "minnesota",
+      "nebraska",
+      "wyoming"
+    ]
+  },
+  {
+    "slug": "tennessee",
+    "name": "Tennessee",
+    "abbr": "TN",
+    "rpp": 93.2,
+    "wages": {
+      "47-2061": 19.71,
+      "47-2181": 21.16,
+      "47-2141": 20.33,
+      "47-2031": 23.63,
+      "47-2051": 22.31,
+      "47-2044": 21.65,
+      "47-2042": 21.25,
+      "47-2041": 20.06,
+      "47-2081": 22.97
+    },
+    "climateZone": "IECC Zones 3A–4A (Mixed-Humid)",
+    "climateConsiderations": "Shallow limestone bedrock in Middle/East Tennessee, New Madrid seismic zone in West Tennessee, and humid summer algae growth on roofs and decks.",
+    "licensingBoardName": "Tennessee Board for Licensing Contractors",
+    "licensingBoardUrl": "https://www.tn.gov/commerce/regboards/contractors.html",
+    "permitNote": "Projects $25,000 or more require a state Contractor License; projects $3,000–$24,999 in covered counties require a Home Improvement license.",
+    "neighbors": [
+      "kentucky",
+      "north-carolina",
+      "georgia",
+      "alabama"
+    ]
+  },
+  {
+    "slug": "texas",
+    "name": "Texas",
+    "abbr": "TX",
+    "rpp": 97.4,
+    "wages": {
+      "47-2061": 20.38,
+      "47-2181": 21.89,
+      "47-2141": 21.02,
+      "47-2031": 24.43,
+      "47-2051": 23.07,
+      "47-2044": 22.39,
+      "47-2042": 21.98,
+      "47-2041": 20.75,
+      "47-2081": 23.75
+    },
+    "climateZone": "IECC Zones 2A–4B (Hot-Humid to Mixed-Dry)",
+    "climateConsiderations": "Highly expansive Blackland Prairie clay soils (rebar-reinforced concrete slabs essential), Texas Windstorm Insurance Association (TWIA) Gulf Coast roof certifications, and severe North Texas hail.",
+    "licensingBoardName": "Texas Department of Licensing and Regulation (TDLR) / Local Municipal Permits",
+    "licensingBoardUrl": "https://www.tdlr.texas.gov/",
+    "permitNote": "General and roofing contractors register at the city level (Houston, Dallas, Austin, San Antonio); Gulf Coast roofs require a TDI WPI-8 windstorm certificate.",
+    "neighbors": [
+      "oklahoma",
+      "louisiana",
+      "arkansas",
+      "new-mexico"
+    ]
+  },
+  {
+    "slug": "utah",
+    "name": "Utah",
+    "abbr": "UT",
+    "rpp": 97.9,
+    "wages": {
+      "47-2061": 21.5,
+      "47-2181": 23.09,
+      "47-2141": 22.18,
+      "47-2031": 25.78,
+      "47-2051": 24.34,
+      "47-2044": 23.62,
+      "47-2042": 23.18,
+      "47-2041": 21.89,
+      "47-2081": 25.06
+    },
+    "climateZone": "IECC Zones 3B–6B (Dry / Wasatch Alpine)",
+    "climateConsiderations": "Wasatch Front seismic fault zones, heavy mountain bench snow loads, 30–42 inch frost depths, and intense high-elevation UV exposure.",
+    "licensingBoardName": "Utah Division of Professional Licensing (DOPL)",
+    "licensingBoardUrl": "https://dopl.utah.gov/contractor/",
+    "permitNote": "A Utah DOPL B100, R100, or specialty S-series contractor license is required for projects exceeding $3,000.",
+    "neighbors": [
+      "idaho",
+      "wyoming",
+      "colorado",
+      "nevada"
+    ]
+  },
+  {
+    "slug": "vermont",
+    "name": "Vermont",
+    "abbr": "VT",
+    "rpp": 100.4,
+    "wages": {
+      "47-2061": 22.62,
+      "47-2181": 24.29,
+      "47-2141": 23.33,
+      "47-2031": 27.12,
+      "47-2051": 25.6,
+      "47-2044": 24.85,
+      "47-2042": 24.39,
+      "47-2041": 23.03,
+      "47-2081": 26.36
+    },
+    "climateZone": "IECC Zone 6A (Cold-Humid)",
+    "climateConsiderations": "54–60 inch frost depth for deck and fence footings, heavy wet snow loads, and strict Act 250 / local energy stretch codes.",
+    "licensingBoardName": "Vermont Office of Professional Regulation — Residential Contractors",
+    "licensingBoardUrl": "https://sos.vermont.gov/residential-contractors/",
+    "permitNote": "Residential contractors must register with the Vermont Secretary of State for projects valued at $10,000 or more.",
+    "neighbors": [
+      "new-hampshire",
+      "new-york",
+      "massachusetts",
+      "maine"
+    ]
+  },
+  {
+    "slug": "virginia",
+    "name": "Virginia",
+    "abbr": "VA",
+    "rpp": 101.6,
+    "wages": {
+      "47-2061": 21.95,
+      "47-2181": 23.57,
+      "47-2141": 22.64,
+      "47-2031": 26.31,
+      "47-2051": 24.84,
+      "47-2044": 24.11,
+      "47-2042": 23.67,
+      "47-2041": 22.34,
+      "47-2081": 25.58
+    },
+    "climateZone": "IECC Zone 4A (Mixed-Humid)",
+    "climateConsiderations": "Tidewater coastal wind zones, Piedmont shrink-swell clay, and Northern Virginia HOA architectural review and county permit standards.",
+    "licensingBoardName": "Virginia Department of Professional and Occupational Regulation (DPOR)",
+    "licensingBoardUrl": "https://www.dpor.virginia.gov/Boards/Contractors",
+    "permitNote": "Virginia requires a Class C license for jobs over $1,000, Class B for $10,000+, and Class A for $120,000+.",
+    "neighbors": [
+      "maryland",
+      "north-carolina",
+      "kentucky",
+      "tennessee"
+    ]
+  },
+  {
+    "slug": "washington",
+    "name": "Washington",
+    "abbr": "WA",
+    "rpp": 108.7,
+    "wages": {
+      "47-2061": 28.67,
+      "47-2181": 30.78,
+      "47-2141": 29.57,
+      "47-2031": 34.37,
+      "47-2051": 32.45,
+      "47-2044": 31.49,
+      "47-2042": 30.91,
+      "47-2041": 29.18,
+      "47-2081": 33.41
+    },
+    "climateZone": "IECC Zones 4C–5B (Marine West Coast to Cool-Dry)",
+    "climateConsiderations": "Continuous Puget Sound moisture requiring rainscreen siding furring strips, seismic hold-downs, moss prevention on roofs, and Washington State Energy Code (WSEC) insulation levels.",
+    "licensingBoardName": "Washington State Department of Labor & Industries (L&I)",
+    "licensingBoardUrl": "https://lni.wa.gov/licensing-permits/contractors/",
+    "permitNote": "All general and specialty contractors in Washington must register with L&I, carry a surety bond, and maintain general liability insurance.",
+    "neighbors": [
+      "oregon",
+      "idaho",
+      "california",
+      "montana"
+    ]
+  },
+  {
+    "slug": "west-virginia",
+    "name": "West Virginia",
+    "abbr": "WV",
+    "rpp": 87.9,
+    "wages": {
+      "47-2061": 20.38,
+      "47-2181": 21.89,
+      "47-2141": 21.02,
+      "47-2031": 24.43,
+      "47-2051": 23.07,
+      "47-2044": 22.39,
+      "47-2042": 21.98,
+      "47-2041": 20.75,
+      "47-2081": 23.75
+    },
+    "climateZone": "IECC Zones 4A–5A (Mixed/Cool-Humid)",
+    "climateConsiderations": "Steep hillside grading and retaining wall drainage requirements, mountain snow loads, and 30–36 inch frost lines.",
+    "licensingBoardName": "West Virginia Division of Labor — Contractor Licensing Board",
+    "licensingBoardUrl": "https://labor.wv.gov/",
+    "permitNote": "A West Virginia Contractor License is required for residential projects valued at $5,000 or more.",
+    "neighbors": [
+      "virginia",
+      "pennsylvania",
+      "ohio",
+      "kentucky"
+    ]
+  },
+  {
+    "slug": "wisconsin",
+    "name": "Wisconsin",
+    "abbr": "WI",
+    "rpp": 93.4,
+    "wages": {
+      "47-2061": 23.97,
+      "47-2181": 25.73,
+      "47-2141": 24.72,
+      "47-2031": 28.73,
+      "47-2051": 27.12,
+      "47-2044": 26.32,
+      "47-2042": 25.84,
+      "47-2041": 24.4,
+      "47-2081": 27.93
+    },
+    "climateZone": "IECC Zones 6A–7 (Cold / Very Cold)",
+    "climateConsiderations": "48-inch frost depth code for footings, deep eave ice-dam protection (2 rows of ice-and-water shield), and air-entrained concrete for driveway salt resistance.",
+    "licensingBoardName": "Wisconsin Department of Safety and Professional Services (DSPS)",
+    "licensingBoardUrl": "https://dsps.wi.gov/",
+    "permitNote": "One- and two-family dwelling contractors must hold a Wisconsin Dwelling Contractor and Dwelling Contractor Qualifier credential.",
+    "neighbors": [
+      "minnesota",
+      "illinois",
+      "iowa",
+      "michigan"
+    ]
+  },
+  {
+    "slug": "wyoming",
+    "name": "Wyoming",
+    "abbr": "WY",
+    "rpp": 92.6,
+    "wages": {
+      "47-2061": 21.28,
+      "47-2181": 22.85,
+      "47-2141": 21.95,
+      "47-2031": 25.51,
+      "47-2051": 24.08,
+      "47-2044": 23.37,
+      "47-2042": 22.94,
+      "47-2041": 21.66,
+      "47-2081": 24.8
+    },
+    "climateZone": "IECC Zones 6B–7 (Cold-Dry / High Plains)",
+    "climateConsiderations": "Sustained 60–90+ MPH winter wind gusts requiring 6-nail high-wind shingle installation, 42–48 inch frost depths, and rapid dry-air concrete evaporation.",
+    "licensingBoardName": "Wyoming Municipal Building Departments (Cheyenne, Casper, Laramie)",
+    "licensingBoardUrl": "https://dws.wyo.gov/",
+    "permitNote": "Contractor licensing and building permits are managed by local city and county building departments.",
+    "neighbors": [
+      "montana",
+      "south-dakota",
+      "nebraska",
+      "colorado"
+    ]
+  }
+]

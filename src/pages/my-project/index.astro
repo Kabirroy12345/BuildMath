@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProjectListManager from '../../components/ProjectListManager';
+---
+
+<BaseLayout
+  title="My Project Shopping List & Combined Cost Estimate | BuildMath"
+  description="View, print, or copy your combined DIY home-improvement materials shopping list and total project cost estimate."
+  pathname="/my-project/"
+  noindex={true}
+>
+  <Breadcrumbs items={[{ name: 'My Project List', href: '/my-project/' }]} />
+
+  <header class="mb-6">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      My Project Shopping List
+    </h1>
+    <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      Your saved calculator measurements and material takeoffs are stored privately in your browser. Print this page for the hardware store aisle or copy the list to your notes.
+    </p>
+  </header>
+
+  <ProjectListManager client:load />
+</BaseLayout>

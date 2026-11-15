@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBox, { type SearchableItem } from '../components/SearchBox';
+import { siteConfig } from '../config/site';
+import categories from '../data/categories.json';
+import calculators from '../data/calculators.json';
+import jobs from '../data/costs/jobs.json';
+import states from '../data/costs/states.json';
+import guides from '../data/guides.json';
+
+const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
+
+const searchItems: SearchableItem[] = [
+  ...calculators.map((calc) => ({
+    slug: calc.slug,
+    title: calc.name,
+    shortTitle: calc.shortName,
+    category: calc.category,
+    categoryName: categoryMap[calc.category] || calc.category,
+    description: calc.intro,
+    href: `/calculators/${calc.slug}/`,
+    type: 'calculator' as const,
+  })),
+  ...jobs.map((job) => ({
+    slug: job.slug,
+    title: `${job.name} Cost Guide`,
+    shortTitle: job.name,
+    category: 'cost',
+    categoryName: 'Cost Guide',
+    description: `Typical national cost: $${Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize).toLocaleString()} ($${job.nationalLowPerUnit}–$${job.nationalHighPerUnit}/${job.unit}).`,
+    href: `/cost/${job.slug}/`,
+    type: 'cost' as const,
+  })),
+];
+
+const popularSlugs = [
+  'paint-calculator',
+  'concrete-slab-calculator',
+  'roofing-calculator',
+  'flooring-calculator',
+  'mulch-calculator',
+  'fence-calculator',
+  'deck-calculator',
+  'tile-calculator',
+  'drywall-calculator',
+  'gravel-calculator',
+  'stair-calculator',
+  'square-footage-calculator',
+];
+
+const popularCalculators = popularSlugs
+  .map((s) => calculators.find((c) => c.slug === s))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+const featuredJobs = jobs.slice(0, 8);
+const topStates = states.slice(0, 12);
+---
+
+<BaseLayout
+  title="BuildMath: Free DIY & Home Improvement Calculators + Cost Guides"
+  description="Get accurate DIY material quantities and local project cost estimates in under 10 seconds. 32 trade-verified home improvement calculators for US homeowners."
+  pathname="/"
+>
+  <!-- Hero Section -->
+  <section class="py-8 sm:py-12 px-4 sm:px-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-brand-950 text-white text-center shadow-lg mb-12">
+    <span class="inline-block text-xs font-bold uppercase tracking-wider text-accent-500 bg-slate-800/90 border border-slate-700 px-3 py-1 rounded-full mb-4">
+      100% Free • Trade-Verified Formulas • Instant Material Lists
+    </span>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight max-w-3xl mx-auto leading-tight">
+      Accurate Home-Improvement Math in Under 10 Seconds
+    </h1>
+    <p class="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto">
+      Calculate exact purchasable bags, boxes, gallons, bundles, and cubic yards—plus localized US material and contractor cost ranges.
+    </p>
+
+    <div class="mt-7">
+      <SearchBox client:load items={searchItems} />
+    </div>
+
+    <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-300">
+      <span class="text-slate-400">Popular right now:</span>
+      <a href="/calculators/paint-calculator/" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors">Paint</a>
+      <a href="/calculators/concrete-slab-calculator/" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors">Concrete Slab</a>
+      <a href="/calculators/mulch-calculator/" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors">Mulch</a>
+      <a href="/calculators/roofing-calculator/" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors">Roofing Shingles</a>
+      <a href="/calculators/stair-calculator/" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 transition-colors">Stair Stringers</a>
+    </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section aria-label="Why homeowners trust BuildMath" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+    <div class="card p-5 flex items-start gap-3.5">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold">
+        ✓
+      </span>
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Real Manufacturer Specs</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          Every default coverage rate, bag yield, and pitch factor cites trade standards (ACI, ARMA, NWFA, USG, Quikrete) and is 100% editable.
+        </p>
+      </div>
+    </div>
+    <div class="card p-5 flex items-start gap-3.5">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold">
+        ⚡
+      </span>
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white">Rounded to Purchasable Units</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          You can't buy 2.37 bags of concrete. We show both the exact unrounded math and the rounded-up store units you actually need.
+        </p>
+      </div>
+    </div>
+    <div class="card p-5 flex items-start gap-3.5">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold">
+        📋
+      </span>
+      <div>
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white">No Sign-Up Required</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          Save multiple room calculations to your <a href="/my-project/" class="underline font-medium text-brand-600">Project Shopping List</a>, print clean worksheets, or share links—privately in your browser.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 Category Tiles -->
+  <section class="mb-14" aria-labelledby="categories-heading">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 id="categories-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          Browse Calculators by Category
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          32 specialized calculators across 8 residential building trades.
+        </p>
+      </div>
+      <a href="/calculators/" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline shrink-0">
+        View all 32 calculators →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {categories.map((cat) => {
+        const catCalcs = calculators.filter((c) => c.category === cat.slug);
+        return (
+          <div class="card p-5 flex flex-col justify-between hover:border-brand-500 transition-colors">
+            <div>
+              <a href={`/calculators/${cat.slug}/`} class="group">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400">
+                  {cat.name}
+                </h3>
+              </a>
+              <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 mb-3">
+                {cat.description}
+              </p>
+              <ul class="space-y-1.5 text-xs border-t border-slate-100 dark:border-slate-800 pt-3">
+                {catCalcs.map((c) => (
+                  <li>
+                    <a
+                      href={`/calculators/${c.slug}/`}
+                      class="text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:underline"
+                    >
+                      • {c.shortName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <a
+              href={`/calculators/${cat.slug}/`}
+              class="mt-4 pt-2 inline-flex items-center text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
+            >
+              Explore {cat.name} ({catCalcs.length}) →
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- 12 Most-Used Calculators -->
+  <section class="mb-14" aria-labelledby="popular-calcs-heading">
+    <h2 id="popular-calcs-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+      12 Most-Used Home Improvement Calculators
+    </h2>
+    <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+      Instant material takeoffs, waste factor sliders, and store-ready shopping lists.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {popularCalculators.map((calc) => (
+        <a
+          href={`/calculators/${calc.slug}/`}
+          class="card p-5 hover:border-brand-500 transition-all group flex flex-col justify-between"
+        >
+          <div>
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950 px-2 py-0.5 rounded">
+              {categoryMap[calc.category]}
+            </span>
+            <h3 class="mt-2 text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400">
+              {calc.name}
+            </h3>
+            <p class="mt-1.5 text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+              {calc.intro}
+            </p>
+          </div>
+          <span class="mt-4 text-xs font-semibold text-brand-600 dark:text-brand-400">
+            Calculate Materials & Cost →
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Cost Guides by Job & State -->
+  <section class="mb-14" aria-labelledby="cost-guides-heading">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 id="cost-guides-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          Home Improvement Cost Guides by State
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Compare localized contractor labor and material costs across all 50 US states and DC.
+        </p>
+      </div>
+      <a href="/cost/" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline shrink-0">
+        All 25 Cost Guides →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {featuredJobs.map((job) => (
+        <a
+          href={`/cost/${job.slug}/`}
+          class="card p-4 hover:border-brand-500 transition-colors flex flex-col justify-between"
+        >
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+              Cost of {job.name}
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              National Typical: <strong class="text-slate-800 dark:text-slate-200">${Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize).toLocaleString()}</strong> ({job.typicalProjectSize} {job.unit})
+            </p>
+          </div>
+          <span class="mt-3 text-xs font-semibold text-brand-600 dark:text-brand-400">
+            View State Breakdown →
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <div class="card p-5 bg-slate-50 dark:bg-slate-900/60">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-3">
+        Quick Jump: Roof Replacement Cost by State
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        {topStates.map((st) => (
+          <a
+            href={`/cost/roof-replacement/${st.slug}/`}
+            class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-300"
+          >
+            {st.name} ({st.abbr})
+          </a>
+        ))}
+        <a
+          href="/cost/roof-replacement/"
+          class="px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+        >
+          All 50 States + DC →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How-To Guides Strip -->
+  <section aria-labelledby="guides-heading">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 id="guides-heading" class="text-2xl font-extrabold text-slate-900 dark:text-white">
+          Step-by-Step Measurement & Estimation Guides
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Practical field guides written by {siteConfig.author.name}.
+        </p>
+      </div>
+      <a href="/guides/" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline shrink-0">
+        All Guides →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {guides.slice(0, 3).map((g) => (
+        <a href={`/guides/${g.slug}/`} class="card p-5 hover:border-brand-500 transition-colors">
+          <span class="text-xs text-slate-500 dark:text-slate-400">{g.readingTime}</span>
+          <h3 class="mt-1 text-base font-bold text-slate-900 dark:text-white">
+            {g.title}
+          </h3>
+          <p class="mt-1.5 text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+            {g.excerpt}
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

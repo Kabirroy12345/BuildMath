@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SearchBox, { type SearchableItem } from '../../components/SearchBox';
+import categories from '../../data/categories.json';
+import calculators from '../../data/calculators.json';
+
+const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
+
+const searchItems: SearchableItem[] = calculators.map((calc) => ({
+  slug: calc.slug,
+  title: calc.name,
+  shortTitle: calc.shortName,
+  category: calc.category,
+  categoryName: categoryMap[calc.category] || calc.category,
+  description: calc.intro,
+  href: `/calculators/${calc.slug}/`,
+  type: 'calculator',
+}));
+---
+
+<BaseLayout
+  title="All 32 DIY Home Improvement Calculators | BuildMath"
+  description="Browse and search all 32 free DIY home-improvement calculators for painting, flooring, concrete, roofing, landscaping, fencing, decking, and drywall."
+  pathname="/calculators/"
+>
+  <Breadcrumbs items={[{ name: 'Calculators', href: '/calculators/' }]} />
+
+  <header class="mb-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      All DIY & Home-Improvement Calculators
+    </h1>
+    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      Filter by trade category or search by project keyword. Every calculator runs locally in your browser with editable coverage rates, waste factors, and unit prices.
+    </p>
+  </header>
+
+  <!-- Interactive Search & Category Filter Grid -->
+  <SearchBox
+    client:load
+    items={searchItems}
+    categories={categories.map((c) => ({ slug: c.slug, name: c.name }))}
+    placeholder="Filter calculators by keyword (e.g., paint, concrete, shingle, mulch, stairs)..."
+    showGridFilter={true}
+  />
+
+  <!-- Static Pre-Rendered Directory by Category for SEO & Noscript Users -->
+  <section class="mt-14 pt-10 border-t border-slate-200 dark:border-slate-800" aria-labelledby="directory-heading">
+    <h2 id="directory-heading" class="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+      Complete Calculator Directory by Category
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {categories.map((cat) => {
+        const catCalcs = calculators.filter((c) => c.category === cat.slug);
+        return (
+          <div class="card p-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+              <a href={`/calculators/${cat.slug}/`} class="hover:text-brand-600">
+                {cat.name} Calculators
+              </a>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 mb-4">
+              {cat.description}
+            </p>
+            <ul class="space-y-2 text-sm">
+              {catCalcs.map((calc) => (
+                <li class="flex items-center justify-between gap-2">
+                  <a
+                    href={`/calculators/${calc.slug}/`}
+                    class="font-medium text-brand-700 dark:text-brand-300 hover:underline"
+                  >
+                    {calc.name}
+                  </a>
+                  <a
+                    href={`/cost/${calc.relatedCostJobSlug}/`}
+                    class="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                  >
+                    Cost Guide →
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>

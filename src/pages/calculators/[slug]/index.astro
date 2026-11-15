@@ -1,0 +1,299 @@
+---
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import CalculatorWidget, { type ProductItem } from '../../../components/CalculatorWidget';
+import AdSlot from '../../../components/AdSlot.astro';
+import FAQSection from '../../../components/FAQSection.astro';
+import { getQuickReferenceTable } from '../../../lib/formulas';
+import { siteConfig } from '../../../config/site';
+import { monetizationConfig } from '../../../config/monetization';
+import calculators from '../../../data/calculators.json';
+import categories from '../../../data/categories.json';
+import products from '../../../data/products.json';
+import jobs from '../../../data/costs/jobs.json';
+import states from '../../../data/costs/states.json';
+
+export function getStaticPaths() {
+  return calculators.map((calc) => ({
+    params: { slug: calc.slug },
+    props: { calc },
+  }));
+}
+
+const { calc } = Astro.props;
+const categoryObj = categories.find((c) => c.slug === calc.category)!;
+const productsMap: Record<string, ProductItem> = Object.fromEntries(
+  products.map((p) => [
+    p.id,
+    {
+      id: p.id,
+      name: p.name,
+      retailer:
+        p.retailer === 'homedepot'
+          ? 'Home Depot'
+          : p.retailer === 'amazon'
+            ? 'Amazon'
+            : p.retailer,
+      priceIndication: p.note || '',
+    },
+  ])
+);
+
+const qrMeta = calc.quickReferenceMeta;
+const quickRefTable = getQuickReferenceTable(
+  calc.slug,
+  qrMeta
+    ? ['Project Size / Scenario', qrMeta.col1Header, qrMeta.col2Header, qrMeta.col3Header]
+    : undefined,
+  qrMeta?.title || `${calc.shortName} Quick-Reference Chart`
+);
+
+const relatedCalcs = (calc.relatedCalculators || [])
+  .map((slug) => calculators.find((c) => c.slug === slug))
+  .filter(Boolean);
+
+const relatedJob = jobs.find((j) => j.slug === calc.relatedCostJobSlug) || jobs[0];
+const sampleStates = states.slice(0, 6);
+
+const diagramMap: Record<string, 'room-walls' | 'roof-pitch' | 'stair-stringer' | 'fence-layout'> = {
+  'paint-calculator': 'room-walls',
+  'roof-pitch-calculator': 'roof-pitch',
+  'roofing-calculator': 'roof-pitch',
+  'stair-calculator': 'stair-stringer',
+  'fence-calculator': 'fence-layout',
+};
+const diagramType = diagramMap[calc.slug] || null;
+---
+
+<CalculatorLayout
+  title={calc.name}
+  metaTitle={calc.metaTitle}
+  metaDescription={calc.metaDescription}
+  pathname={`/calculators/${calc.slug}/`}
+  categoryName={categoryObj.name}
+  lastUpdated={calc.lastReviewed || siteConfig.lastUpdatedDefault}
+  breadcrumbs={[
+    { name: 'Calculators', href: '/calculators/' },
+    { name: categoryObj.name, href: `/calculators/${categoryObj.slug}/` },
+    { name: calc.shortName, href: `/calculators/${calc.slug}/` },
+  ]}
+>
+  <!-- 1. H1 + One-sentence intro (above the fold, no hero image pushing the tool down) -->
+  <header class="mb-4">
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      {calc.h1 || calc.name}
+    </h1>
+    <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-4xl">
+      {calc.intro}
+    </p>
+  </header>
+
+  <!-- 2. The Interactive Calculator Widget (Inputs left, live Results + Materials + Cost right) -->
+  <CalculatorWidget
+    client:load
+    slug={calc.slug}
+    title={calc.name}
+    fields={calc.inputs}
+    diagramType={diagramType}
+    productsMap={productsMap}
+    affiliateDisclosure={monetizationConfig.affiliateDisclosureShort}
+    affiliateEnabled={monetizationConfig.affiliateEnabled}
+  />
+
+  <!-- 3. Ad slot #1 (below the calculator results, never above or inside the calculator) -->
+  <AdSlot position="belowCalculator" />
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-10">
+    <div class="lg:col-span-8 space-y-10">
+      <!-- 4. Quick-reference table (pre-computed at build time from the same formula function) -->
+      {quickRefTable && (
+        <section class="card p-6" aria-labelledby="quick-ref-heading">
+          <h2 id="quick-ref-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            {quickRefTable.title}
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
+            Pre-calculated reference chart generated directly from our trade formula:
+          </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="border-b-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
+                  {quickRefTable.headers.map((h) => (
+                    <th class="py-3 px-4 font-bold text-slate-900 dark:text-white">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                {quickRefTable.rows.map((row) => (
+                  <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-900/50">
+                    {row.map((cell, idx) => (
+                      <td class={`py-2.5 px-4 ${idx === 0 ? 'font-semibold text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {quickRefTable.footnote && (
+            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400 italic">
+              {quickRefTable.footnote}
+            </p>
+          )}
+        </section>
+      )}
+
+      <!-- 5. How the calculation works: plain-English explanation + exact formula + worked example -->
+      <section class="card p-6 space-y-4" aria-labelledby="how-it-works-heading">
+        <h2 id="how-it-works-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+          How the {calc.shortName} Calculation Works
+        </h2>
+        <div class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs sm:text-sm overflow-x-auto">
+          <span class="text-accent-500 font-bold uppercase tracking-wider block text-[11px] mb-1">
+            Exact Mathematical Formula
+          </span>
+          {calc.howToCalculate.formula}
+        </div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
+          {calc.howToCalculate.steps.map((st) => (
+            <li>{st}</li>
+          ))}
+        </ol>
+        <div class="p-4 rounded-xl bg-brand-50/60 dark:bg-slate-800/60 border border-brand-200 dark:border-slate-700 space-y-2">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+            Worked Example: {calc.howToCalculate.workedExample.title}
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            {calc.howToCalculate.workedExample.scenario}
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            {calc.howToCalculate.workedExample.steps.map((s) => (
+              <li>{s}</li>
+            ))}
+          </ul>
+          <p class="text-xs sm:text-sm font-bold text-brand-700 dark:text-brand-300 pt-1">
+            Result: {calc.howToCalculate.workedExample.finalAnswer}
+          </p>
+        </div>
+      </section>
+
+      <!-- 6. Practical tips & common mistakes -->
+      <section class="card p-6" aria-labelledby="tips-heading">
+        <h2 id="tips-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">
+          Practical Trade Tips & Common Mistakes to Avoid
+        </h2>
+        <ul class="space-y-3">
+          {calc.tipsAndMistakes.map((tip) => (
+            <li class="flex items-start gap-3 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold text-xs mt-0.5">
+                ✓
+              </span>
+              <span>{tip}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- 7. "What it might cost" box linking to matching /cost/[job]/ and state pages -->
+      <section class="card p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-900 border-brand-200 dark:border-brand-900" aria-labelledby="cost-box-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
+              DIY vs. Hiring a Contractor
+            </span>
+            <h2 id="cost-box-heading" class="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
+              What {relatedJob.name} Might Cost Installed
+            </h2>
+          </div>
+          <a href={`/cost/${relatedJob.slug}/`} class="btn-primary text-xs shrink-0">
+            View National Cost Guide →
+          </a>
+        </div>
+
+        <p class="text-sm text-slate-700 dark:text-slate-300 mb-4">
+          Hiring a licensed professional for <strong>{relatedJob.name.toLowerCase()}</strong> averages{' '}
+          <strong>${Math.round(relatedJob.nationalTypicalPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> nationally (typical range:{' '}
+          <strong>${Math.round(relatedJob.nationalLowPerUnit * relatedJob.typicalProjectSize).toLocaleString()} – ${Math.round(relatedJob.nationalHighPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> for {relatedJob.typicalProjectSize.toLocaleString()} {relatedJob.unit}), with labor accounting for roughly {Math.round(relatedJob.laborShare * 100)}% of the total project bill.
+        </p>
+
+        <div>
+          <span class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            Compare Local {relatedJob.name} Costs by State:
+          </span>
+          <div class="flex flex-wrap gap-2">
+            {sampleStates.map((st) => (
+              <a
+                href={`/cost/${relatedJob.slug}/${st.slug}/`}
+                class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-300"
+              >
+                {st.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Ad slot #2 -->
+      <AdSlot position="inContent" />
+
+      <!-- 9. FAQ (5-7 specific questions, marked up with FAQPage schema) -->
+      <FAQSection
+        faqs={calc.faqs}
+        title={`${calc.shortName} Calculator: Frequently Asked Questions`}
+      />
+
+      <!-- 11. Author / reviewer line + "Last updated" date + link to /methodology/ -->
+      <footer class="card p-5 bg-slate-50 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
+        <div>
+          <p class="font-semibold text-slate-900 dark:text-white">
+            Formula & Trade Standards Reviewed by {siteConfig.author.name}
+          </p>
+          <p class="mt-0.5">
+            {siteConfig.author.role} • {siteConfig.author.credentials}
+          </p>
+        </div>
+        <div class="sm:text-right shrink-0">
+          <p>Last Updated: <strong>{calc.lastReviewed || siteConfig.lastUpdatedDefault}</strong></p>
+          <a href="/methodology/" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
+            Read Our Formula Methodology →
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Sidebar: 10. Related calculators (4-6 internal links) -->
+    <aside class="lg:col-span-4 space-y-6">
+      <div class="card p-5 sticky top-20">
+        <h2 class="text-base font-bold text-slate-900 dark:text-white mb-3">
+          Related DIY Calculators
+        </h2>
+        <ul class="space-y-2.5">
+          {relatedCalcs.map((rc) => (
+            <li>
+              <a
+                href={`/calculators/${rc.slug}/`}
+                class="block p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 hover:border-brand-500 transition-colors"
+              >
+                <div class="text-sm font-bold text-slate-900 dark:text-white">
+                  {rc.name}
+                </div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                  {rc.intro}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <a
+            href={`/calculators/${categoryObj.slug}/`}
+            class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline block"
+          >
+            ← All {categoryObj.name} Calculators
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</CalculatorLayout>

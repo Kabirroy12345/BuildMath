@@ -1,0 +1,101 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { siteConfig } from '../../config/site';
+import prices from '../../data/prices.json';
+---
+
+<ArticleLayout
+  title="Our Formula & Cost Estimation Methodology"
+  metaTitle="Formula & Cost Methodology: How BuildMath Calculates Estimates"
+  metaDescription="See the exact engineering formulas, trade standards (ACI, ARMA, NWFA, IRC), and BLS regional wage multipliers behind BuildMath calculators."
+  pathname="/methodology/"
+  breadcrumbs={[{ name: 'Methodology', href: '/methodology/' }]}
+>
+  <section class="space-y-4">
+    <p>
+      Every calculator and cost guide on <strong>{siteConfig.name}</strong> is built on deterministic, unit-tested mathematical functions stored in open TypeScript modules. We never hide our assumptions: every default coverage rate, bag yield, and waste factor is visible and editable by the user.
+    </p>
+  </section>
+
+  <section class="space-y-4 mt-8">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+      1. Material Quantity Formulas & Trade Standards
+    </h2>
+    <p>
+      Our 32 DIY calculators derive their default parameters from published manufacturer technical data sheets (TDS) and residential building codes:
+    </p>
+    <ul class="list-disc pl-6 space-y-2 text-sm sm:text-base">
+      <li>
+        <strong>Concrete & Masonry (ACI 318 / Quikrete / Sakrete / BIA):</strong> Pre-mixed concrete yields are calculated at <code>0.60 cu ft</code> per 80-lb bag, <code>0.45 cu ft</code> per 60-lb bag, and <code>0.30 cu ft</code> per 40-lb bag. Standard modular bricks with a 3/8-inch mortar bed are calculated at <code>6.75 bricks per sq ft</code>.
+      </li>
+      <li>
+        <strong>Roofing & Pitch Geometry (NRCA / ARMA):</strong> Roof slope multipliers follow the exact right-triangle secant formula <code>√(1 + (Rise / 12)²)</code>. Asphalt architectural shingles are calculated at 3 bundles per 100 sq ft roofing square.
+      </li>
+      <li>
+        <strong>Flooring & Tile (NWFA / TCNA):</strong> Tile quantities account for actual grout joint width <code>ceil(Area_in² / ((W + Grout) × (L + Grout)) × (1 + Waste))</code>.
+      </li>
+      <li>
+        <strong>Stair Stringers & Framing (2024 IRC R311.7.5):</strong> Stair calculations automatically verify compliance against the International Residential Code maximum riser height of <code>7.75 inches</code> and minimum tread depth of <code>10.0 inches</code>.
+      </li>
+      <li>
+        <strong>Drywall & Joint Compound (USG Gypsum Construction Handbook):</strong> Standard 4×8 (32 sq ft) and 4×12 (48 sq ft) sheets are paired with 0.053 gal/sq ft ready-mixed joint compound, 0.37 linear ft/sq ft joint tape, and 1 screw per sq ft.
+      </li>
+    </ul>
+  </section>
+
+  <section class="space-y-4 mt-8">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+      2. Regional State Cost Formula
+    </h2>
+    <p>
+      Our "Cost to [Job] in [State]" guides combine national baseline project costs with state-level labor and material cost indices using a weighted composite formula:
+    </p>
+    <div class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs sm:text-sm">
+      State_Cost = National_Cost × (Job_Labor_Share × State_Labor_Multiplier + (1 − Job_Labor_Share) × State_Material_Multiplier)
+    </div>
+    <ul class="list-disc pl-6 space-y-2 text-sm sm:text-base">
+      <li>
+        <strong>BLS Occupational Employment and Wage Statistics (OEWS):</strong> State labor multipliers and trade hourly rates reference US Bureau of Labor Statistics mean hourly wages for Carpenters (SOC 47-2031), Painters (SOC 47-2141), Roofers (SOC 47-2181), Cement Masons (SOC 47-2051), and Electricians (SOC 47-2111).
+      </li>
+      <li>
+        <strong>BEA Regional Price Parities (RPP):</strong> Material multipliers reflect regional freight, sales tax, and supply-house pricing variations published by the Bureau of Economic Analysis.
+      </li>
+      <li>
+        <strong>Climate & Licensing Verification:</strong> Each state profile includes IECC climate zone classifications, frost-line depth ranges, and direct links to the official state contractor licensing board.
+      </li>
+    </ul>
+  </section>
+
+  <section class="space-y-4 mt-8">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+      3. National Material Price Dataset & Review Cadence
+    </h2>
+    <p>
+      Default retail unit prices are reviewed quarterly against US big-box home improvement retailers (Home Depot, Lowe's, Menards) and local building supply yards. Below is a sample of our current baseline unit price dataset:
+    </p>
+    <div class="overflow-x-auto card p-4">
+      <table class="w-full text-left border-collapse text-xs sm:text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-700">
+            <th class="py-2 px-3 font-bold">Material Item</th>
+            <th class="py-2 px-3 font-bold">Unit</th>
+            <th class="py-2 px-3 font-bold">Default Price</th>
+            <th class="py-2 px-3 font-bold">Low – High Range</th>
+            <th class="py-2 px-3 font-bold">Last Reviewed</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+          {prices.slice(0, 12).map((p) => (
+            <tr>
+              <td class="py-2 px-3 font-medium text-slate-900 dark:text-white">{p.name}</td>
+              <td class="py-2 px-3">{p.unit}</td>
+              <td class="py-2 px-3 font-semibold">${p.defaultPrice}</td>
+              <td class="py-2 px-3">${p.lowPrice} – ${p.highPrice}</td>
+              <td class="py-2 px-3 text-slate-500">{p.lastReviewed}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</ArticleLayout>

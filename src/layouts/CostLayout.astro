@@ -1,0 +1,45 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { buildArticleSchema, type BreadcrumbItem } from '../lib/seo/schema';
+
+interface Props {
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  pathname: string;
+  breadcrumbs: BreadcrumbItem[];
+  noindex?: boolean;
+  lastUpdated?: string;
+}
+
+const {
+  title,
+  metaTitle,
+  metaDescription,
+  pathname,
+  breadcrumbs,
+  noindex = false,
+  lastUpdated,
+} = Astro.props;
+
+const articleSchema = buildArticleSchema({
+  headline: title,
+  description: metaDescription,
+  pathname,
+  dateModified: lastUpdated,
+});
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  pathname={pathname}
+  noindex={noindex}
+  ogType="article"
+  modifiedTime={lastUpdated}
+  schemas={[articleSchema]}
+>
+  <Breadcrumbs items={breadcrumbs} />
+  <slot />
+</BaseLayout>

@@ -1,0 +1,6 @@
+# Legacy & convenience redirects enforcing lowercase trailing-slash URLs
+/calculators/square-footage/ /calculators/square-footage-calculator/ 301
+/calculators/cubic-yards/ /calculators/cubic-yard-calculator/ 301
+/calculators/board-feet/ /calculators/board-foot-calculator/ 301
+/privacy /privacy-policy/ 301
+/terms-of-service /terms/ 301

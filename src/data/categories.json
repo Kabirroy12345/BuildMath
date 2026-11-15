@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "painting",
+    "name": "Painting & Wallpapering",
+    "shortName": "Painting",
+    "icon": "paint-roller",
+    "description": "Calculate interior wall paint, exterior house paint, deck stain, primer, and wallpaper rolls with exact door and window deductions.",
+    "metaTitle": "Painting & Wallpaper Calculators | BuildMath",
+    "metaDescription": "Free interior paint, exterior house paint, deck stain, and wallpaper calculators. Estimate gallons, quarts, primer, and cost in seconds."
+  },
+  {
+    "slug": "flooring",
+    "name": "Flooring, Tile & Trim",
+    "shortName": "Flooring",
+    "icon": "grid",
+    "description": "Estimate boxes of LVP, hardwood, laminate, porcelain tile, thinset mortar, grout bags, 12-ft carpet rolls, and baseboard moulding.",
+    "metaTitle": "Flooring, Tile, Grout & Carpet Calculators | BuildMath",
+    "metaDescription": "Calculate flooring boxes, ceramic tile count, grout weight, carpet yardage, and baseboard trim lengths with straight or diagonal waste."
+  },
+  {
+    "slug": "concrete-masonry",
+    "name": "Concrete & Masonry",
+    "shortName": "Concrete & Masonry",
+    "icon": "layers",
+    "description": "Calculate 80-lb and 60-lb concrete bags, ready-mix cubic yards, Sonotube footings, steps, modular bricks, paver patios, retaining walls, and rebar.",
+    "metaTitle": "Concrete, Paver, Brick & Masonry Calculators | BuildMath",
+    "metaDescription": "Estimate concrete slabs, Sonotube footings, steps, brick walls, paver patios, retaining wall blocks, and rebar grids in bags or cubic yards."
+  },
+  {
+    "slug": "roofing",
+    "name": "Roofing, Siding & Gutters",
+    "shortName": "Roofing",
+    "icon": "home",
+    "description": "Estimate shingle bundles, roofing squares, pitch multipliers, rafter angles, seamless gutters, downspouts, and vinyl or fiber-cement siding.",
+    "metaTitle": "Roofing, Pitch, Gutter & Siding Calculators | BuildMath",
+    "metaDescription": "Calculate roof squares, shingle bundles, roof pitch angles, gutter sections, downspouts, and exterior siding squares with pitch multipliers."
+  },
+  {
+    "slug": "landscaping",
+    "name": "Landscaping & Yard",
+    "shortName": "Landscaping",
+    "icon": "trees",
+    "description": "Calculate bulk cubic yards, tons, and bags of mulch, crushed gravel, screened topsoil, turfgrass sod pallets, and grass seed.",
+    "metaTitle": "Mulch, Gravel, Topsoil, Sod & Seed Calculators | BuildMath",
+    "metaDescription": "Calculate cubic yards, tons, and bags of mulch, gravel, crushed stone, topsoil, sod rolls, and grass seed for your yard or driveway."
+  },
+  {
+    "slug": "fencing-decking",
+    "name": "Fencing & Decking",
+    "shortName": "Fencing & Decking",
+    "icon": "fence",
+    "description": "Plan wood privacy fences and backyard decks with exact post counts, rails, pickets, post-hole concrete, deck boards, joists, and fasteners.",
+    "metaTitle": "Fence & Deck Material Calculators | BuildMath",
+    "metaDescription": "Estimate fence posts, rails, pickets, post hole concrete bags, deck boards, floor joists, and deck screws with zero guesswork."
+  },
+  {
+    "slug": "drywall-walls",
+    "name": "Drywall, Framing & Stairs",
+    "shortName": "Drywall & Stairs",
+    "icon": "layout",
+    "description": "Estimate 4×8 and 4×12 drywall sheets, joint compound buckets, tape, screws, and IRC code-compliant stair stringers, risers, and treads.",
+    "metaTitle": "Drywall & Stair Stringer Calculators | BuildMath",
+    "metaDescription": "Calculate 4x8 and 4x12 drywall sheets, joint compound, tape, screws, and IRC-compliant stair risers, treads, and stringer lengths."
+  },
+  {
+    "slug": "general-conversions",
+    "name": "General & Volume Conversions",
+    "shortName": "Conversions",
+    "icon": "ruler",
+    "description": "Convert dimensions into square footage, cubic yards, cubic feet, and hardwood lumber board feet across rectangles, circles, triangles, and L-shapes.",
+    "metaTitle": "Square Footage, Cubic Yard & Board Foot Calculators | BuildMath",
+    "metaDescription": "Fast square footage, cubic yard, and lumber board foot calculators for rectangles, circles, triangles, trapezoids, and L-shaped areas."
+  }
+]

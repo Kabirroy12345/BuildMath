@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import categories from '../../../data/categories.json';
+import calculators from '../../../data/calculators.json';
+
+export function getStaticPaths() {
+  return categories.map((cat) => ({
+    params: { category: cat.slug },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const categoryCalculators = calculators.filter((c) => c.category === category.slug);
+---
+
+<BaseLayout
+  title={`${category.name} Calculators: Free DIY Material Estimators`}
+  description={category.description}
+  pathname={`/calculators/${category.slug}/`}
+>
+  <Breadcrumbs
+    items={[
+      { name: 'Calculators', href: '/calculators/' },
+      { name: category.name, href: `/calculators/${category.slug}/` },
+    ]}
+  />
+
+  <header class="mb-8">
+    <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-2.5 py-1 rounded-md mb-2">
+      {categoryCalculators.length} Free Tools
+    </span>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      {category.name} Calculators
+    </h1>
+    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      {category.description}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+    {categoryCalculators.map((calc) => (
+      <article class="card p-6 flex flex-col justify-between hover:border-brand-500 transition-colors">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+            <a href={`/calculators/${calc.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
+              {calc.name}
+            </a>
+          </h2>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            {calc.intro}
+          </p>
+          <div class="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300">
+            Formula: {calc.howToCalculate.formula}
+          </div>
+        </div>
+        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
+          <a href={`/calculators/${calc.slug}/`} class="text-brand-600 dark:text-brand-400 hover:underline">
+            Open Calculator →
+          </a>
+          <a href={`/cost/${calc.relatedCostJobSlug}/`} class="text-slate-500 hover:text-slate-900 dark:hover:text-white">
+            View Cost Guide →
+          </a>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <!-- Explore Other Categories -->
+  <section class="pt-8 border-t border-slate-200 dark:border-slate-800">
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">
+      Other Calculator Categories
+    </h2>
+    <div class="flex flex-wrap gap-2">
+      {categories
+        .filter((c) => c.slug !== category.slug)
+        .map((c) => (
+          <a
+            href={`/calculators/${c.slug}/`}
+            class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-300"
+          >
+            {c.name}
+          </a>
+        ))}
+    </div>
+  </section>
+</BaseLayout>

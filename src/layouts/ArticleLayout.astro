@@ -1,0 +1,67 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { buildArticleSchema, type BreadcrumbItem } from '../lib/seo/schema';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  pathname: string;
+  breadcrumbs: BreadcrumbItem[];
+  lastUpdated?: string;
+  readingTimeMinutes?: number;
+}
+
+const {
+  title,
+  metaTitle,
+  metaDescription,
+  pathname,
+  breadcrumbs,
+  lastUpdated = siteConfig.lastUpdatedDefault,
+  readingTimeMinutes,
+} = Astro.props;
+
+const articleSchema = buildArticleSchema({
+  headline: title,
+  description: metaDescription,
+  pathname,
+  dateModified: lastUpdated,
+});
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  pathname={pathname}
+  ogType="article"
+  modifiedTime={lastUpdated}
+  schemas={[articleSchema]}
+>
+  <Breadcrumbs items={breadcrumbs} />
+  <article class="max-w-4xl mx-auto">
+    <header class="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        {title}
+      </h1>
+      <div class="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+        <span>
+          Reviewed by <strong class="text-slate-900 dark:text-slate-200">{siteConfig.author.name}</strong> ({siteConfig.author.role})
+        </span>
+        <span>•</span>
+        <span>Updated {lastUpdated}</span>
+        {readingTimeMinutes && (
+          <>
+            <span>•</span>
+            <span>{readingTimeMinutes} min read</span>
+          </>
+        )}
+      </div>
+    </header>
+    <div class="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

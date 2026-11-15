@@ -1,0 +1,22 @@
+# BuildMath (https://buildmath.com)
+
+> Free, trade-verified DIY and residential home-improvement calculators + state-by-state construction cost guides for US homeowners.
+
+## Overview
+BuildMath provides 32 deterministic material takeoff calculators and 25 national & state cost guides (across all 50 US states and DC). Every calculator outputs both exact engineering calculations and store-purchasable units (80-lb bags, 5-gal buckets, 3-bundle roofing squares, 12-ft carpet rolls) alongside editable coverage rates and waste factors.
+
+## Core Sections
+- All Calculators Hub: https://buildmath.com/calculators/
+- Cost Guides Hub: https://buildmath.com/cost/
+- How-To Measurement Guides: https://buildmath.com/guides/
+- Formula & Cost Methodology: https://buildmath.com/methodology/
+
+## Calculator Categories
+- Painting (`/calculators/painting/`): Interior Paint, Exterior Paint, Deck Stain, Wallpaper Roll Calculator
+- Flooring (`/calculators/flooring/`): Laminate/LVP/Hardwood Flooring, Ceramic Tile, Tile Grout, Carpet Roll, Baseboard & Trim
+- Concrete & Masonry (`/calculators/concrete-masonry/`): Concrete Slab, Footings/Sonotubes, Concrete Steps, Brick & Mortar, Paver Patio, Retaining Wall Blocks, Rebar Grid
+- Roofing & Exterior (`/calculators/roofing/`): Roofing Shingle Squares & Bundles, Roof Pitch & Angle, Rain Gutters & Downspouts, Vinyl Siding Squares
+- Landscaping (`/calculators/landscaping/`): Mulch Cubic Yards & Bags, Pea Gravel & Crushed Stone Tons, Topsoil & Raised Beds, Sod Pallets, Grass Seed
+- Fencing & Decking (`/calculators/fencing-decking/`): Wood Fence Posts/Rails/Pickets, Deck Boards/Joists/Fasteners
+- Drywall & Framing (`/calculators/drywall-walls/`): Drywall Sheets/Mud/Tape, Stair Stringer & IRC Code Check
+- General Conversions (`/calculators/general-conversions/`): Square Footage, Cubic Yards, Lumber Board Feet

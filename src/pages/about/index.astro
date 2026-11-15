@@ -1,0 +1,56 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { siteConfig } from '../../config/site';
+---
+
+<ArticleLayout
+  title={`About ${siteConfig.name}`}
+  metaTitle={`About ${siteConfig.name}: Free Trade-Verified DIY Calculators`}
+  metaDescription={`Learn how ${siteConfig.name} builds fast, accurate home improvement material and cost calculators reviewed by residential construction estimators.`}
+  pathname="/about/"
+  breadcrumbs={[{ name: 'About Us', href: '/about/' }]}
+>
+  <section class="space-y-4">
+    <p>
+      <strong>{siteConfig.name}</strong> ({siteConfig.domain}) was built with a single mission: give US homeowners, DIYers, and residential remodelers an accurate material takeoff and realistic local cost estimate in under 10 seconds—without popups, paywalls, or forced email sign-ups.
+    </p>
+    <p>
+      Too many online calculators give you a raw mathematical number (like <code>2.37 cubic yards</code> or <code>412.6 square feet</code>) without telling you how many actual 80-lb bags, 5-gallon buckets, 3-bundle roofing squares, or 12-foot carpet roll lengths you need to buy at the store. Every tool on {siteConfig.name} rounds up to real purchasable store units while still displaying the exact unrounded engineering value.
+    </p>
+  </section>
+
+  <section class="card p-6 my-8 bg-slate-50 dark:bg-slate-900/60">
+    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+      Editorial & Technical Review
+    </h2>
+    <p class="text-sm font-semibold text-brand-700 dark:text-brand-300">
+      {siteConfig.author.name} — {siteConfig.author.role} ({siteConfig.author.experienceYears}+ Years Experience)
+    </p>
+    <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">
+      {siteConfig.author.bio}
+    </p>
+    <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+      Credentials & Standards Referenced: {siteConfig.author.credentials}
+    </p>
+  </section>
+
+  <section class="space-y-4">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+      Our 4 Core Principles
+    </h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>
+        <strong>Transparent, Editable Defaults:</strong> Every coverage rate, mortar joint thickness, waste factor, and unit price includes a source citation and can be customized to match your exact product label.
+      </li>
+      <li>
+        <strong>No Manufactured Numbers:</strong> Our material prices and regional labor multipliers are maintained in versioned datasets with explicit <code>lastReviewed</code> dates. Read our full <a href="/methodology/" class="text-brand-600 underline">Formula & Cost Methodology</a>.
+      </li>
+      <li>
+        <strong>100% Browser-Side Privacy:</strong> All calculator math and your saved <a href="/my-project/" class="text-brand-600 underline">Project Shopping List</a> run locally in your browser.
+      </li>
+      <li>
+        <strong>Clear Monetization Disclosure:</strong> We keep our calculators free through non-intrusive display advertising and retail affiliate links. Read our <a href="/affiliate-disclosure/" class="text-brand-600 underline">Affiliate Disclosure</a>.
+      </li>
+    </ul>
+  </section>
+</ArticleLayout>

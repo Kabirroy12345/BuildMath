@@ -1,0 +1,34 @@
+---
+import { monetizationConfig, type AdPosition } from '../config/monetization';
+
+interface Props {
+  position: AdPosition;
+  className?: string;
+}
+
+const { position, className = '' } = Astro.props;
+const slot = monetizationConfig.adSlots[position];
+const enabled = monetizationConfig.adsEnabled;
+---
+
+{enabled && (
+  <aside
+    aria-label="Advertisement"
+    class:list={[
+      'ad-slot my-8 w-full flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/50 p-3',
+      className,
+    ]}
+    style={`min-height: ${slot.minHeightPx + 28}px;`}
+  >
+    <span class="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">
+      {slot.label}
+    </span>
+    <div
+      id={slot.id}
+      class="w-full flex items-center justify-center text-xs text-slate-400"
+      style={`min-height: ${slot.minHeightPx}px;`}
+    >
+      <!-- AdSense / Raptive / Mediavine slot container with reserved height to guarantee CLS = 0 -->
+    </div>
+  </aside>
+)}

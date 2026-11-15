@@ -1,0 +1,228 @@
+---
+import CostLayout from '../../../layouts/CostLayout.astro';
+import StateCostEstimator from '../../../components/StateCostEstimator';
+import LeadGenWidget from '../../../components/LeadGenWidget.astro';
+import FAQSection from '../../../components/FAQSection.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { calculateStateJobCost } from '../../../lib/formulas/state-cost';
+import { siteConfig } from '../../../config/site';
+import jobs from '../../../data/costs/jobs.json';
+import states from '../../../data/costs/states.json';
+
+export function getStaticPaths() {
+  return jobs.map((job) => ({
+    params: { job: job.slug },
+    props: { job },
+  }));
+}
+
+const { job } = Astro.props;
+
+const nationalTypical = Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize);
+const nationalLow = Math.round(job.nationalLowPerUnit * job.typicalProjectSize);
+const nationalHigh = Math.round(job.nationalHighPerUnit * job.typicalProjectSize);
+
+const nationalStateBaseline = {
+  slug: 'united-states',
+  name: 'United States',
+  abbr: 'US',
+  rpp: 100,
+  wages: {
+    [job.socCode]: job.nationalTradeWage,
+  },
+  climateZone: 'Mixed US Climate Zones (IECC Zones 1–7)',
+  climateConsiderations: 'Material selection and footing depth vary significantly between Southern Gulf states and Northern freeze-thaw regions.',
+  licensingBoardName: 'State Contractor Licensing Board',
+  licensingBoardUrl: 'https://www.nascla.org/',
+  permitNote: 'Most US states require specialty or general contractor registration, surety bonding, and general liability insurance for residential remodeling.',
+  neighbors: ['texas', 'california', 'florida', 'new-york'],
+};
+
+const faqs = [
+  {
+    question: `How much does ${job.name.toLowerCase()} cost on average in the US?`,
+    answer: `Across the United States, ${job.name.toLowerCase()} typically costs $${nationalTypical.toLocaleString()} for a standard ${job.typicalProjectSize.toLocaleString()} ${job.unit} project, with most homeowners spending between $${nationalLow.toLocaleString()} and $${nationalHigh.toLocaleString()} ($${job.nationalLowPerUnit} to $${job.nationalHighPerUnit} per ${job.unit}).`,
+  },
+  {
+    question: `What percentage of ${job.name.toLowerCase()} is labor vs. materials?`,
+    answer: `Professional labor (${job.tradeName}) accounts for approximately ${Math.round(job.laborShare * 100)}% of the total cost of ${job.name.toLowerCase()}, while materials, fasteners, and supplies make up the remaining ${Math.round((1 - job.laborShare) * 100)}%.`,
+  },
+  {
+    question: `How can I calculate exact DIY materials for ${job.name.toLowerCase()}?`,
+    answer: `Use our free ${job.name} Calculator to compute exact purchasable units, waste factors, and store-ready shopping lists before buying materials.`,
+  },
+];
+---
+
+<CostLayout
+  title={`Cost of ${job.name} (${new Date().getFullYear()} National & State Guide)`}
+  metaTitle={`Cost of ${job.name}: $${nationalLow.toLocaleString()}–$${nationalHigh.toLocaleString()} | BuildMath`}
+  metaDescription={`How much does ${job.name.toLowerCase()} cost? National average is $${nationalTypical.toLocaleString()} ($${job.nationalLowPerUnit}–$${job.nationalHighPerUnit}/${job.unit}). Compare costs across all 50 states.`}
+  pathname={`/cost/${job.slug}/`}
+  noindex={!job.verified}
+  lastUpdated={job.lastReviewed || siteConfig.lastUpdatedDefault}
+  breadcrumbs={[
+    { name: 'Cost Guides', href: '/cost/' },
+    { name: job.name, href: `/cost/${job.slug}/` },
+  ]}
+>
+  <header class="mb-6">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      How Much Does {job.name} Cost? ({new Date().getFullYear()} National Price Guide)
+    </h1>
+    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      {job.diySavingsNote} Best season to schedule: {job.bestSeason}.
+    </p>
+  </header>
+
+  <!-- Summary Answer Box -->
+  <section class="card p-6 bg-gradient-to-br from-brand-50/70 to-white dark:from-slate-900 dark:to-slate-900 border-brand-200 dark:border-brand-900 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left">
+      <div class="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+        <span class="text-xs uppercase tracking-wider text-slate-500">National Typical Cost</span>
+        <div class="text-2xl sm:text-3xl font-extrabold text-brand-700 dark:text-brand-400 mt-1">
+          ${nationalTypical.toLocaleString()}
+        </div>
+        <span class="text-xs text-slate-500">For {job.typicalProjectSize.toLocaleString()} {job.unit}</span>
+      </div>
+      <div class="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+        <span class="text-xs uppercase tracking-wider text-slate-500">Typical Range (Low – High)</span>
+        <div class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          ${nationalLow.toLocaleString()} – ${nationalHigh.toLocaleString()}
+        </div>
+        <span class="text-xs text-slate-500">Economy to Premium Grade</span>
+      </div>
+      <div class="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+        <span class="text-xs uppercase tracking-wider text-slate-500">Cost Per {job.unit}</span>
+        <div class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          ${job.nationalLowPerUnit} – ${job.nationalHighPerUnit}
+        </div>
+        <span class="text-xs text-slate-500">Installed (Labor + Materials)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive National Estimator -->
+  <StateCostEstimator
+    client:load
+    job={job}
+    state={nationalStateBaseline}
+    relatedCalculatorSlug={job.relatedCalculatorSlug}
+  />
+
+  <AdSlot position="belowCalculator" />
+
+  <!-- Materials vs Labor Table & Cost Factors -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10">
+    <section class="card p-6">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
+        Materials vs. Labor Cost Breakdown
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
+        For a typical ${nationalTypical.toLocaleString()} {job.name.toLowerCase()} project, professional labor represents {Math.round(job.laborShare * 100)}% and materials represent {Math.round((1 - job.laborShare) * 100)}%:
+      </p>
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-700 text-left">
+            <th class="py-2 font-bold">Component</th>
+            <th class="py-2 font-bold">Share</th>
+            <th class="py-2 font-bold text-right">Typical Cost</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+          <tr>
+            <td class="py-2.5 font-semibold">Professional Trade Labor ({job.tradeName})</td>
+            <td class="py-2.5">{Math.round(job.laborShare * 100)}%</td>
+            <td class="py-2.5 text-right font-semibold">${Math.round(nationalTypical * job.laborShare).toLocaleString()}</td>
+          </tr>
+          {job.materialsBreakdown.map((m) => {
+            const matShare = (1 - job.laborShare) * (m.sharePercent / 100);
+            return (
+              <tr>
+                <td class="py-2.5 text-slate-700 dark:text-slate-300">{m.item}</td>
+                <td class="py-2.5">{Math.round(matShare * 100)}%</td>
+                <td class="py-2.5 text-right">${Math.round(nationalTypical * matShare).toLocaleString()}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
+        Key Factors That Affect Your Quote
+      </h2>
+      <ul class="space-y-3">
+        {job.costFactors.map((factor) => (
+          <li class="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
+            <span class="text-brand-600 font-bold">•</span>
+            <span>{factor}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <a
+          href={`/calculators/${job.relatedCalculatorSlug}/`}
+          class="btn-secondary w-full text-xs"
+        >
+          Calculate Exact DIY Materials with Our {job.name} Calculator →
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- All 50 States + DC Comparison Table -->
+  <section class="card p-6 my-10" aria-labelledby="state-table-heading">
+    <h2 id="state-table-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+      {job.name} Cost by State (All 50 States & DC)
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
+      Click any state below to view local BLS trade wages, building permit rules, climate considerations, and state contractor licensing links:
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-xs sm:text-sm">
+        <thead>
+          <tr class="border-b-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
+            <th class="py-3 px-3 font-bold">State</th>
+            <th class="py-3 px-3 font-bold">Typical Cost ({job.typicalProjectSize} {job.unit})</th>
+            <th class="py-3 px-3 font-bold">Low – High Range</th>
+            <th class="py-3 px-3 font-bold">Cost / {job.unit}</th>
+            <th class="py-3 px-3 font-bold">vs. US Avg</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+          {states.map((st) => {
+            const est = calculateStateJobCost(job, st);
+            const diffSign = est.percentDiffVsNational > 0 ? '+' : '';
+            return (
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <td class="py-2.5 px-3 font-semibold">
+                  <a href={`/cost/${job.slug}/${st.slug}/`} class="text-brand-700 dark:text-brand-300 hover:underline">
+                    {st.name} ({st.abbr})
+                  </a>
+                </td>
+                <td class="py-2.5 px-3 font-bold text-slate-900 dark:text-white">
+                  ${est.typical.toLocaleString()}
+                </td>
+                <td class="py-2.5 px-3 text-slate-600 dark:text-slate-400">
+                  ${est.low.toLocaleString()} – ${est.high.toLocaleString()}
+                </td>
+                <td class="py-2.5 px-3 text-slate-600 dark:text-slate-400">
+                  ${est.lowPerUnit} – ${est.highPerUnit}
+                </td>
+                <td class={`py-2.5 px-3 font-semibold ${est.percentDiffVsNational > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
+                  {diffSign}{est.percentDiffVsNational}%
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <LeadGenWidget jobTitle={job.name} />
+
+  <FAQSection faqs={faqs} title={`${job.name} Cost: Frequently Asked Questions`} />
+</CostLayout>

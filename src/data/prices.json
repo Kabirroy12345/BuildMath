@@ -1,0 +1,272 @@
+[
+  {
+    "id": "price-interior-paint-gal",
+    "name": "Interior Latex Wall Paint (1 Gallon)",
+    "unit": "gallon",
+    "defaultPrice": 42.0,
+    "lowPrice": 32.0,
+    "highPrice": 68.0,
+    "source": "US Big-Box Retail Mid-Grade Acrylic Latex Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-interior-primer-gal",
+    "name": "Multi-Surface Interior Primer (1 Gallon)",
+    "unit": "gallon",
+    "defaultPrice": 28.0,
+    "lowPrice": 21.0,
+    "highPrice": 38.0,
+    "source": "US Retail Primer Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-exterior-paint-gal",
+    "name": "100% Acrylic Exterior House Paint (1 Gallon)",
+    "unit": "gallon",
+    "defaultPrice": 54.0,
+    "lowPrice": 42.0,
+    "highPrice": 79.0,
+    "source": "US Retail Exterior Acrylic Latex Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-deck-stain-gal",
+    "name": "Exterior Wood Deck Stain & Sealer (1 Gallon)",
+    "unit": "gallon",
+    "defaultPrice": 48.0,
+    "lowPrice": 36.0,
+    "highPrice": 65.0,
+    "source": "US Retail Semi-Transparent Deck Stain Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-wallpaper-double-roll",
+    "name": "Wallpaper Double Roll (56 sq ft total / 50 sq ft usable)",
+    "unit": "double roll",
+    "defaultPrice": 55.0,
+    "lowPrice": 34.0,
+    "highPrice": 95.0,
+    "source": "US Residential Wallpaper Retail Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-flooring-sqft",
+    "name": "LVP / Laminate Plank Flooring (per sq ft)",
+    "unit": "sq ft",
+    "defaultPrice": 3.49,
+    "lowPrice": 2.29,
+    "highPrice": 5.49,
+    "source": "US Retail 20-mil Wear Layer LVP Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-tile-piece",
+    "name": "Porcelain Floor/Wall Tile (per tile)",
+    "unit": "tile",
+    "defaultPrice": 3.25,
+    "lowPrice": 1.75,
+    "highPrice": 6.5,
+    "source": "US Retail 12x24 Porcelain Tile Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-grout-25lb",
+    "name": "Polymer-Modified Tile Grout (25-lb Bag)",
+    "unit": "bag",
+    "defaultPrice": 22.0,
+    "lowPrice": 17.0,
+    "highPrice": 34.0,
+    "source": "US Retail Sanded/Unsanded Grout Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-carpet-sqyd",
+    "name": "Residential Plush/Berber Carpet (per sq yd)",
+    "unit": "sq yd",
+    "defaultPrice": 27.0,
+    "lowPrice": 18.0,
+    "highPrice": 45.0,
+    "source": "US Retail Nylon/Polyester Carpet Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-baseboard-lf",
+    "name": "Primed MDF/Pine Baseboard Trim (per linear ft)",
+    "unit": "linear ft",
+    "defaultPrice": 1.85,
+    "lowPrice": 1.25,
+    "highPrice": 3.2,
+    "source": "US Retail 3-1/4 in Primed Baseboard Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-concrete-80lb",
+    "name": "4000 PSI Concrete Mix (80-lb Bag)",
+    "unit": "bag",
+    "defaultPrice": 6.85,
+    "lowPrice": 5.65,
+    "highPrice": 8.45,
+    "source": "US Retail 80-lb Ready-to-Use Concrete Mix Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-readymix-cuyd",
+    "name": "Ready-Mix Concrete Truck Delivery (per cu yd)",
+    "unit": "cubic yard",
+    "defaultPrice": 165.0,
+    "lowPrice": 140.0,
+    "highPrice": 210.0,
+    "source": "US National Ready-Mix 4000 PSI Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-brick-modular",
+    "name": "Standard Modular Clay Brick (per brick)",
+    "unit": "brick",
+    "defaultPrice": 0.85,
+    "lowPrice": 0.65,
+    "highPrice": 1.25,
+    "source": "US Masonry Supply Modular Brick Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-paver-4x8",
+    "name": "4x8 Concrete Patio Paver (per paver)",
+    "unit": "paver",
+    "defaultPrice": 0.95,
+    "lowPrice": 0.68,
+    "highPrice": 1.45,
+    "source": "US Retail Holland Concrete Paver Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-retaining-block",
+    "name": "Interlocking Retaining Wall Block (6x16 in)",
+    "unit": "block",
+    "defaultPrice": 5.25,
+    "lowPrice": 3.85,
+    "highPrice": 7.95,
+    "source": "US Retail Beveled Retaining Wall Block Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-rebar-20ft",
+    "name": "#4 (1/2-in) Grade 60 Steel Rebar (20-ft Bar)",
+    "unit": "bar",
+    "defaultPrice": 13.5,
+    "lowPrice": 10.75,
+    "highPrice": 17.5,
+    "source": "US Steel & Building Supply #4 Rebar Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-shingle-bundle",
+    "name": "Architectural Asphalt Roof Shingles (1 Bundle = 33.3 sq ft)",
+    "unit": "bundle",
+    "defaultPrice": 42.0,
+    "lowPrice": 35.0,
+    "highPrice": 54.0,
+    "source": "US Roofing Supply Architectural Shingle Bundle Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-gutter-10ft",
+    "name": "5-in K-Style Aluminum Gutter Section (10-ft)",
+    "unit": "10-ft section",
+    "defaultPrice": 18.5,
+    "lowPrice": 14.0,
+    "highPrice": 25.0,
+    "source": "US Retail K-Style Aluminum Gutter Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-siding-square",
+    "name": "Vinyl Exterior Siding Panels (per Square = 100 sq ft)",
+    "unit": "square",
+    "defaultPrice": 145.0,
+    "lowPrice": 110.0,
+    "highPrice": 225.0,
+    "source": "US Retail Double 4-in Vinyl Siding Square Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-mulch-bag",
+    "name": "Shredded Hardwood Mulch (2 cu ft Bag)",
+    "unit": "bag",
+    "defaultPrice": 4.25,
+    "lowPrice": 3.33,
+    "highPrice": 5.99,
+    "source": "US Garden Center 2 cu ft Mulch Bag Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-gravel-ton",
+    "name": "Crushed Stone / Pea Gravel (per Ton Bulk)",
+    "unit": "ton",
+    "defaultPrice": 52.0,
+    "lowPrice": 38.0,
+    "highPrice": 75.0,
+    "source": "US Landscape Supply Yard Bulk Aggregate Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-topsoil-bag",
+    "name": "Screened Topsoil (0.75 cu ft / 40-lb Bag)",
+    "unit": "bag",
+    "defaultPrice": 3.48,
+    "lowPrice": 2.49,
+    "highPrice": 4.99,
+    "source": "US Retail Screened Topsoil Bag Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-sod-sqft",
+    "name": "Fresh Cut Turfgrass Sod (per sq ft)",
+    "unit": "sq ft",
+    "defaultPrice": 0.65,
+    "lowPrice": 0.45,
+    "highPrice": 0.95,
+    "source": "US Sod Farm Fescue/Bermuda/Bluegrass Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-grass-seed-lb",
+    "name": "Certified Turfgrass Seed Blend (per lb)",
+    "unit": "lb",
+    "defaultPrice": 3.8,
+    "lowPrice": 2.75,
+    "highPrice": 5.5,
+    "source": "US Retail Grass Seed 20-lb Bag Unit Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-fence-picket",
+    "name": "1x6x6 Pressure-Treated / Cedar Dog-Ear Fence Picket",
+    "unit": "picket",
+    "defaultPrice": 3.15,
+    "lowPrice": 2.25,
+    "highPrice": 4.95,
+    "source": "US Lumber Retail 6-ft Fence Picket Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-deck-board-16ft",
+    "name": "5/4x6x16 ft Pressure-Treated Decking Board",
+    "unit": "board",
+    "defaultPrice": 24.0,
+    "lowPrice": 18.0,
+    "highPrice": 48.0,
+    "source": "US Lumber Retail 16-ft Deck Board Average",
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "id": "price-drywall-4x8",
+    "name": "1/2-in Gypsum Drywall Sheet (4x8 ft)",
+    "unit": "sheet",
+    "defaultPrice": 15.8,
+    "lowPrice": 13.5,
+    "highPrice": 19.5,
+    "source": "US Building Supply 1/2-in 4x8 Drywall Panel Average",
+    "lastReviewed": "2026-11-15"
+  }
+]

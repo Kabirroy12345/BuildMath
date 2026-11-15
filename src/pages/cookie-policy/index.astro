@@ -1,0 +1,54 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { siteConfig } from '../../config/site';
+---
+
+<ArticleLayout
+  title="Cookie Policy"
+  metaTitle={`Cookie Policy | ${siteConfig.name}`}
+  metaDescription={`Understand how ${siteConfig.name} uses browser localStorage and optional analytics/advertising cookies under Google Consent Mode v2.`}
+  pathname="/cookie-policy/"
+  breadcrumbs={[{ name: 'Cookie Policy', href: '/cookie-policy/' }]}
+>
+  <p>
+    <strong>Last Updated:</strong> {siteConfig.lastUpdatedDefault}
+  </p>
+  <p>
+    This Cookie Policy explains how <strong>{siteConfig.name}</strong> uses browser local storage and cookies, and how you can control your preferences at any time.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    1. Strictly Necessary Local Storage
+  </h2>
+  <p>
+    We use browser <code>localStorage</code> for three functional features that operate entirely on your device:
+  </p>
+  <ul class="list-disc pl-6 space-y-2">
+    <li><code>buildmath_project_list</code>: Stores the calculations and material shopping lists you explicitly add to "My Project".</li>
+    <li><code>buildmath_theme</code>: Remembers whether you selected Light Mode or Dark Mode.</li>
+    <li><code>buildmath_consent_v2</code>: Remembers your cookie consent choice so you are not prompted on every page load.</li>
+  </ul>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    2. Optional Advertising & Analytics Cookies (Google Consent Mode v2)
+  </h2>
+  <p>
+    By default, optional advertising and analytics storage (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>, and <code>analytics_storage</code>) are set to <code>denied</code> until you click "Accept All" on our consent banner.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    3. How to Reset Your Cookie Preferences
+  </h2>
+  <p>
+    You can clear your saved consent preference and reset local storage at any time using the button below, or via your browser settings:
+  </p>
+  <div class="my-4">
+    <button
+      type="button"
+      onclick="localStorage.removeItem('buildmath_consent_v2'); window.location.reload();"
+      class="btn-secondary text-xs"
+    >
+      Reset My Cookie Consent Preferences
+    </button>
+  </div>
+</ArticleLayout>

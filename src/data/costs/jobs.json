@@ -1,0 +1,890 @@
+[
+  {
+    "slug": "roof-replacement",
+    "name": "Roof Replacement",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (roof area)",
+    "nationalLowPerUnit": 4.25,
+    "nationalTypicalPerUnit": 5.75,
+    "nationalHighPerUnit": 8.5,
+    "typicalProjectSize": 2000,
+    "laborShare": 0.6,
+    "socCode": "47-2181",
+    "tradeName": "Roofers",
+    "nationalTradeWage": 24.05,
+    "materialsBreakdown": [
+      { "item": "Architectural Asphalt Shingles (3 bundles/sq)", "sharePercent": 45 },
+      { "item": "Synthetic Underlayment & Ice/Water Shield", "sharePercent": 20 },
+      { "item": "Drip Edge, Flashing, Ridge Vent & Starter Strip", "sharePercent": 20 },
+      { "item": "Tear-Off Dumpster, Nails & Decking Repairs", "sharePercent": 15 }
+    ],
+    "costFactors": [
+      "Roof pitch and walkability (roofs steeper than 7/12 require staging and safety harnesses)",
+      "Number of existing shingle layers requiring tear-off and disposal",
+      "Rotten OSB or plywood roof decking replacement ($75–$110 per 4×8 sheet)",
+      "Skylight, chimney, and complex valley flashing details"
+    ],
+    "relatedCalculatorSlug": "roofing-calculator",
+    "diySavingsNote": "Ordering materials directly or handling tear-off preparation can reduce total project markups by 15%–25%.",
+    "bestSeason": "Late fall or early spring before peak storm-repair season",
+    "sources": [
+      "PLACEHOLDER: Verify against RSMeans Residential Cost Data / NRCA",
+      "US BLS OEWS SOC 47-2181 Roofers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "interior-painting",
+    "name": "Interior Painting",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (floor area)",
+    "nationalLowPerUnit": 2.25,
+    "nationalTypicalPerUnit": 3.5,
+    "nationalHighPerUnit": 5.25,
+    "typicalProjectSize": 1500,
+    "laborShare": 0.75,
+    "socCode": "47-2141",
+    "tradeName": "Painters, Construction & Maintenance",
+    "nationalTradeWage": 23.1,
+    "materialsBreakdown": [
+      { "item": "Low-VOC Acrylic Latex Wall Paint (2 Coats)", "sharePercent": 55 },
+      { "item": "Drywall Primer & Stain Blocker", "sharePercent": 20 },
+      { "item": "Trim Enamel, Caulk, Spackle & Masking Supplies", "sharePercent": 25 }
+    ],
+    "costFactors": [
+      "Wall height above 8 feet (vaulted foyers and two-story stairwells add 25%–40%)",
+      "Drywall patching, nail-pop repair, and skim coating before priming",
+      "Painting ceilings, baseboards, crown moulding, and interior doors",
+      "Dramatic dark-to-light color changes requiring tinted primer"
+    ],
+    "relatedCalculatorSlug": "paint-calculator",
+    "diySavingsNote": "Interior painting is 75% labor; DIYing bedrooms and hallways using our Paint Calculator saves $2.00–$3.50 per sq ft.",
+    "bestSeason": "Winter (January–March) when contractors discount indoor work by 10%–20%",
+    "sources": [
+      "PLACEHOLDER: Verify against Painting Contractors Association (PCA) benchmarks",
+      "US BLS OEWS SOC 47-2141 Painters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "exterior-house-painting",
+    "name": "Exterior House Painting",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (siding area)",
+    "nationalLowPerUnit": 1.85,
+    "nationalTypicalPerUnit": 3.1,
+    "nationalHighPerUnit": 4.85,
+    "typicalProjectSize": 2000,
+    "laborShare": 0.72,
+    "socCode": "47-2141",
+    "tradeName": "Painters, Construction & Maintenance",
+    "nationalTradeWage": 23.1,
+    "materialsBreakdown": [
+      { "item": "100% Acrylic Exterior Siding Paint (2 Coats)", "sharePercent": 60 },
+      { "item": "Exterior Bonding Primer & Elastomeric Caulk", "sharePercent": 22 },
+      { "item": "Semi-Gloss Trim, Fascia & Shutter Enamel", "sharePercent": 18 }
+    ],
+    "costFactors": [
+      "Two-story or three-story ladder and boom-lift access requirements",
+      "Siding texture (rough stucco and cedar shakes absorb 30% more paint than smooth lap siding)",
+      "Pressure washing, scraping loose paint, and EPA RRP lead-safe containment on pre-1978 homes",
+      "Number of contrasting trim, soffit, shutter, and porch colors"
+    ],
+    "relatedCalculatorSlug": "exterior-paint-calculator",
+    "diySavingsNote": "Pressure washing and caulking window trim yourself before the crew arrives can trim 1–2 days of labor off your quote.",
+    "bestSeason": "Late spring or early autumn when temperatures stay between 50°F and 80°F",
+    "sources": [
+      "PLACEHOLDER: Verify against PCA Exterior Estimating Standards",
+      "US BLS OEWS SOC 47-2141 Painters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "concrete-driveway",
+    "name": "Concrete Driveway",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 7.5,
+    "nationalTypicalPerUnit": 11.25,
+    "nationalHighPerUnit": 16.5,
+    "typicalProjectSize": 600,
+    "laborShare": 0.55,
+    "socCode": "47-2051",
+    "tradeName": "Cement Masons & Concrete Finishers",
+    "nationalTradeWage": 25.35,
+    "materialsBreakdown": [
+      { "item": "4000 PSI Ready-Mix Concrete (4–6\" Thickness)", "sharePercent": 52 },
+      { "item": "Compacted Crushed Stone Base (4–6\" Depth)", "sharePercent": 20 },
+      { "item": "#4 Steel Rebar Grid or Wire Mesh & Control Joints", "sharePercent": 18 },
+      { "item": "Forming Lumber, Cure-and-Seal Compound & Expansion Strip", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Demolition and haul-away of an existing cracked asphalt or concrete driveway ($2–$4/sq ft)",
+      "Upgrading from 4-inch passenger-car thickness to 6-inch heavy truck/RV thickness",
+      "Stamped, stained, or exposed-aggregate decorative finishes",
+      "Slope grading, culvert pipes, and channel drain installation"
+    ],
+    "relatedCalculatorSlug": "concrete-slab-calculator",
+    "diySavingsNote": "Calculate exact cubic yards and rebar counts with our Concrete Slab Calculator so you never overpay for padded contractor yardage.",
+    "bestSeason": "Mid-spring or early fall (avoid pouring below 40°F or above 90°F)",
+    "sources": [
+      "PLACEHOLDER: Verify against Portland Cement Association / NRMCA",
+      "US BLS OEWS SOC 47-2051 Cement Masons",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "concrete-patio",
+    "name": "Concrete Patio",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 6.75,
+    "nationalTypicalPerUnit": 10.5,
+    "nationalHighPerUnit": 16.0,
+    "typicalProjectSize": 250,
+    "laborShare": 0.58,
+    "socCode": "47-2051",
+    "tradeName": "Cement Masons & Concrete Finishers",
+    "nationalTradeWage": 25.35,
+    "materialsBreakdown": [
+      { "item": "4000 PSI Concrete Mix (4\" Slab)", "sharePercent": 50 },
+      { "item": "4-Inch Compacted Gravel Sub-Base", "sharePercent": 22 },
+      { "item": "Rebar / Wire Mesh Reinforcement & Forms", "sharePercent": 18 },
+      { "item": "Acrylic Concrete Sealer & Expansion Joint Filler", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Backyard access (wheelbarrow or concrete buggy pumping adds $400–$900 if truck cannot back in)",
+      "Curved forms vs straight rectangular perimeter",
+      "Broom finish vs stamped concrete or integral color pigment",
+      "Built-in concrete steps from patio door down to grade"
+    ],
+    "relatedCalculatorSlug": "concrete-slab-calculator",
+    "diySavingsNote": "For patios under 120 sq ft, mixing 80-lb bags with a rented barrel mixer avoids ready-mix short-load delivery fees.",
+    "bestSeason": "Spring and autumn for slow, crack-free curing",
+    "sources": [
+      "PLACEHOLDER: Verify against NRMCA / RSMeans",
+      "US BLS OEWS SOC 47-2051 Cement Masons",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "tile-floor-installation",
+    "name": "Tile Floor Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 9.5,
+    "nationalTypicalPerUnit": 15.0,
+    "nationalHighPerUnit": 24.0,
+    "typicalProjectSize": 150,
+    "laborShare": 0.62,
+    "socCode": "47-2044",
+    "tradeName": "Tile & Stone Setters",
+    "nationalTradeWage": 24.6,
+    "materialsBreakdown": [
+      { "item": "Porcelain or Ceramic Floor Tile (+10% Waste)", "sharePercent": 50 },
+      { "item": "Cement Backer Board / Uncoupling Membrane (Ditra)", "sharePercent": 24 },
+      { "item": "Polymer-Modified Thinset Mortar & Leveling Clips", "sharePercent": 16 },
+      { "item": "Sanded/Unsanded Grout, Sealer & Transition Strips", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Subfloor flatness prep and self-leveling underlayment pour",
+      "Large-format tiles (12×24\" or larger) or herringbone patterns requiring 15% waste and lippage clips",
+      "Removal of existing tile or vinyl flooring and toilet reset",
+      "Waterproofing membrane in wet bathroom zones"
+    ],
+    "relatedCalculatorSlug": "tile-calculator",
+    "diySavingsNote": "Buying tile, thinset, and grout directly at retail using our Tile Calculator eliminates contractor 20% material markups.",
+    "bestSeason": "Year-round (indoor project; winter booking often yields faster scheduling)",
+    "sources": [
+      "PLACEHOLDER: Verify against Tile Council of North America (TCNA) / NTCA",
+      "US BLS OEWS SOC 47-2044 Tile & Stone Setters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "hardwood-floor-installation",
+    "name": "Hardwood Floor Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 8.5,
+    "nationalTypicalPerUnit": 13.5,
+    "nationalHighPerUnit": 20.0,
+    "typicalProjectSize": 400,
+    "laborShare": 0.45,
+    "socCode": "47-2042",
+    "tradeName": "Floor Layers",
+    "nationalTradeWage": 24.15,
+    "materialsBreakdown": [
+      { "item": "3/4\" Solid or Engineered Hardwood Planks (+10% Waste)", "sharePercent": 68 },
+      { "item": "Rosin/Silicone Vapor Retarder or Sound Underlayment", "sharePercent": 12 },
+      { "item": "Cleat Nails/Staples or Urethane Wood Adhesive", "sharePercent": 10 },
+      { "item": "Shoe Moulding, Reducers & Threshold Transitions", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Pre-finished factory planks vs site-sanded and stained hardwood",
+      "Wood species (Red Oak vs White Oak, Hickory, Walnut, or Brazilian Cherry)",
+      "Subfloor squeak repair, OSB leveling, and old carpet removal",
+      "Stair treads and risers matching the main floor"
+    ],
+    "relatedCalculatorSlug": "flooring-calculator",
+    "diySavingsNote": "Pulling up old carpet, tack strips, and baseboards yourself saves $1.50–$2.50 per sq ft in demolition charges.",
+    "bestSeason": "Spring or fall when indoor relative humidity is stable between 35% and 55%",
+    "sources": [
+      "PLACEHOLDER: Verify against National Wood Flooring Association (NWFA)",
+      "US BLS OEWS SOC 47-2042 Floor Layers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "lvp-flooring-installation",
+    "name": "LVP Flooring Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 4.75,
+    "nationalTypicalPerUnit": 7.25,
+    "nationalHighPerUnit": 11.5,
+    "typicalProjectSize": 500,
+    "laborShare": 0.48,
+    "socCode": "47-2042",
+    "tradeName": "Floor Layers",
+    "nationalTradeWage": 24.15,
+    "materialsBreakdown": [
+      { "item": "Click-Lock Luxury Vinyl Plank (20-mil Wear Layer)", "sharePercent": 68 },
+      { "item": "6-mil Poly Vapor Barrier / Acoustic Underlayment", "sharePercent": 14 },
+      { "item": "Quarter-Round Shoe Moulding & T-Moulding Transitions", "sharePercent": 18 }
+    ],
+    "costFactors": [
+      "Plank core thickness (5mm SPC vs 8mm WPC with cork backing)",
+      "Subfloor grinding or patching low spots exceeding 3/16\" over 10 feet",
+      "Moving heavy appliances and furniture",
+      "Undercutting door jambs and installing new quarter-round trim"
+    ],
+    "relatedCalculatorSlug": "flooring-calculator",
+    "diySavingsNote": "Floating click-lock LVP is one of the easiest DIY projects—cutting with a utility knife saves $2.50–$4.50/sq ft in labor.",
+    "bestSeason": "Year-round indoor installation",
+    "sources": [
+      "PLACEHOLDER: Verify against Resilient Floor Covering Institute (RFCI)",
+      "US BLS OEWS SOC 47-2042 Floor Layers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "carpet-installation",
+    "name": "Carpet Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 3.5,
+    "nationalTypicalPerUnit": 5.75,
+    "nationalHighPerUnit": 9.25,
+    "typicalProjectSize": 450,
+    "laborShare": 0.35,
+    "socCode": "47-2041",
+    "tradeName": "Carpet Installers",
+    "nationalTradeWage": 22.8,
+    "materialsBreakdown": [
+      { "item": "Broadloom Carpet (12-ft Roll w/ 10% Seam Waste)", "sharePercent": 65 },
+      { "item": "8-lb Density 7/16\" Rebond Carpet Padding", "sharePercent": 22 },
+      { "item": "Tack Strips, Heat-Bond Seam Tape & Metal Transitions", "sharePercent": 13 }
+    ],
+    "costFactors": [
+      "Fiber type (solution-dyed polyester vs nylon vs wool)",
+      "Room width exceeding 12 feet requiring power-stretched cross seams",
+      "Box stairs, bullnose steps, and wrapped spindles ($15–$35 per step)",
+      "Upgrading to moisture-barrier pet padding"
+    ],
+    "relatedCalculatorSlug": "carpet-calculator",
+    "diySavingsNote": "Check how your room dimensions fit a standard 12-ft carpet roll in our Carpet Calculator to avoid paying for excessive roll waste.",
+    "bestSeason": "Late fall before holidays or mid-winter retail flooring sales",
+    "sources": [
+      "PLACEHOLDER: Verify against Carpet and Rug Institute (CRI)",
+      "US BLS OEWS SOC 47-2041 Carpet Installers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "drywall-installation",
+    "name": "Drywall Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (wall & ceiling area)",
+    "nationalLowPerUnit": 1.95,
+    "nationalTypicalPerUnit": 2.95,
+    "nationalHighPerUnit": 4.5,
+    "typicalProjectSize": 1000,
+    "laborShare": 0.65,
+    "socCode": "47-2081",
+    "tradeName": "Drywall & Ceiling Tile Installers",
+    "nationalTradeWage": 26.1,
+    "materialsBreakdown": [
+      { "item": "1/2\" or 5/8\" Gypsum Drywall Panels (4×8 or 4×12)", "sharePercent": 58 },
+      { "item": "All-Purpose & Topping Joint Compound (3 Coats)", "sharePercent": 20 },
+      { "item": "Paper/Mesh Joint Tape & Corner Bead", "sharePercent": 12 },
+      { "item": "Coarse Drywall Screws & Sanding Screens", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Finish level (Level 3 for heavy texture vs Level 4 standard vs Level 5 skim coat)",
+      "Moisture-resistant green/purple board in bathrooms or 5/8\" Type X fire code board in garages",
+      "Ceiling heights over 9 feet requiring drywall lifts and stilts",
+      "Knockdown, orange peel, or smooth trowel texture finish"
+    ],
+    "relatedCalculatorSlug": "drywall-calculator",
+    "diySavingsNote": "Hanging the drywall sheets yourself and hiring a pro taper just for mudding and sanding can cut labor costs by 45%.",
+    "bestSeason": "Year-round (climate-controlled interior helps joint compound dry evenly)",
+    "sources": [
+      "PLACEHOLDER: Verify against Gypsum Association / USG Handbook",
+      "US BLS OEWS SOC 47-2081 Drywall Installers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "wood-fence-installation",
+    "name": "Wood Fence Installation",
+    "unit": "linear ft",
+    "unitPlural": "linear ft",
+    "nationalLowPerUnit": 24.0,
+    "nationalTypicalPerUnit": 36.0,
+    "nationalHighPerUnit": 54.0,
+    "typicalProjectSize": 150,
+    "laborShare": 0.5,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "6-ft Cedar or Pressure-Treated Pickets", "sharePercent": 45 },
+      { "item": "4×4×8 Ground-Contact Posts & 2×4 Rails", "sharePercent": 32 },
+      { "item": "Post Hole Concrete (2–3 Bags per Post)", "sharePercent": 12 },
+      { "item": "Walk/Drive Gates, Heavy Hinges & Exterior Ring-Shank Nails", "sharePercent": 11 }
+    ],
+    "costFactors": [
+      "Wood species (Western Red Cedar costs 35%–60% more than pressure-treated pine)",
+      "Rocky, root-heavy, or clay soil requiring a skid-steer hydraulic auger",
+      "Board-on-board overlapping privacy style vs standard side-by-side dog-ear",
+      "Number of single walk gates ($250–$450 each) and double drive gates ($600–$1,100)"
+    ],
+    "relatedCalculatorSlug": "fence-calculator",
+    "diySavingsNote": "Renting a two-person gas auger ($85/day) and building your own fence using our Fence Calculator saves $15–$25 per linear foot.",
+    "bestSeason": "Spring or fall when soil is moist enough to dig easily without frost",
+    "sources": [
+      "PLACEHOLDER: Verify against American Fence Association (AFA)",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "vinyl-fence-installation",
+    "name": "Vinyl Fence Installation",
+    "unit": "linear ft",
+    "unitPlural": "linear ft",
+    "nationalLowPerUnit": 30.0,
+    "nationalTypicalPerUnit": 44.0,
+    "nationalHighPerUnit": 65.0,
+    "typicalProjectSize": 150,
+    "laborShare": 0.42,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "Tongue-and-Groove PVC Privacy Panels & Rails", "sharePercent": 60 },
+      { "item": "5×5 Routed Vinyl Posts & Post Caps", "sharePercent": 22 },
+      { "item": "Post Hole Concrete & Aluminum Gate Stiffeners", "sharePercent": 18 }
+    ],
+    "costFactors": [
+      "Virgin vinyl wall thickness and wind-load rating (essential in coastal zones)",
+      "Woodgrain textured or dark tan/gray colors vs standard white PVC",
+      "Stepping vs racking panels on sloped yards",
+      "Old fence tear-out and post-footing extraction"
+    ],
+    "relatedCalculatorSlug": "fence-calculator",
+    "diySavingsNote": "Measure your exact perimeter and post count at 8-ft or 6-ft centers before ordering pre-routed vinyl corner and line posts.",
+    "bestSeason": "Late fall or early spring",
+    "sources": [
+      "PLACEHOLDER: Verify against AFA / Manufacturer Specs",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "deck-building",
+    "name": "Deck Building",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 28.0,
+    "nationalTypicalPerUnit": 45.0,
+    "nationalHighPerUnit": 75.0,
+    "typicalProjectSize": 250,
+    "laborShare": 0.52,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "5/4×6 Pressure-Treated or Composite Decking Boards", "sharePercent": 42 },
+      { "item": "2×8/2×10 Joists, Double Beams & 6×6 Support Posts", "sharePercent": 28 },
+      { "item": "Railing Posts, Balusters, Top Rail & Stair Stringers", "sharePercent": 18 },
+      { "item": "Concrete Pier Footings, Joist Hangers, Ledger Flashing & Screws", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "Material choice (pressure-treated pine at $28–$42/sq ft vs capped composite at $50–$85/sq ft)",
+      "Elevated second-story decks requiring deep frost-line footings, 36\" guardrails, and long stairs",
+      "Hidden fastener systems and picture-frame perimeter borders",
+      "Municipal building permit and footing/framing inspection fees"
+    ],
+    "relatedCalculatorSlug": "deck-calculator",
+    "diySavingsNote": "Building a ground-level platform deck yourself using our Deck Calculator and Footing Calculator can save $4,000–$7,500 in carpentry labor.",
+    "bestSeason": "Late fall and winter when lumber prices dip and deck builders have open schedules",
+    "sources": [
+      "PLACEHOLDER: Verify against North American Deck and Railing Association (NADRA)",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "kitchen-backsplash-installation",
+    "name": "Kitchen Backsplash Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 18.0,
+    "nationalTypicalPerUnit": 28.0,
+    "nationalHighPerUnit": 46.0,
+    "typicalProjectSize": 35,
+    "laborShare": 0.65,
+    "socCode": "47-2044",
+    "tradeName": "Tile & Stone Setters",
+    "nationalTradeWage": 24.6,
+    "materialsBreakdown": [
+      { "item": "Subway, Mosaic, or Zellige Backsplash Tile (+10–15% Waste)", "sharePercent": 58 },
+      { "item": "White Polymer-Modified Thinset or Mastic", "sharePercent": 16 },
+      { "item": "Stain-Resistant Grout & Color-Matched Silicone Caulk", "sharePercent": 14 },
+      { "item": "Schluter Metal Edge Profiles & Outlet Box Extenders", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "Number of electrical outlets, switches, and window reveals requiring wet-saw notch cuts",
+      "Herringbone, chevron, or intricate mosaic patterns vs straight brick-lay",
+      "Drywall repair after prying off an existing tile backsplash",
+      "Full-height tiling behind a range hood up to a 9-ft or 10-ft ceiling"
+    ],
+    "relatedCalculatorSlug": "tile-calculator",
+    "diySavingsNote": "A 30–35 sq ft kitchen backsplash takes a weekend to DIY with a $90 wet tile saw, saving $600–$1,100 in minimum tile-setter labor charges.",
+    "bestSeason": "Year-round indoor project",
+    "sources": [
+      "PLACEHOLDER: Verify against TCNA / NKBA",
+      "US BLS OEWS SOC 47-2044 Tile & Stone Setters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "cabinet-painting",
+    "name": "Cabinet Painting",
+    "unit": "linear ft",
+    "unitPlural": "linear ft (cabinet run)",
+    "nationalLowPerUnit": 95.0,
+    "nationalTypicalPerUnit": 145.0,
+    "nationalHighPerUnit": 220.0,
+    "typicalProjectSize": 25,
+    "laborShare": 0.8,
+    "socCode": "47-2141",
+    "tradeName": "Painters, Construction & Maintenance",
+    "nationalTradeWage": 23.1,
+    "materialsBreakdown": [
+      { "item": "Urethane Alkyd / 2K Cabinet Enamel Topcoat", "sharePercent": 48 },
+      { "item": "Shellac or Oil-Based Stain-Blocking Bonding Primer", "sharePercent": 26 },
+      { "item": "TSP Degreaser, Wood Grain Filler, Sanding Discs & Masking Film", "sharePercent": 26 }
+    ],
+    "costFactors": [
+      "HVLP fine-finish spraying off-site vs brush-and-roll on-site",
+      "Heavy oak grain requiring wood grain filler for a smooth factory finish",
+      "Number of doors, drawer fronts, and crown moulding details",
+      "Installing new soft-close European hinges and drilling new hardware pulls"
+    ],
+    "relatedCalculatorSlug": "paint-calculator",
+    "diySavingsNote": "Cabinet painting is 80% prep and spraying labor; removing, labeling, and degreasing doors yourself cuts contractor hours significantly.",
+    "bestSeason": "Year-round (spring/fall allow easy garage ventilation for spraying doors)",
+    "sources": [
+      "PLACEHOLDER: Verify against PCA / NKBA",
+      "US BLS OEWS SOC 47-2141 Painters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "gutter-installation",
+    "name": "Gutter Installation",
+    "unit": "linear ft",
+    "unitPlural": "linear ft",
+    "nationalLowPerUnit": 6.5,
+    "nationalTypicalPerUnit": 10.5,
+    "nationalHighPerUnit": 17.5,
+    "typicalProjectSize": 150,
+    "laborShare": 0.5,
+    "socCode": "47-2181",
+    "tradeName": "Roofers",
+    "nationalTradeWage": 24.05,
+    "materialsBreakdown": [
+      { "item": "5\" or 6\" K-Style Seamless Aluminum Gutter Coil/Sections", "sharePercent": 52 },
+      { "item": "Downspout Pipes, Elbows & Drop Outlets", "sharePercent": 24 },
+      { "item": "Hidden Screw-In Fascia Hangers (24\" OC)", "sharePercent": 14 },
+      { "item": "End Caps, Miter Corners & Tripolymer Seam Sealant", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "5-inch standard K-style vs 6-inch oversized gutters for steep or metal roofs",
+      "Two-story or three-story roof eaves requiring tall ladder stabilization",
+      "Rotten wood fascia board replacement before mounting hangers",
+      "Adding micro-mesh leaf guards ($4–$9 per linear ft extra)"
+    ],
+    "relatedCalculatorSlug": "gutter-calculator",
+    "diySavingsNote": "For single-story homes and garages,sectional 10-ft aluminum gutters cost ~$2.50–$3.50 per linear ft in materials.",
+    "bestSeason": "Late spring or early fall before heavy leaf drop and winter ice",
+    "sources": [
+      "PLACEHOLDER: Verify against NRCA / RSMeans",
+      "US BLS OEWS SOC 47-2181 Roofers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "siding-replacement",
+    "name": "Siding Replacement",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (wall area)",
+    "nationalLowPerUnit": 5.5,
+    "nationalTypicalPerUnit": 9.25,
+    "nationalHighPerUnit": 15.5,
+    "typicalProjectSize": 1800,
+    "laborShare": 0.52,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "Vinyl or Fiber-Cement Lap Siding Panels (+10% Waste)", "sharePercent": 58 },
+      { "item": "Breathable Housewrap & Window Flashing Tape", "sharePercent": 14 },
+      { "item": "Outside/Inside Corner Posts, J-Channel & Starter Strips", "sharePercent": 18 },
+      { "item": "Corrosion-Resistant Siding Nails, Soffit Trim & Caulk", "sharePercent": 10 }
+    ],
+    "costFactors": [
+      "Material tier (standard vinyl at $5.50–$8.50/sq ft vs James Hardie fiber-cement at $10–$16/sq ft)",
+      "Tear-off of old wood, aluminum, or asbestos-era siding and sheathing repairs",
+      "Adding fan-fold foam insulation board under the new siding",
+      "Complex dormers, gables, and multi-story scaffolding"
+    ],
+    "relatedCalculatorSlug": "siding-calculator",
+    "diySavingsNote": "Calculate your exact siding squares, corner posts, and J-channel lengths in our Siding Calculator to audit contractor material bids.",
+    "bestSeason": "Spring through autumn",
+    "sources": [
+      "PLACEHOLDER: Verify against Vinyl Siding Institute (VSI) / RSMeans",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "attic-insulation-blown-in",
+    "name": "Attic Insulation (Blown-In)",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (attic floor)",
+    "nationalLowPerUnit": 1.35,
+    "nationalTypicalPerUnit": 2.15,
+    "nationalHighPerUnit": 3.5,
+    "typicalProjectSize": 1200,
+    "laborShare": 0.48,
+    "socCode": "47-2061",
+    "tradeName": "Construction Laborers",
+    "nationalTradeWage": 22.4,
+    "materialsBreakdown": [
+      { "item": "Loose-Fill Fiberglass or Cellulose Insulation Bags", "sharePercent": 72 },
+      { "item": "Rafter Soffit Vent Baffles & Attic Ruler Markers", "sharePercent": 15 },
+      { "item": "Expanding Foam Air-Sealing Cans & Hatch Weatherstripping", "sharePercent": 13 }
+    ],
+    "costFactors": [
+      "Target R-value depth (topping off R-19 to R-49 vs full R-60 new install)",
+      "Air-sealing recessed can lights, plumbing stacks, and top plates prior to blowing",
+      "Vacuum removal of old rodent-soiled or wet insulation ($1.50–$3.00/sq ft)",
+      "Tight low-pitch attic clearances"
+    ],
+    "relatedCalculatorSlug": "square-footage-calculator",
+    "diySavingsNote": "Big-box stores provide a free 24-hour insulation blower rental when you buy 10–20 bags of cellulose or fiberglass.",
+    "bestSeason": "Early spring or mid-fall when attic temperatures are comfortable",
+    "sources": [
+      "PLACEHOLDER: Verify against ENERGY STAR / Insulation Contractors Association",
+      "US BLS OEWS SOC 47-2061 Construction Laborers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "paver-patio",
+    "name": "Paver Patio Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 12.0,
+    "nationalTypicalPerUnit": 18.5,
+    "nationalHighPerUnit": 28.0,
+    "typicalProjectSize": 240,
+    "laborShare": 0.62,
+    "socCode": "47-2051",
+    "tradeName": "Cement Masons & Concrete Finishers",
+    "nationalTradeWage": 25.35,
+    "materialsBreakdown": [
+      { "item": "Interlocking Concrete or Clay Patio Pavers (+10% Waste)", "sharePercent": 50 },
+      { "item": "4–6\" Compacted Crushed Stone Aggregate Base", "sharePercent": 22 },
+      { "item": "1\" C-33 Bedding Sand & Polymeric Locking Joint Sand", "sharePercent": 16 },
+      { "item": "Geotextile Fabric, Edge Restraint & Spikes", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "Excavating 7–9 inches of native soil (manual digging vs mini-skid-steer access)",
+      "Freeze-thaw climates requiring a full 6-inch compacted gravel base",
+      "Natural bluestone/travertine pavers vs standard concrete pavers",
+      "Curved borders requiring wet-saw miter cuts and soldier courses"
+    ],
+    "relatedCalculatorSlug": "paver-patio-calculator",
+    "diySavingsNote": "Renting a $95/day vibrating plate compactor and laying your own paver patio saves $8–$14 per sq ft in labor.",
+    "bestSeason": "Spring through fall",
+    "sources": [
+      "PLACEHOLDER: Verify against Interlocking Concrete Pavement Institute (ICPI)",
+      "US BLS OEWS SOC 47-2051 Cement Masons",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "retaining-wall",
+    "name": "Retaining Wall Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (wall face)",
+    "nationalLowPerUnit": 22.0,
+    "nationalTypicalPerUnit": 35.0,
+    "nationalHighPerUnit": 55.0,
+    "typicalProjectSize": 120,
+    "laborShare": 0.58,
+    "socCode": "47-2051",
+    "tradeName": "Cement Masons & Concrete Finishers",
+    "nationalTradeWage": 25.35,
+    "materialsBreakdown": [
+      { "item": "Interlocking Retaining Wall Blocks (incl. Buried Base Course)", "sharePercent": 52 },
+      { "item": "Cap Blocks & Exterior Masonry Adhesive", "sharePercent": 16 },
+      { "item": "#57 Washed Drainage Gravel & Compacted Base Trench", "sharePercent": 20 },
+      { "item": "4\" Perforated Drain Pipe, Filter Fabric & Geogrid", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "Walls over 4 feet tall requiring stamped structural engineering and geogrid tieback layers",
+      "Hillside excavation and disposal of heavy clay spoil",
+      "Segmented concrete block vs poured concrete or natural boulder walls",
+      "Integrated steps, corners, and weep drainage outlets"
+    ],
+    "relatedCalculatorSlug": "retaining-wall-calculator",
+    "diySavingsNote": "Garden walls under 3 feet high do not require engineering in most municipalities and are prime DIY weekend projects.",
+    "bestSeason": "Late spring through autumn when soil is dry and stable",
+    "sources": [
+      "PLACEHOLDER: Verify against NCMA (National Concrete Masonry Association)",
+      "US BLS OEWS SOC 47-2051 Cement Masons",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "sod-installation",
+    "name": "Sod Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 1.35,
+    "nationalTypicalPerUnit": 2.1,
+    "nationalHighPerUnit": 3.25,
+    "typicalProjectSize": 1500,
+    "laborShare": 0.52,
+    "socCode": "47-2061",
+    "tradeName": "Construction Laborers",
+    "nationalTradeWage": 22.4,
+    "materialsBreakdown": [
+      { "item": "Farm-Fresh Turfgrass Sod Pallets (+5% Cut Waste)", "sharePercent": 64 },
+      { "item": "Screened Topsoil / Compost Grading Layer (1–2\")", "sharePercent": 24 },
+      { "item": "Starter Fertilizer & Sod Staples (on slopes)", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "Sod cutter removal of existing dead grass and weeds ($0.50–$1.00/sq ft)",
+      "Rototilling compacted clay and spreading 2 inches of fresh topsoil",
+      "Grass variety (Bermuda and Fescue vs premium Zoysia or St. Augustine)",
+      "Wheelbarrow distance from street pallet drop to backyard"
+    ],
+    "relatedCalculatorSlug": "sod-calculator",
+    "diySavingsNote": "Ordering sod pallets direct from a local turf farm ($0.50–$0.75/sq ft) and laying rolls with family in one morning cuts costs in half.",
+    "bestSeason": "Cool-season grasses: early fall or spring; Warm-season grasses: late spring",
+    "sources": [
+      "PLACEHOLDER: Verify against Turfgrass Producers International (TPI)",
+      "US BLS OEWS SOC 47-2061 Construction Laborers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "gravel-driveway",
+    "name": "Gravel Driveway Installation",
+    "unit": "sq ft",
+    "unitPlural": "sq ft",
+    "nationalLowPerUnit": 1.65,
+    "nationalTypicalPerUnit": 2.75,
+    "nationalHighPerUnit": 4.5,
+    "typicalProjectSize": 1000,
+    "laborShare": 0.42,
+    "socCode": "47-2061",
+    "tradeName": "Construction Laborers",
+    "nationalTradeWage": 22.4,
+    "materialsBreakdown": [
+      { "item": "#3/#4 Crushed Stone Base Course + #57/QP Top Layer (4–6\" Total)", "sharePercent": 68 },
+      { "item": "Heavy Woven Geotextile Driveway Stabilization Fabric", "sharePercent": 20 },
+      { "item": "Dump Truck Delivery, Box-Blade Grading & Compaction", "sharePercent": 12 }
+    ],
+    "costFactors": [
+      "New excavation (stripping 4–6\" of topsoil) vs resurfacing an existing gravel drive (2\" topcoat)",
+      "Distance from the local quarry (dump truck haul rates increase beyond 20 miles)",
+      "Three-layer build (#3 base + #57 middle + #411 crusher run with fines)",
+      "Crown grading and drainage ditches along sloped driveways"
+    ],
+    "relatedCalculatorSlug": "gravel-calculator",
+    "diySavingsNote": "Order bulk crushed stone directly from a local quarry in tons using our Gravel Calculator and spread it with a rented compact tractor.",
+    "bestSeason": "Late spring through fall when ground is firm for dump trucks",
+    "sources": [
+      "PLACEHOLDER: Verify against NSSGA / RSMeans",
+      "US BLS OEWS SOC 47-2061 Construction Laborers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "popcorn-ceiling-removal",
+    "name": "Popcorn Ceiling Removal",
+    "unit": "sq ft",
+    "unitPlural": "sq ft (ceiling area)",
+    "nationalLowPerUnit": 1.75,
+    "nationalTypicalPerUnit": 3.1,
+    "nationalHighPerUnit": 5.5,
+    "typicalProjectSize": 800,
+    "laborShare": 0.82,
+    "socCode": "47-2081",
+    "tradeName": "Drywall & Ceiling Tile Installers",
+    "nationalTradeWage": 26.1,
+    "materialsBreakdown": [
+      { "item": "Skim-Coat Topping Joint Compound & Tape", "sharePercent": 45 },
+      { "item": "PVA Ceiling Primer & Flat White Ceiling Paint", "sharePercent": 35 },
+      { "item": "0.7-mil Plastic Containment Sheeting, Tape & HEPA Filters", "sharePercent": 20 }
+    ],
+    "costFactors": [
+      "Pre-1980 ceilings MUST be lab-tested for asbestos before scraping (asbestos abatement costs $6–$12/sq ft)",
+      "Painted-over popcorn texture that resists water wetting and requires heavy sanding or 1/4\" drywall overlay",
+      "Skim-coating to a smooth Level 5 finish vs spraying knockdown texture",
+      "Vaulted ceilings and chandelier/recessed light masking"
+    ],
+    "relatedCalculatorSlug": "drywall-calculator",
+    "diySavingsNote": "If an accredited lab test confirms 0% asbestos and the texture is unpainted, wetting with a garden pump sprayer and scraping is 80%+ labor savings.",
+    "bestSeason": "Before moving furniture or installing new flooring",
+    "sources": [
+      "PLACEHOLDER: Verify against PCA / Gypsum Association",
+      "US BLS OEWS SOC 47-2081 Drywall Installers",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "interior-door-installation",
+    "name": "Interior Door Installation",
+    "unit": "door",
+    "unitPlural": "doors",
+    "nationalLowPerUnit": 240.0,
+    "nationalTypicalPerUnit": 385.0,
+    "nationalHighPerUnit": 620.0,
+    "typicalProjectSize": 5,
+    "laborShare": 0.52,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "Pre-Hung Hollow or Solid-Core Interior Door Unit", "sharePercent": 65 },
+      { "item": "Interior Casing Trim (Both Sides) & Cedar Shims", "sharePercent": 20 },
+      { "item": "Privacy/Passage Lever Handle Set, Finish Nails & Paint", "sharePercent": 15 }
+    ],
+    "costFactors": [
+      "Solid-core sound-dampening MDF/wood doors vs standard hollow-core molded doors",
+      "Pre-hung jamb replacement vs mortising hinges on a slab-only door into an existing frame",
+      "Reframing non-standard rough openings in older homes",
+      "Pocket doors, French double doors, or barn doors"
+    ],
+    "relatedCalculatorSlug": "baseboard-trim-calculator",
+    "diySavingsNote": "Replacing 5+ doors at once reduces the carpenter's per-door trip charge by 20%–30%.",
+    "bestSeason": "Year-round indoor carpentry",
+    "sources": [
+      "PLACEHOLDER: Verify against Window & Door Manufacturers Association (WDMA)",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  },
+  {
+    "slug": "baseboard-installation",
+    "name": "Baseboard Installation",
+    "unit": "linear ft",
+    "unitPlural": "linear ft",
+    "nationalLowPerUnit": 4.25,
+    "nationalTypicalPerUnit": 6.75,
+    "nationalHighPerUnit": 10.5,
+    "typicalProjectSize": 200,
+    "laborShare": 0.64,
+    "socCode": "47-2031",
+    "tradeName": "Carpenters",
+    "nationalTradeWage": 26.85,
+    "materialsBreakdown": [
+      { "item": "Primed MDF, Pine, or Poplar Baseboard Moulding (+10% Waste)", "sharePercent": 64 },
+      { "item": "Semi-Gloss Trim Enamel Paint & Wood Putty", "sharePercent": 22 },
+      { "item": "Paintable Acrylic Caulk & 18-Ga / 16-Ga Brad Nails", "sharePercent": 14 }
+    ],
+    "costFactors": [
+      "Profile height (5-1/4\" or 7-1/4\" tall modern craftsman trim vs standard 3-1/4\" colonial)",
+      "Stained solid oak/maple hardwood trim vs painted primed MDF",
+      "Coping inside corners vs simple miter joints on wavy drywall",
+      "Adding separate shoe moulding along hardwood or LVP floors"
+    ],
+    "relatedCalculatorSlug": "baseboard-trim-calculator",
+    "diySavingsNote": "Pre-painting 12-ft or 16-ft baseboard lengths on sawhorses before nailing them up makes DIY installation fast and clean.",
+    "bestSeason": "Year-round indoor finish carpentry",
+    "sources": [
+      "PLACEHOLDER: Verify against Finish Carpentry / RSMeans",
+      "US BLS OEWS SOC 47-2031 Carpenters",
+      "US BEA Regional Price Parities"
+    ],
+    "verified": false,
+    "lastReviewed": "2026-11-15"
+  }
+]

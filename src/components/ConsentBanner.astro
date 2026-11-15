@@ -1,0 +1,98 @@
+---
+import { monetizationConfig } from '../config/monetization';
+---
+
+{monetizationConfig.cmpEnabled && (
+  <div
+    id="consent-banner"
+    role="dialog"
+    aria-live="polite"
+    aria-label="Cookie and privacy consent"
+    class="consent-banner hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur shadow-lg p-4"
+  >
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+        We use essential local storage to save your project list and optional cookies for anonymous analytics and advertising (Google Consent Mode v2). Read our{' '}
+        <a href="/privacy-policy/" class="underline font-medium text-brand-600 dark:text-brand-400">Privacy Policy</a> and{' '}
+        <a href="/cookie-policy/" class="underline font-medium text-brand-600 dark:text-brand-400">Cookie Policy</a>.
+      </p>
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          id="consent-reject"
+          type="button"
+          class="btn-secondary text-xs px-3 py-2 min-h-[38px]"
+        >
+          Essential Only
+        </button>
+        <button
+          id="consent-accept"
+          type="button"
+          class="btn-primary text-xs px-4 py-2 min-h-[38px]"
+        >
+          Accept All
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+<script is:inline>
+  (function () {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    var savedConsent = null;
+    try {
+      savedConsent = localStorage.getItem('buildmath_consent_v2');
+    } catch (e) {}
+
+    if (savedConsent === 'granted') {
+      gtag('consent', 'default', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted',
+      });
+    } else {
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      var banner = document.getElementById('consent-banner');
+      if (!banner) return;
+      if (!savedConsent) {
+        banner.classList.remove('hidden');
+      }
+      var acceptBtn = document.getElementById('consent-accept');
+      var rejectBtn = document.getElementById('consent-reject');
+      if (acceptBtn) {
+        acceptBtn.addEventListener('click', function () {
+          try {
+            localStorage.setItem('buildmath_consent_v2', 'granted');
+          } catch (e) {}
+          gtag('consent', 'update', {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted',
+          });
+          banner.classList.add('hidden');
+        });
+      }
+      if (rejectBtn) {
+        rejectBtn.addEventListener('click', function () {
+          try {
+            localStorage.setItem('buildmath_consent_v2', 'denied');
+          } catch (e) {}
+          banner.classList.add('hidden');
+        });
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,62 @@
+---
+import { monetizationConfig } from '../config/monetization';
+
+interface Props {
+  jobTitle: string;
+  stateName?: string;
+}
+
+const { jobTitle, stateName } = Astro.props;
+const locationLabel = stateName ? `in ${stateName}` : 'in your area';
+---
+
+{monetizationConfig.leadGenEnabled ? (
+  <section class="my-8 card p-6 bg-gradient-to-br from-brand-50 to-white dark:from-slate-900 dark:to-slate-900 border-brand-200 dark:border-brand-900">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-2.5 py-1 rounded-md mb-2">
+          Licensed Local Pros
+        </span>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+          Get 3 Free Quotes for {jobTitle} {locationLabel}
+        </h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Compare itemized bids from licensed, insured local contractors before starting your project.
+        </p>
+      </div>
+      <form class="flex flex-col sm:flex-row gap-2 shrink-0" action="/contact/" method="get">
+        <label for="lead-zip" class="sr-only">ZIP Code</label>
+        <input
+          id="lead-zip"
+          name="zip"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]{5}"
+          maxlength="5"
+          placeholder="Enter ZIP Code"
+          required
+          class="input-field sm:w-40"
+        />
+        <button type="submit" class="btn-primary whitespace-nowrap">
+          Compare Quotes
+        </button>
+      </form>
+    </div>
+  </section>
+) : (
+  <aside class="my-8 card p-5 bg-slate-50 dark:bg-slate-900/70 border-slate-200 dark:border-slate-800">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">
+          Hiring a pro vs. DIY for {jobTitle.toLowerCase()} {locationLabel}?
+        </h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Always request at least 3 written, itemized bids that separate material quantities from labor hours, and verify contractor licensing on your state board website.
+        </p>
+      </div>
+      <a href="/methodology/" class="btn-secondary text-sm shrink-0">
+        How We Estimate Costs
+      </a>
+    </div>
+  </aside>
+)}

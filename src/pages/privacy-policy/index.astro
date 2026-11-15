@@ -1,0 +1,77 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { siteConfig } from '../../config/site';
+---
+
+<ArticleLayout
+  title="Privacy Policy"
+  metaTitle={`Privacy Policy | ${siteConfig.name}`}
+  metaDescription={`Read the ${siteConfig.name} Privacy Policy covering local storage, Google AdSense & DoubleClick DART cookies, affiliate links, CCPA/CPRA, and GDPR rights.`}
+  pathname="/privacy-policy/"
+  breadcrumbs={[{ name: 'Privacy Policy', href: '/privacy-policy/' }]}
+>
+  <p>
+    <strong>Effective Date:</strong> {siteConfig.lastUpdatedDefault}
+  </p>
+  <p>
+    At <strong>{siteConfig.name}</strong> ({siteConfig.url}), operated by {siteConfig.legalName}, we respect your privacy and are committed to transparency about how information is handled when you use our calculators and cost guides.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    1. Information We Collect & Browser Local Storage
+  </h2>
+  <p>
+    All calculator inputs, room dimensions, and saved project items on our <a href="/my-project/" class="text-brand-600 underline">My Project Shopping List</a> page are processed and stored locally in your browser's <code>localStorage</code>. We do not transmit your calculator measurements to any backend database. If you contact us via our <a href="/contact/" class="text-brand-600 underline">Contact Form</a>, we receive the name, email address, and message content you voluntarily submit so we can reply to your inquiry.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    2. Google AdSense & the DoubleClick DART Cookie
+  </h2>
+  <p>
+    We may use third-party advertising companies, including Google AdSense, to serve advertisements when you visit {siteConfig.name}:
+  </p>
+  <ul class="list-disc pl-6 space-y-2">
+    <li>
+      Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites on the internet.
+    </li>
+    <li>
+      Google's use of advertising cookies (including the DoubleClick DART cookie) enables it and its partners to serve ads to our users based on their visit to {siteConfig.domain} and/or other sites on the Internet.
+    </li>
+    <li>
+      Users may opt out of personalized advertising by visiting <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">Google Ads Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">www.aboutads.info</a> or <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">Network Advertising Initiative Opt-Out</a>.
+    </li>
+  </ul>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    3. Affiliate Links & Retail Partners
+  </h2>
+  <p>
+    Our calculators include "Shop at" links to third-party retailers such as Amazon.com and The Home Depot. When you click an affiliate link (routed via <code>/go/</code>), the destination retailer may set a tracking cookie on your browser to attribute any qualifying purchase within their standard referral window. Please review our <a href="/affiliate-disclosure/" class="text-brand-600 underline">Affiliate Disclosure</a> for full details.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    4. Analytics
+  </h2>
+  <p>
+    We use privacy-friendly web analytics (such as Cloudflare Web Analytics) and Google Consent Mode v2 to understand aggregate page traffic, mobile vs. desktop device ratios, and popular calculator tools without building personal profiles.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    5. Your Privacy Rights (CCPA / CPRA & GDPR / UK GDPR)
+  </h2>
+  <p>
+    Depending on your location (including California, Virginia, Colorado, the European Economic Area, and the United Kingdom), you have the right to:
+  </p>
+  <ul class="list-disc pl-6 space-y-2">
+    <li>Opt out of non-essential cookies and personalized advertising at any time via our consent banner ("Essential Only").</li>
+    <li>Request access to or deletion of any personal correspondence you have sent to us via email or our contact form.</li>
+    <li>Opt out of the "sale" or "sharing" of personal information for cross-context behavioral advertising under CCPA/CPRA.</li>
+  </ul>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    6. Contact Us Regarding Privacy
+  </h2>
+  <p>
+    For any privacy questions or data requests, contact us at <a href={`mailto:${siteConfig.email}`} class="text-brand-600 underline">{siteConfig.email}</a>.
+  </p>
+</ArticleLayout>

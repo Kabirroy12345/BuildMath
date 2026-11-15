@@ -1,0 +1,70 @@
+---
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import FAQSection from '../../../components/FAQSection.astro';
+import guides from '../../../data/guides.json';
+import calculators from '../../../data/calculators.json';
+
+export function getStaticPaths() {
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const relatedCalcs = (guide.relatedCalculators || [])
+  .map((slug: string) => calculators.find((c) => c.slug === slug))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+---
+
+<ArticleLayout
+  title={guide.title}
+  metaTitle={guide.metaTitle}
+  metaDescription={guide.metaDescription}
+  pathname={`/guides/${guide.slug}/`}
+  lastUpdated={guide.lastReviewed}
+  breadcrumbs={[
+    { name: 'How-To Guides', href: '/guides/' },
+    { name: guide.title, href: `/guides/${guide.slug}/` },
+  ]}
+>
+  <p class="text-base sm:text-lg font-medium text-slate-800 dark:text-slate-200 bg-brand-50/70 dark:bg-slate-900 p-5 rounded-xl border border-brand-200 dark:border-slate-800">
+    {guide.excerpt}
+  </p>
+
+  {guide.sections.map((sec) => (
+    <section class="mt-8">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
+        {sec.heading}
+      </h2>
+      <p class="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+        {sec.body}
+      </p>
+    </section>
+  ))}
+
+  {relatedCalcs.length > 0 && (
+    <section class="my-10 card p-6 bg-slate-50 dark:bg-slate-900/60">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-3">
+        Try the Interactive Calculators Mentioned in This Guide
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {relatedCalcs.map((rc) => (
+          <a
+            href={`/calculators/${rc.slug}/`}
+            class="card p-4 hover:border-brand-500 transition-colors"
+          >
+            <div class="text-sm font-bold text-brand-700 dark:text-brand-300">
+              {rc.name}
+            </div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+              {rc.intro}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <FAQSection faqs={guide.faqs} />
+</ArticleLayout>

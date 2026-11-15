@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import guides from '../../data/guides.json';
+import calculators from '../../data/calculators.json';
+---
+
+<BaseLayout
+  title="DIY Home Improvement Measurement & Material Guides | BuildMath"
+  description="Step-by-step measurement and material estimation guides for painting, concrete slabs, roofing pitch, flooring waste factors, and landscaping beds."
+  pathname="/guides/"
+>
+  <Breadcrumbs items={[{ name: 'How-To Guides', href: '/guides/' }]} />
+
+  <header class="mb-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      DIY Measurement & Material Estimation Guides
+    </h1>
+    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      Practical, step-by-step field guides showing how residential estimators measure rooms, calculate roof pitch from the ground, and plan waste factors.
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {guides.map((guide) => {
+      const relatedCalcs = (guide.relatedCalculators || [])
+        .map((slug) => calculators.find((c) => c.slug === slug))
+        .filter(Boolean);
+      return (
+        <article class="card p-6 flex flex-col justify-between hover:border-brand-500 transition-colors">
+          <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-2">
+              <span>{guide.readingTime}</span>
+              <span>•</span>
+              <span>Updated {guide.lastReviewed}</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+              <a href={`/guides/${guide.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
+                {guide.title}
+              </a>
+            </h2>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              {guide.excerpt}
+            </p>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <a
+                href={`/guides/${guide.slug}/`}
+                class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
+              >
+                Read Full Guide →
+              </a>
+              <div class="flex flex-wrap gap-1.5">
+                {relatedCalcs.slice(0, 2).map((rc) => (
+                  <a
+                    href={`/calculators/${rc.slug}/`}
+                    class="text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-brand-600"
+                  >
+                    {rc.shortName} Calc
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</BaseLayout>

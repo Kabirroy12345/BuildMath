@@ -1,0 +1,39 @@
+---
+import products from '../../../data/products.json';
+import { monetizationConfig } from '../../../config/monetization';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { id: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const targetUrl = product.url.includes('amazon.com')
+  ? `${product.url}${product.url.includes('?') ? '&' : '?'}tag=${monetizationConfig.amazonAssociateTag}`
+  : product.url;
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting to {product.retailer} – {product.name}</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content={`0;url=${targetUrl}`} />
+    <link rel="canonical" href={targetUrl} />
+  </head>
+  <body style="font-family: system-ui, sans-serif; padding: 2rem; text-align: center; color: #1e293b;">
+    <p>
+      Redirecting to <strong>{product.name}</strong> at {product.retailer}...
+    </p>
+    <p>
+      <a href={targetUrl} rel="sponsored nofollow noopener">Click here if you are not redirected automatically</a>.
+    </p>
+    <script is:inline define:vars={{ targetUrl }}>
+      window.location.replace(targetUrl);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { buildWebApplicationSchema, type BreadcrumbItem } from '../lib/seo/schema';
+
+interface Props {
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  pathname: string;
+  categoryName: string;
+  breadcrumbs: BreadcrumbItem[];
+  lastUpdated?: string;
+}
+
+const {
+  title,
+  metaTitle,
+  metaDescription,
+  pathname,
+  categoryName,
+  breadcrumbs,
+  lastUpdated,
+} = Astro.props;
+
+const webAppSchema = buildWebApplicationSchema({
+  name: title,
+  description: metaDescription,
+  pathname,
+  category: categoryName,
+  dateModified: lastUpdated,
+});
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  pathname={pathname}
+  ogImage={`/og/${pathname.replace(/^\/|\/$/g, '').replace(/\//g, '-')}.svg`}
+  modifiedTime={lastUpdated}
+  schemas={[webAppSchema]}
+>
+  <Breadcrumbs items={breadcrumbs} />
+  <slot />
+</BaseLayout>

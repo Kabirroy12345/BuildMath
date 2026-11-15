@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import jobs from '../../data/costs/jobs.json';
+import states from '../../data/costs/states.json';
+---
+
+<BaseLayout
+  title="Home Improvement Cost Guides (National & By State) | BuildMath"
+  description="Explore 25 residential construction and remodeling cost guides with material vs. labor breakdowns across all 50 US states and Washington, DC."
+  pathname="/cost/"
+>
+  <Breadcrumbs items={[{ name: 'Cost Guides', href: '/cost/' }]} />
+
+  <header class="mb-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      Home Improvement & Remodeling Cost Guides
+    </h1>
+    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
+      Compare DIY material expenses against professional contractor installation costs across 25 residential jobs and all 50 US states + DC.
+    </p>
+  </header>
+
+  <section class="mb-14" aria-labelledby="jobs-heading">
+    <h2 id="jobs-heading" class="text-2xl font-bold text-slate-900 dark:text-white mb-5">
+      All 25 Project Cost Guides
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {jobs.map((job) => {
+        const natLow = Math.round(job.nationalLowPerUnit * job.typicalProjectSize);
+        const natHigh = Math.round(job.nationalHighPerUnit * job.typicalProjectSize);
+        return (
+          <article class="card p-5 flex flex-col justify-between hover:border-brand-500 transition-colors">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950 px-2.5 py-0.5 rounded">
+                  {job.typicalProjectSize.toLocaleString()} {job.unit}
+                </span>
+                <span class="text-xs text-slate-500">
+                  Labor: {Math.round(job.laborShare * 100)}%
+                </span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                <a href={`/cost/${job.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
+                  Cost of {job.name}
+                </a>
+              </h3>
+              <p class="mt-1.5 text-xs text-slate-600 dark:text-slate-400">
+                {job.diySavingsNote}
+              </p>
+              <div class="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-500">US Typical Range:</span>
+                <strong class="text-slate-900 dark:text-white">
+                  ${natLow.toLocaleString()} – ${natHigh.toLocaleString()}
+                </strong>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
+              <a href={`/cost/${job.slug}/`} class="text-brand-600 dark:text-brand-400 hover:underline">
+                National & State Guide →
+              </a>
+              <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-slate-500 hover:text-slate-900 dark:hover:text-white">
+                DIY Calculator →
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Browse by State Directory -->
+  <section class="card p-6" aria-labelledby="states-directory-heading">
+    <h2 id="states-directory-heading" class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+      Browse Regional Labor & Material Multipliers by State
+    </h2>
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-5">
+      Select any state below to view localized roof replacement estimates and navigate all 25 trades in that state:
+    </p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+      {states.map((st) => (
+        <a
+          href={`/cost/roof-replacement/${st.slug}/`}
+          class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-brand-500 flex items-center justify-between"
+        >
+          <span class="text-slate-800 dark:text-slate-200 font-semibold">{st.name}</span>
+          <span class="text-[11px] text-slate-400">{st.abbr}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

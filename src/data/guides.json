@@ -1,0 +1,280 @@
+[
+  {
+    "slug": "how-to-measure-a-room-for-flooring",
+    "title": "How to Measure a Room for Flooring (Rectangles, L-Shapes & Closets)",
+    "shortTitle": "How to Measure a Room for Flooring",
+    "category": "flooring",
+    "metaTitle": "How to Measure a Room for Flooring | BuildMath",
+    "metaDescription": "Learn how to measure rectangular, L-shaped, and angled rooms for LVP, hardwood, laminate, or tile flooring, plus how much waste percentage to add.",
+    "readingTime": "6 min read",
+    "lastReviewed": "2026-11-15",
+    "excerpt": "Measure once, buy once: learn the box-division method for L-shaped rooms, closet alcoves, and doorways, and pick the right 10% or 15% waste factor.",
+    "relatedCalculators": [
+      "flooring-calculator",
+      "tile-calculator",
+      "carpet-calculator",
+      "baseboard-trim-calculator",
+      "square-footage-calculator"
+    ],
+    "relatedCostJobs": [
+      "lvp-flooring-installation",
+      "hardwood-floor-installation",
+      "tile-floor-installation"
+    ],
+    "sections": [
+      {
+        "heading": "1. Gather Your Measuring Tools",
+        "body": "You only need a 25-foot locking steel tape measure (or laser distance measurer), graph paper, a pencil, and a calculator. Measure along the floor next to the baseboard rather than mid-air so your tape stays straight. Always record measurements in feet and inches, then convert inches to decimal feet by dividing the inches by 12 (for example, 14 feet 6 inches = 14.5 feet)."
+      },
+      {
+        "heading": "2. Rectangular Rooms: Length × Width (Plus Doorways)",
+        "body": "For a standard four-wall bedroom or living room, measure the longest wall (Length) and the adjacent wall (Width). Multiply Length × Width to get the base square footage. Do not forget to measure inside doorway jambs: a standard interior doorway frame is 3 feet wide by 0.5 feet deep, adding 1.5 sq ft per door where the flooring runs under the door slab to meet a transition strip."
+      },
+      {
+        "heading": "3. L-Shaped Rooms and Hallway Alcoves: The Box Method",
+        "body": "Never try to measure an L-shaped room diagonally. Instead, sketch the floor plan on paper and draw an imaginary line splitting the room into two or three separate rectangles (Box A and Box B). Measure the length and width of Box A, then measure the length and width of Box B—making sure you do not double-count the overlapping corner. Add Box A + Box B + any walk-in closets to get your net room footprint."
+      },
+      {
+        "heading": "4. How Much Waste Factor Should You Add?",
+        "body": "Flooring planks and tiles come in fixed sizes, and the last plank in each row must be cut to fit. While you can often use the cut-off piece (> 8 inches long) to start the next row, end cuts, starter row rip cuts, and occasional damaged tongues create unavoidable waste. Use 10% waste for straight parallel installations in rectangular rooms, 12% for L-shaped rooms with multiple closets, and 15% for diagonal (45-degree) or herringbone layouts."
+      },
+      {
+        "heading": "5. Converting Square Footage into Full Boxes",
+        "body": "Luxury vinyl plank (LVP), laminate, and hardwood are sold by the carton—never by the loose plank. Typical LVP boxes hold 18.9 to 23.8 sq ft per box. Divide your total square footage (including waste) by the exact coverage printed on the box label, then round UP to the next whole box. Buying one extra box to store flat in a closet is smart insurance in case a plank is gouged years later after the manufacturer discontinues your dye lot."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Do I subtract kitchen islands or vanities when measuring flooring?",
+        "answer": "Yes for permanent cabinets and bolted-down kitchen islands with floating LVP or laminate (which must not be pinned under heavy cabinetry). However, do not deduct pedestals, refrigerators, or dishwashers—your flooring should run all the way under appliances so they can slide out for servicing."
+      },
+      {
+        "question": "Should I measure in inches or feet?",
+        "answer": "Measure in feet and inches, then convert inches to decimal feet by dividing by 12 (e.g., 3 inches = 0.25 ft, 6 inches = 0.50 ft, 9 inches = 0.75 ft). Multiplying 12'6\" as 12.6 instead of 12.5 is the single most common DIY math mistake."
+      },
+      {
+        "question": "Which direction should plank flooring run?",
+        "answer": "Run planks parallel to the longest wall or parallel to the main sightline as you enter the room. If installing solid nail-down hardwood over wood joists, planks must run perpendicular (90 degrees) to the floor joists for structural support."
+      }
+    ]
+  },
+  {
+    "slug": "how-much-paint-for-a-bedroom",
+    "title": "How Much Paint Do You Need for a Bedroom? (10×10, 12×12 & Master)",
+    "shortTitle": "How Much Paint for a Bedroom",
+    "category": "painting",
+    "metaTitle": "How Much Paint for a Bedroom? (Gallon Chart) | BuildMath",
+    "metaDescription": "Find out exactly how many gallons of wall, ceiling, and trim paint you need for a 10x10, 12x12, or master bedroom with 1 or 2 coats.",
+    "readingTime": "5 min read",
+    "lastReviewed": "2026-11-15",
+    "excerpt": "Most standard 12×12 bedrooms take 2 gallons of wall paint for two full coats. Here is the exact wall-area math for every bedroom size.",
+    "relatedCalculators": [
+      "paint-calculator",
+      "wallpaper-calculator",
+      "baseboard-trim-calculator",
+      "drywall-calculator"
+    ],
+    "relatedCostJobs": [
+      "interior-painting",
+      "baseboard-installation",
+      "popcorn-ceiling-removal"
+    ],
+    "sections": [
+      {
+        "heading": "1. The Short Answer by Bedroom Size",
+        "body": "For two coats of standard acrylic latex paint (covering 350 sq ft per gallon) on 8-foot walls: a small 10×10 ft nursery or office takes 1.6 gallons (buy 2 gallons); a standard 12×12 ft bedroom takes 1.8 gallons (buy 2 gallons); a 12×15 ft bedroom takes 2.1 gallons (buy 2 gallons + 1 quart); and a large 14×18 ft primary bedroom with 9-foot ceilings takes 3.0 gallons."
+      },
+      {
+        "heading": "2. Don't Confuse Floor Square Footage with Wall Square Footage",
+        "body": "A 12×12 ft bedroom has 144 sq ft of floor space, but you are painting the four vertical walls—not the floor. To find wall square footage, add the lengths of all four walls to get the room perimeter (12 + 12 + 12 + 12 = 48 linear feet) and multiply by the ceiling height (48 × 8 ft = 384 gross sq ft). Next, subtract 21 sq ft for each door (entry + closet = 42 sq ft) and 15 sq ft for each window (2 windows = 30 sq ft), leaving 312 net paintable sq ft."
+      },
+      {
+        "heading": "3. One Coat vs. Two Coats (And When You Need Primer)",
+        "body": "Even 'paint and primer in one' cans require two coats whenever you change colors by more than two shades, paint over patched spackle spots, or use satin/eggshell sheens that flash if rolled unevenly. At 350 sq ft per gallon, one coat on 312 sq ft uses 0.89 gallons, while two coats use 1.78 gallons. If you are painting over bare new drywall, glossy oil trim, water stains, or deep red/navy walls, roll one dedicated coat of PVA or stain-blocking primer (250 sq ft/gal) first."
+      },
+      {
+        "heading": "4. Calculating Ceiling and Baseboard Trim Paint Separately",
+        "body": "Ceilings use dead-flat white ceiling paint to hide drywall joint imperfections. A 12×12 ceiling is 144 sq ft, which easily takes just 1 gallon for two coats. For baseboards, door casings, and window sills in a standard bedroom, 1 quart of semi-gloss or urethane alkyd trim enamel covers roughly 85–100 linear feet of 3.25-inch trim."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Is 1 gallon of paint enough for a 12×12 bedroom?",
+        "answer": "One gallon will cover a single refresh coat on a 12×12 bedroom (312 net wall sq ft vs. 350 sq ft per gallon coverage) if you are painting the exact same color. For any color change requiring two coats, you need 2 gallons."
+      },
+      {
+        "question": "Should I buy a 5-gallon bucket for painting multiple bedrooms?",
+        "answer": "Yes—if you are painting three or more bedrooms the same neutral color, a 5-gallon pail typically costs 15% to 25% less per gallon than five individual 1-gallon cans and guarantees consistent color tinting across rooms."
+      },
+      {
+        "question": "What paint sheen is best for bedroom walls?",
+        "answer": "Eggshell is the most popular sheen for adult and guest bedrooms because it hides minor drywall bumps while remaining wipeable. For kids' bedrooms and hallways, upgrade to satin for higher scrub resistance."
+      }
+    ]
+  },
+  {
+    "slug": "concrete-bags-vs-ready-mix",
+    "title": "Concrete Bags vs. Ready-Mix Truck: Which Is Cheaper? (Crossover Math)",
+    "shortTitle": "Concrete Bags vs Ready-Mix: Which Is Cheaper?",
+    "category": "concrete-masonry",
+    "metaTitle": "Concrete Bags vs Ready-Mix Truck Cost Crossover | BuildMath",
+    "metaDescription": "Compare 80-lb concrete bags vs ready-mix delivery truck prices. See the exact cubic-yard crossover point where ordering a truck saves money and labor.",
+    "readingTime": "7 min read",
+    "lastReviewed": "2026-11-15",
+    "excerpt": "At 45 bags per cubic yard, hand-mixing 80-lb bags stops making financial or physical sense much sooner than most DIYers expect.",
+    "relatedCalculators": [
+      "concrete-slab-calculator",
+      "concrete-footing-calculator",
+      "concrete-steps-calculator",
+      "rebar-calculator",
+      "cubic-yard-calculator"
+    ],
+    "relatedCostJobs": [
+      "concrete-driveway",
+      "concrete-patio"
+    ],
+    "sections": [
+      {
+        "heading": "1. The Raw Math: 45 Bags (3,600 lbs) Equals 1 Cubic Yard",
+        "body": "One 80-lb bag of Quikrete or Sakrete yields 0.60 cubic feet of mixed concrete. Because 1 cubic yard equals 27 cubic feet, it takes exactly 45 bags of 80-lb concrete (or 60 bags of 60-lb concrete) to equal a single cubic yard. At $6.85 per 80-lb bag, 1 cubic yard of bagged concrete costs $308.25 in materials alone—nearly double the $155–$185 per cubic yard base rate of a ready-mix truck."
+      },
+      {
+        "heading": "2. Why Small Jobs Still Favor Bags: Short-Load Fees",
+        "body": "Ready-mix concrete plants design their drum trucks around 8-to-10 cubic yard loads. If you order less than 3 to 4 cubic yards, most batch plants charge a 'short-load fee' or minimum delivery surcharge of $150 to $300. For a 1-cubic-yard shed pad (8×10 ft at 4 inches thick), 1.35 yd³ of ready-mix with a $225 short-load fee costs ~$450, whereas 62 bags of 80-lb concrete cost ~$425 and can be mixed on your own schedule."
+      },
+      {
+        "heading": "3. The 1.5 to 2.0 Cubic Yard Crossover Point",
+        "body": "Once your slab exceeds 1.5 to 2.0 cubic yards (roughly 120–160 sq ft at 4 inches thick, or 70–90 bags of 80-lb mix), a ready-mix truck wins on both cost and quality. Lifting, tearing open, mixing, and wheelbarrowing 90 bags means moving 7,200 pounds of dry concrete plus 80 gallons of water before the first corner starts setting up—creating cold joints and inconsistent water-to-cement ratios."
+      },
+      {
+        "heading": "4. The Middle-Ground Option: Metered Volumetric Trucks & Cart-Away Trailers",
+        "body": "For projects between 1.25 and 3.5 cubic yards, look for two local alternatives: (1) Volumetric mobile batch trucks that mix concrete on-site by the exact tenth of a yard with no short-load penalty, or (2) 'U-Cart' towable 1-to-2 yard concrete trailers rented by masonry yards for ~$175–$210 per yard."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "How many 80-lb bags of concrete are on a pallet?",
+        "answer": "A standard pallet holds 42 bags of 80-lb concrete (weighing 3,360 lbs total) and yields 25.2 cubic feet, or 0.93 cubic yards—just shy of one full cubic yard."
+      },
+      {
+        "question": "How fast do I have to unload a ready-mix concrete truck?",
+        "answer": "Most ready-mix suppliers include 5 to 7 minutes of unloading time per cubic yard (typically 30–45 minutes total on site) before charging standby time of $2–$4 per minute. Have 2–3 helpers with wheelbarrows and rakes ready before the truck arrives."
+      },
+      {
+        "question": "Is truck concrete stronger than bagged concrete?",
+        "answer": "Both meet 4,000 PSI compressive strength when mixed at the proper slump, but batch-plant ready-mix is computer-proportioned with uniform aggregate gradation and optional air-entrainment for superior freeze-thaw durability."
+      }
+    ]
+  },
+  {
+    "slug": "how-to-read-roof-pitch",
+    "title": "How to Read & Measure Roof Pitch (4/12, 6/12, 8/12 Multiplier Guide)",
+    "shortTitle": "How to Read Roof Pitch",
+    "category": "roofing",
+    "metaTitle": "How to Read & Measure Roof Pitch | BuildMath",
+    "metaDescription": "Understand roof pitch ratios like 4/12 and 6/12, learn how to measure your roof slope with a 12-inch level, and calculate true roof area from footprint.",
+    "readingTime": "6 min read",
+    "lastReviewed": "2026-11-15",
+    "excerpt": "What does a 6/12 roof pitch actually mean, and how do you measure it safely from a ladder or attic using a torpedo level and tape measure?",
+    "relatedCalculators": [
+      "roof-pitch-calculator",
+      "roofing-calculator",
+      "gutter-calculator",
+      "siding-calculator"
+    ],
+    "relatedCostJobs": [
+      "roof-replacement",
+      "gutter-installation"
+    ],
+    "sections": [
+      {
+        "heading": "1. What Roof Pitch Numbers Mean (Rise Over 12-Inch Run)",
+        "body": "In the United States, roof slope is expressed as 'X/12' (read as 'X in 12'). The first number (Rise) is how many vertical inches the roof climbs for every 12 horizontal inches (Run). A 4/12 roof rises 4 inches per horizontal foot (18.4° angle), a 6/12 roof rises 6 inches per foot (26.6° angle), and a 12/12 roof rises 12 inches per foot—forming a 45-degree angle."
+      },
+      {
+        "heading": "2. How to Measure Roof Pitch Using a 12-Inch Level",
+        "body": "You can measure pitch from your attic rafters (safest) or against a gable rake board from a ladder. Mark a clear line at 12 inches on a carpenter's level. Hold one end of the level tight against the bottom of a rafter (or top of the shingles) and adjust the level until the bubble is dead-center horizontal. Now hold a tape measure vertically from the 12-inch mark on the level straight up to the rafter. If that vertical distance is 6 inches, your roof is a 6/12 pitch."
+      },
+      {
+        "heading": "3. Using the Pitch Multiplier to Find True Roof Square Footage",
+        "body": "Because a sloped roof is the hypotenuse of a right triangle, its surface area is larger than the flat ground footprint of your house. Using the Pythagorean theorem, the Pitch Factor equals √(1 + (Rise ÷ 12)²). Multiply your flat house footprint (including eave overhangs) by 1.054 for a 4/12 roof, 1.118 for a 6/12 roof, 1.202 for an 8/12 roof, or 1.414 for a 12/12 roof."
+      },
+      {
+        "heading": "4. Minimum Pitch Codes & Walkability Thresholds",
+        "body": "Under IRC Section R905.2.2, standard asphalt shingles require a minimum roof pitch of 2/12, and roofs between 2/12 and 4/12 must have two layers of underlayment (or peel-and-stick ice barrier) to prevent wind-driven rain backups. Roofs from 4/12 to 6/12 are comfortably walkable with rubber-soled shoes; roofs 7/12 and steeper require roof jacks, toe boards, and a fall-arrest harness."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is the most common residential roof pitch in the US?",
+        "answer": "Between 4/12 and 7/12 is the most common range for US single-family homes. Mid-century ranches typically use 4/12 or 5/12, while traditional colonials and craftsman homes use 6/12 to 8/12."
+      },
+      {
+        "question": "Can I measure roof pitch with my smartphone?",
+        "answer": "Yes—use the built-in Measure/Level app on an iPhone or Android phone against the underside of an attic rafter to read the angle in degrees, then enter that angle or convert it in our Roof Pitch Calculator."
+      },
+      {
+        "question": "How much more does a steep roof cost to replace?",
+        "answer": "A steep 9/12 or 12/12 roof has 25% to 41% more surface area than a flat footprint and requires roof jacks and harness staging, typically adding $1.00 to $2.25 per square foot in roofing labor."
+      }
+    ]
+  },
+  {
+    "slug": "planning-a-paver-patio-step-by-step",
+    "title": "Planning a Paver Patio Step by Step: Excavation, Base & Sand Math",
+    "shortTitle": "Planning a Paver Patio Step by Step",
+    "category": "concrete-masonry",
+    "metaTitle": "Planning a Paver Patio Step-by-Step Guide | BuildMath",
+    "metaDescription": "Complete DIY guide to building a concrete paver patio that never sinks: excavation depth math, crushed stone base compaction, screed sand, and edging.",
+    "readingTime": "8 min read",
+    "lastReviewed": "2026-11-15",
+    "excerpt": "90% of sunken paver patios fail in the sub-base—not the pavers. Follow this exact layer-by-layer depth formula for a patio that stays flat for decades.",
+    "relatedCalculators": [
+      "paver-patio-calculator",
+      "gravel-calculator",
+      "retaining-wall-calculator",
+      "cubic-yard-calculator"
+    ],
+    "relatedCostJobs": [
+      "paver-patio",
+      "concrete-patio",
+      "retaining-wall"
+    ],
+    "sections": [
+      {
+        "heading": "1. Calculate Your Total Excavation Depth",
+        "body": "Before putting a shovel in the ground, add the thickness of all three patio layers: (1) Compacted crushed stone base: 4 inches for mild climates/foot traffic, or 6 inches for freeze-thaw climates; (2) Coarse C-33 bedding sand: exactly 1 inch (never thicker, or pavers will rut); and (3) Paver thickness: typically 2.375 inches (60mm). That totals 7.375 inches (or 9.375 inches in northern states). Excavate 6 inches wider than your finished patio on all sides to support the plastic edge restraints."
+      },
+      {
+        "heading": "2. Set a 1/8-Inch to 1/4-Inch per Foot Drainage Slope",
+        "body": "A flat patio puddles and heaves in winter. Drive wooden stakes around the perimeter and tie mason's string lines level at the house wall. On the far side away from the house, drop the string line 1/8 inch to 1/4 inch for every foot of patio length (for a 12-foot patio, the outer edge should be 1.5 to 3 inches lower than the house side). Grade your dirt sub-base to match this exact slope."
+      },
+      {
+        "heading": "3. Compacting Crushed Stone Base in 2-Inch Lifts",
+        "body": "Lay woven geotextile fabric over the dirt subgrade so clay cannot pump up into your stone. Spread #411 / crusher-run aggregate (crushed stone mixed with stone dust fines—never round pea gravel, which rolls underfoot) in 2-inch layers. Wet each layer lightly with a hose and make 3 passes with a rented vibrating plate compactor before adding the next 2-inch lift."
+      },
+      {
+        "heading": "4. Screeding 1 Inch of Bedding Sand with 1-Inch Steel Conduit Pipes",
+        "body": "Lay two parallel 1-inch outside-diameter (3/4-inch trade size) rigid metal electrical conduit pipes directly on the compacted gravel base. Dump coarse washed concrete sand between the pipes and pull a straight 2×4 board across the rails to screed a uniform 1-inch sand bed. Slide the pipes out, fill the narrow grooves with sand by hand, and never walk on the screeded sand."
+      },
+      {
+        "heading": "5. Laying Pavers, Edge Restraints, and Polymeric Sand",
+        "body": "Start laying pavers at a 90-degree corner against the house, clicking them straight down without dragging the sand. Spike heavy-duty plastic edge restraints into the compacted gravel base around the outside perimeter using 10-inch steel spikes every 12 inches. Finally, sweep dry polymeric joint sand into all joints, run the plate compactor with a rubber pad over the pavers, blow every speck of dust off the surface with a leaf blower, and mist lightly with water."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Can I use play sand or masonry sand under pavers?",
+        "answer": "No. Fine play sand and mason sand wash away and compress unevenly. Always ask for coarse washed concrete sand meeting ASTM C33 specifications for the 1-inch bedding layer."
+      },
+      {
+        "question": "Why did a white haze appear after wetting polymeric sand?",
+        "answer": "Polymeric haze happens if polymer dust is left sitting on top of textured pavers when you mist them with water. Always sweep thoroughly and use a leaf blower to clear the paver tops before misting."
+      },
+      {
+        "question": "How much extra gravel base should I order for compaction?",
+        "answer": "Loose crushed stone compacts by roughly 10% to 15% under a plate compactor. Our Paver Patio Calculator automatically factors in 1.4 tons per compacted cubic yard so you don't come up short."
+      }
+    ]
+  }
+]

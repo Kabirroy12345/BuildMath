@@ -1,0 +1,42 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { siteConfig } from '../../config/site';
+import { monetizationConfig } from '../../config/monetization';
+---
+
+<ArticleLayout
+  title="Affiliate Disclosure"
+  metaTitle={`FTC & Amazon Affiliate Disclosure | ${siteConfig.name}`}
+  metaDescription={`Full FTC 16 CFR Part 255 and Amazon Associates affiliate disclosure for ${siteConfig.name}.`}
+  pathname="/affiliate-disclosure/"
+  breadcrumbs={[{ name: 'Affiliate Disclosure', href: '/affiliate-disclosure/' }]}
+>
+  <p>
+    <strong>Last Updated:</strong> {siteConfig.lastUpdatedDefault}
+  </p>
+
+  <div class="p-5 rounded-xl bg-brand-50 dark:bg-slate-900 border border-brand-200 dark:border-slate-800 font-medium text-slate-900 dark:text-slate-100">
+    {monetizationConfig.affiliateDisclosureShort}
+  </div>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    1. FTC Compliance (16 CFR Part 255)
+  </h2>
+  <p>
+    In accordance with the Federal Trade Commission's 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), <strong>{siteConfig.name}</strong> discloses that some of the outbound product links in our calculator shopping lists (routed through <code>/go/</code>) are affiliate referral links. If you click one of these links and make a purchase at a partner retailer, we may receive a small referral commission at <strong>zero additional cost to you</strong>.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    2. Amazon Associates Program Participation
+  </h2>
+  <p>
+    {siteConfig.legalName} is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com. As an Amazon Associate we earn from qualifying purchases.
+  </p>
+
+  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+    3. Editorial Independence
+  </h2>
+  <p>
+    Affiliate partnerships never influence our mathematical formulas, coverage rate defaults, or quantity calculations. You can edit any unit price or coverage rate in any calculator, and you are never obligated to use our shopping links.
+  </p>
+</ArticleLayout>
