@@ -8,7 +8,7 @@ const envDomain = envSiteUrl.replace(/^https?:\/\//, '');
 const envWeb3FormsKey =
   typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_WEB3FORMS_KEY
     ? String(import.meta.env.PUBLIC_WEB3FORMS_KEY)
-    : 'YOUR_WEB3FORMS_ACCESS_KEY';
+    : '933d47c2-bc8e-48d3-aeb0-c86f522ebe5c';
 
 export const siteConfig = {
   name: 'BuildMath',
