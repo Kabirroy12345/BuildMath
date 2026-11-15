@@ -1,16 +1,29 @@
+const envSiteUrl =
+  typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SITE_URL
+    ? String(import.meta.env.PUBLIC_SITE_URL).replace(/\/$/, '')
+    : 'https://buildmath.com';
+
+const envDomain = envSiteUrl.replace(/^https?:\/\//, '');
+
+const envWeb3FormsKey =
+  typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_WEB3FORMS_KEY
+    ? String(import.meta.env.PUBLIC_WEB3FORMS_KEY)
+    : 'YOUR_WEB3FORMS_ACCESS_KEY';
+
 export const siteConfig = {
   name: 'BuildMath',
-  legalName: 'BuildMath Media LLC',
+  legalName: 'BuildMath Media',
   tagline: 'Free DIY & Home-Improvement Calculators for US Homeowners',
   description:
     'Fast, trade-verified DIY home-improvement material calculators and localized US construction cost guides. Get exact quantities and cost ranges in under 10 seconds.',
-  domain: 'buildmath.com',
-  url: 'https://buildmath.com',
+  domain: envDomain,
+  url: envSiteUrl,
   locale: 'en-US',
-  repoName: 'buildmath',
+  repoName: 'BuildMath',
+  githubRepoUrl: 'https://github.com/Kabirroy12345/BuildMath',
   email: 'hello@buildmath.com',
   contactEmail: 'hello@buildmath.com',
-  web3FormsAccessKey: 'YOUR_WEB3FORMS_ACCESS_KEY',
+  web3FormsAccessKey: envWeb3FormsKey,
   author: {
     name: 'Alex Rivera',
     role: 'Licensed General Contractor & Residential Estimator',

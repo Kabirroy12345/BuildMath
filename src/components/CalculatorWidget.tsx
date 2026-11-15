@@ -521,6 +521,28 @@ export default function CalculatorWidget({
               </strong>
               {output.primaryResult.subtitle && ` • ${output.primaryResult.subtitle}`}
             </div>
+
+            {/* High-converting Primary Material Buy CTA right under the main result */}
+            {affiliateEnabled && output.materials.length > 0 && (() => {
+              const primaryMat = output.materials[0];
+              const primaryProd = primaryMat?.productId ? productsMap[primaryMat.productId] : undefined;
+              if (!primaryProd) return null;
+              return (
+                <div class="no-print mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <a
+                    href={`/go/${primaryProd.id}/`}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    data-testid="primary-affiliate-cta"
+                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold bg-accent-500 hover:bg-accent-600 text-slate-950 shadow-sm transition-colors"
+                  >
+                    <span>
+                      Buy {primaryMat.quantity.toLocaleString()} {primaryMat.unit} ({primaryMat.name}) at {primaryProd.retailer} ↗
+                    </span>
+                  </a>
+                </div>
+              );
+            })()}
           </div>
 
           {output.complianceCheck && (
