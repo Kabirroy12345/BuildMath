@@ -1,7 +1,7 @@
 const envSiteUrl =
   typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SITE_URL
     ? String(import.meta.env.PUBLIC_SITE_URL).replace(/\/$/, '')
-    : 'https://buildmath.com';
+    : 'https://buildmath.kabir-23bce10815.workers.dev';
 
 const envDomain = envSiteUrl.replace(/^https?:\/\//, '');
 
