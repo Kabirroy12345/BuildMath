@@ -10,9 +10,18 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const targetUrl = product.url.includes('amazon.com')
+const shouldAppendAmazonTag =
+  monetizationConfig.affiliateEnabled &&
+  Boolean(monetizationConfig.amazonAssociateTag) &&
+  product.url.includes('amazon.com');
+
+const targetUrl = shouldAppendAmazonTag
   ? `${product.url}${product.url.includes('?') ? '&' : '?'}tag=${monetizationConfig.amazonAssociateTag}`
   : product.url;
+
+const relAttr = monetizationConfig.affiliateEnabled
+  ? 'sponsored nofollow noopener'
+  : 'nofollow noopener';
 ---
 
 <!doctype html>
@@ -30,7 +39,7 @@ const targetUrl = product.url.includes('amazon.com')
       Redirecting to <strong>{product.name}</strong> at {product.retailer}...
     </p>
     <p>
-      <a href={targetUrl} rel="sponsored nofollow noopener">Click here if you are not redirected automatically</a>.
+      <a href={targetUrl} rel={relAttr}>Click here if you are not redirected automatically</a>.
     </p>
     <script is:inline define:vars={{ targetUrl }}>
       window.location.replace(targetUrl);

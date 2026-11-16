@@ -1,1 +1,1 @@
-google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# Google AdSense ads.txt - replace with your issued Publisher ID (e.g. google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0) before enabling adsEnabled in src/config/monetization.ts.

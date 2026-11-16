@@ -23,3 +23,6 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# local prompt / scratch notes
+DIY_Calculator_Site_PROMPT.md

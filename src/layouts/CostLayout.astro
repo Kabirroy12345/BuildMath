@@ -27,7 +27,8 @@ const articleSchema = buildArticleSchema({
   headline: title,
   description: metaDescription,
   pathname,
-  dateModified: lastUpdated,
+  dateModified: lastUpdated || undefined,
+  omitDates: !lastUpdated,
 });
 ---
 

@@ -68,13 +68,19 @@ const faqs = [
   metaDescription={`How much does ${job.name.toLowerCase()} cost in ${state.name}? Typical price is $${estimate.typical.toLocaleString()} ($${estimate.lowPerUnit}–$${estimate.highPerUnit}/${job.unit}), ${diffWord} the US average.`}
   pathname={`/cost/${job.slug}/${state.slug}/`}
   noindex={!shouldIndex}
-  lastUpdated={job.lastReviewed || siteConfig.lastUpdatedDefault}
+  lastUpdated={job.verified && job.lastReviewed ? job.lastReviewed : undefined}
   breadcrumbs={[
     { name: 'Cost Guides', href: '/cost/' },
     { name: job.name, href: `/cost/${job.slug}/` },
     { name: state.name, href: `/cost/${job.slug}/${state.slug}/` },
   ]}
 >
+  {!job.verified && (
+    <div class="mb-5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
+      <strong>Preliminary Draft Estimate:</strong> This trade guide uses our material calculator baseline and BLS wage ratios for {state.name} while full line-item verification is in progress (excluded from search indexing).
+    </div>
+  )}
+
   <!-- 1. H1: Cost to [Job] in [State] (Year) -->
   <header class="mb-5">
     <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-2.5 py-1 rounded-md mb-2">
@@ -320,4 +326,20 @@ const faqs = [
     faqs={faqs}
     title={`${job.name} in ${state.name}: Frequently Asked Questions`}
   />
+
+  <footer class="card p-5 mt-8 bg-slate-50 dark:bg-slate-900/60 text-xs text-slate-600 dark:text-slate-400 space-y-2">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <strong class="text-slate-900 dark:text-white">
+        {job.verified ? `Verified Bottom-Up Cost Sources (${state.name})` : `Model Data Sources (${state.name})`}
+      </strong>
+      {job.verified && job.lastReviewed && (
+        <span>Last Reviewed: <strong>{job.lastReviewed}</strong></span>
+      )}
+    </div>
+    <ul class="list-disc pl-5 space-y-1">
+      {job.sources.map((src) => (
+        <li>{src}</li>
+      ))}
+    </ul>
+  </footer>
 </CostLayout>

@@ -62,24 +62,44 @@ console.log(`Checking ${jobs.length} cost jobs...`);
 const unverifiedJobs: string[] = [];
 const verifiedJobs: string[] = [];
 for (const job of jobs) {
+  const joinedSources = (job.sources || []).join(' ');
+  if (/placeholder/i.test(joinedSources)) {
+    console.error(`[ERROR] Placeholder text found in sources for cost job: ${job.slug}`);
+    errors++;
+  }
   if (job.verified) {
     verifiedJobs.push(job.slug);
+    if (!job.lastReviewed) {
+      console.error(`[ERROR] Verified cost job missing lastReviewed date: ${job.slug}`);
+      errors++;
+    }
+    if (!job.sources || job.sources.length === 0) {
+      console.error(`[ERROR] Verified cost job missing sources: ${job.slug}`);
+      errors++;
+    }
   } else {
     unverifiedJobs.push(job.slug);
+    if (job.lastReviewed) {
+      console.error(`[ERROR] Unverified cost job should not claim a lastReviewed date: ${job.slug}`);
+      errors++;
+    }
   }
 }
-console.log(`  - Verified jobs (indexed): ${verifiedJobs.length}`);
+console.log(`  - Verified jobs (indexed): ${verifiedJobs.length} (${verifiedJobs.join(', ')})`);
 console.log(`  - Unverified jobs (safeguarded with <meta name="robots" content="noindex, follow"> & excluded from sitemap-cost.xml): ${unverifiedJobs.length}`);
-if (unverifiedJobs.length > 0) {
-  console.log(`    Unverified job slugs: ${unverifiedJobs.join(', ')}`);
-}
 
 // 4. Verify Prices & Products
 const priceKeys = Object.keys(prices);
-console.log(`Checking ${priceKeys.length} material prices and ${products.length} affiliate products...`);
+console.log(`Checking ${priceKeys.length} material prices and ${products.length} retail product links...`);
 for (const key of priceKeys) {
   if (!prices[key].lastReviewed) {
     console.error(`[ERROR] Missing lastReviewed date on price item: ${key}`);
+    errors++;
+  }
+}
+for (const prod of products) {
+  if (/placeholder|\[amazon-tag\]/i.test(prod.url || '')) {
+    console.error(`[ERROR] Placeholder tracking parameter found on product URL: ${prod.id}`);
     errors++;
   }
 }

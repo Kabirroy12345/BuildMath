@@ -23,19 +23,20 @@ export interface MonetizationConfig {
 }
 
 export const monetizationConfig: MonetizationConfig = {
-  // Phase 1/Launch default: ads off until AdSense approval, switchable via single flag
+  // Phase 1/Launch default: all monetization flags off until accounts/IDs are approved
   adsEnabled: false,
   adNetwork: 'adsense',
-  adsensePublisherId: 'pub-XXXXXXXXXXXXXXXX',
-  affiliateEnabled: true,
-  amazonAssociateTag: 'buildmath-20',
-  homeDepotImpactId: 'IMPACT-HD-PLACEHOLDER',
-  lowesAffiliateId: 'LOWES-PLACEHOLDER',
+  adsensePublisherId: '',
+  affiliateEnabled: false,
+  amazonAssociateTag: '',
+  homeDepotImpactId: '',
+  lowesAffiliateId: '',
   leadGenEnabled: false,
-  leadGenPartnerUrl: '#lead-gen-placeholder',
-  cmpEnabled: true,
+  leadGenPartnerUrl: '',
+  // Keep custom banner off: Google AdSense provides a built-in certified CMP for EU/UK ad traffic
+  cmpEnabled: false,
   affiliateDisclosureShort:
-    'As an Amazon Associate and Home Depot affiliate, BuildMath earns from qualifying purchases at no extra cost to you.',
+    'BuildMath does not currently participate in paid retailer affiliate programs; any retail links are provided solely as planning references.',
   adSlots: {
     belowCalculator: {
       id: 'ad-slot-below-calculator',

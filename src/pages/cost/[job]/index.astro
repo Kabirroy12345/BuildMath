@@ -60,12 +60,18 @@ const faqs = [
   metaDescription={`How much does ${job.name.toLowerCase()} cost? National average is $${nationalTypical.toLocaleString()} ($${job.nationalLowPerUnit}–$${job.nationalHighPerUnit}/${job.unit}). Compare costs across all 50 states.`}
   pathname={`/cost/${job.slug}/`}
   noindex={!job.verified}
-  lastUpdated={job.lastReviewed || siteConfig.lastUpdatedDefault}
+  lastUpdated={job.verified && job.lastReviewed ? job.lastReviewed : undefined}
   breadcrumbs={[
     { name: 'Cost Guides', href: '/cost/' },
     { name: job.name, href: `/cost/${job.slug}/` },
   ]}
 >
+  {!job.verified && (
+    <div class="mb-5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
+      <strong>Preliminary Draft Estimate:</strong> This trade guide uses our material calculator baseline and BLS occupational wage ratios while full line-item verification is in progress (excluded from search indexing).
+    </div>
+  )}
+
   <header class="mb-6">
     <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
       How Much Does {job.name} Cost? ({new Date().getFullYear()} National Price Guide)
@@ -225,4 +231,20 @@ const faqs = [
   <LeadGenWidget jobTitle={job.name} />
 
   <FAQSection faqs={faqs} title={`${job.name} Cost: Frequently Asked Questions`} />
+
+  <footer class="card p-5 mt-8 bg-slate-50 dark:bg-slate-900/60 text-xs text-slate-600 dark:text-slate-400 space-y-2">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <strong class="text-slate-900 dark:text-white">
+        {job.verified ? 'Verified Bottom-Up Cost Sources' : 'Model Data Sources'}
+      </strong>
+      {job.verified && job.lastReviewed && (
+        <span>Last Reviewed: <strong>{job.lastReviewed}</strong></span>
+      )}
+    </div>
+    <ul class="list-disc pl-5 space-y-1">
+      {job.sources.map((src) => (
+        <li>{src}</li>
+      ))}
+    </ul>
+  </footer>
 </CostLayout>

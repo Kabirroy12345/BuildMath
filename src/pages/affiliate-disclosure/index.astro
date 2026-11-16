@@ -5,9 +5,9 @@ import { monetizationConfig } from '../../config/monetization';
 ---
 
 <ArticleLayout
-  title="Affiliate Disclosure"
-  metaTitle={`FTC & Amazon Affiliate Disclosure | ${siteConfig.name}`}
-  metaDescription={`Full FTC 16 CFR Part 255 and Amazon Associates affiliate disclosure for ${siteConfig.name}.`}
+  title="Affiliate & Monetization Disclosure"
+  metaTitle={`FTC Affiliate & Monetization Disclosure | ${siteConfig.name}`}
+  metaDescription={`Transparent FTC 16 CFR Part 255 disclosure regarding retailer links and future affiliate partnerships on ${siteConfig.name}.`}
   pathname="/affiliate-disclosure/"
   breadcrumbs={[{ name: 'Affiliate Disclosure', href: '/affiliate-disclosure/' }]}
 >
@@ -19,24 +19,44 @@ import { monetizationConfig } from '../../config/monetization';
     {monetizationConfig.affiliateDisclosureShort}
   </div>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    1. FTC Compliance (16 CFR Part 255)
-  </h2>
-  <p>
-    In accordance with the Federal Trade Commission's 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), <strong>{siteConfig.name}</strong> discloses that some of the outbound product links in our calculator shopping lists (routed through <code>/go/</code>) are affiliate referral links. If you click one of these links and make a purchase at a partner retailer, we may receive a small referral commission at <strong>zero additional cost to you</strong>.
-  </p>
+  {monetizationConfig.affiliateEnabled ? (
+    <>
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+        1. FTC Compliance (16 CFR Part 255)
+      </h2>
+      <p>
+        In accordance with the Federal Trade Commission's 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), <strong>{siteConfig.name}</strong> discloses that outbound product links in our calculator shopping lists routed through <code>/go/</code> may be affiliate referral links. If you click one of these links and make a qualifying purchase at a partner retailer, we may receive a referral commission at <strong>zero additional cost to you</strong>.
+      </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    2. Amazon Associates Program Participation
-  </h2>
-  <p>
-    {siteConfig.legalName} is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com. As an Amazon Associate we earn from qualifying purchases.
-  </p>
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+        2. Retail Affiliate Program Participation
+      </h2>
+      <p>
+        Where active, {siteConfig.legalName} earns referral fees solely from qualifying purchases through properly tagged partner links (such as Amazon Associates and/or Impact/retailer networks) only after formal program approval.
+      </p>
+    </>
+  ) : (
+    <>
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+        1. Current Pre-Affiliate Status
+      </h2>
+      <p>
+        At this time, <strong>{siteConfig.name}</strong> has not activated any paid affiliate programs (including Amazon Associates or Impact/Home Depot affiliate links), and affiliate buy buttons are disabled across all calculators. We receive zero commissions or referral fees from any retailer or brand.
+      </p>
+
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+        2. Planned Future Disclosures (FTC 16 CFR Part 255)
+      </h2>
+      <p>
+        If {siteConfig.legalName} is approved for and enables affiliate partnerships in the future, this disclosure and every tagged outbound link (<code>rel="sponsored nofollow noopener"</code>) will be updated prior to activation in accordance with FTC 16 CFR Part 255 rules.
+      </p>
+    </>
+  )}
 
   <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
     3. Editorial Independence
   </h2>
   <p>
-    Affiliate partnerships never influence our mathematical formulas, coverage rate defaults, or quantity calculations. You can edit any unit price or coverage rate in any calculator, and you are never obligated to use our shopping links.
+    Retail pricing benchmarks and external links never influence our mathematical formulas, coverage rate defaults, or quantity calculations. You can edit any unit price or coverage rate in any calculator, and all tools remain 100% free to use.
   </p>
 </ArticleLayout>

@@ -37,8 +37,8 @@ import states from '../../data/costs/states.json';
                 <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950 px-2.5 py-0.5 rounded">
                   {job.typicalProjectSize.toLocaleString()} {job.unit}
                 </span>
-                <span class="text-xs text-slate-500">
-                  Labor: {Math.round(job.laborShare * 100)}%
+                <span class={`text-[11px] font-semibold px-2 py-0.5 rounded ${job.verified ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300' : 'text-slate-500'}`}>
+                  {job.verified ? 'Verified Model' : `Labor: ${Math.round(job.laborShare * 100)}%`}
                 </span>
               </div>
               <h3 class="text-lg font-bold text-slate-900 dark:text-white">

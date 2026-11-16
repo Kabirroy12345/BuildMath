@@ -5,8 +5,8 @@ import { siteConfig } from '../../config/site';
 
 <ArticleLayout
   title={`About ${siteConfig.name}`}
-  metaTitle={`About ${siteConfig.name}: Free Trade-Verified DIY Calculators`}
-  metaDescription={`Learn how ${siteConfig.name} builds fast, accurate home improvement material and cost calculators reviewed by residential construction estimators.`}
+  metaTitle={`About ${siteConfig.name}: Free Source-Cited DIY Calculators`}
+  metaDescription={`Learn how ${siteConfig.name} builds fast, source-cited home improvement material and cost calculators from published specs, IRC codes, and BLS wage data.`}
   pathname="/about/"
   breadcrumbs={[{ name: 'About Us', href: '/about/' }]}
 >
@@ -21,16 +21,16 @@ import { siteConfig } from '../../config/site';
 
   <section class="card p-6 my-8 bg-slate-50 dark:bg-slate-900/60">
     <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-      Editorial & Technical Review
+      Published Standards & Technical Sources
     </h2>
     <p class="text-sm font-semibold text-brand-700 dark:text-brand-300">
-      {siteConfig.author.name} — {siteConfig.author.role} ({siteConfig.author.experienceYears}+ Years Experience)
+      {siteConfig.author.name} — {siteConfig.author.role}
     </p>
     <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">
       {siteConfig.author.bio}
     </p>
     <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-      Credentials & Standards Referenced: {siteConfig.author.credentials}
+      Standards Referenced: {siteConfig.author.credentials}
     </p>
   </section>
 

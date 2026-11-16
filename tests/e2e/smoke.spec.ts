@@ -45,10 +45,19 @@ test.describe('BuildMath E2E Smoke Suite', () => {
     await expect(page.locator('body')).toContainText('Interior Paint Calculator');
   });
 
-  test('Cost guides render national and state estimates with noindex safeguard while unverified', async ({ page }) => {
+  test('Verified Batch-1 cost guides are indexed while unverified jobs and non-Batch-1 states stay noindex', async ({ page }) => {
     await page.goto('/cost/roof-replacement/texas/');
     await expect(page.locator('h1')).toContainText('Cost of Roof Replacement in Texas');
-    const robots = await page.locator('meta[name="robots"]').getAttribute('content');
-    expect(robots).toContain('noindex');
+    const verifiedRobots = await page.locator('meta[name="robots"]').getAttribute('content');
+    expect(verifiedRobots).toContain('index');
+    expect(verifiedRobots).not.toContain('noindex');
+
+    await page.goto('/cost/deck-building/texas/');
+    const unverifiedRobots = await page.locator('meta[name="robots"]').getAttribute('content');
+    expect(unverifiedRobots).toContain('noindex');
+
+    await page.goto('/cost/roof-replacement/wyoming/');
+    const nonBatchRobots = await page.locator('meta[name="robots"]').getAttribute('content');
+    expect(nonBatchRobots).toContain('noindex');
   });
 });

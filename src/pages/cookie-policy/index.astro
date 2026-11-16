@@ -30,25 +30,25 @@ import { siteConfig } from '../../config/site';
   </ul>
 
   <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    2. Optional Advertising & Analytics Cookies (Google Consent Mode v2)
+    2. Advertising & Analytics Cookies
   </h2>
   <p>
-    By default, optional advertising and analytics storage (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>, and <code>analytics_storage</code>) are set to <code>denied</code> until you click "Accept All" on our consent banner.
+    Currently, display advertising and third-party ad cookies are disabled by default across {siteConfig.name}. When display ads are enabled, optional EU/UK advertising consent is handled through Google AdSense's certified TCF v2.2 Consent Management Platform (CMP).
   </p>
 
   <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    3. How to Reset Your Cookie Preferences
+    3. How to Clear Your Browser Storage
   </h2>
   <p>
-    You can clear your saved consent preference and reset local storage at any time using the button below, or via your browser settings:
+    You can clear your saved local storage preferences on this device at any time using the button below, or via your browser settings:
   </p>
   <div class="my-4">
     <button
       type="button"
-      onclick="localStorage.removeItem('buildmath_consent_v2'); window.location.reload();"
+      onclick="localStorage.removeItem('buildmath_consent_v2'); localStorage.removeItem('buildmath_theme'); window.location.reload();"
       class="btn-secondary text-xs"
     >
-      Reset My Cookie Consent Preferences
+      Clear Local Storage Preferences
     </button>
   </div>
 </ArticleLayout>

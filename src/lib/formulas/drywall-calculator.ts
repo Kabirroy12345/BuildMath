@@ -10,7 +10,7 @@ export interface DrywallCalculatorInput {
   windows: number; // 15 sq ft each
   sheetLengthFeet: number; // 8 or 12 ft (4x8 = 32 sq ft, 4x12 = 48 sq ft)
   wastePercent: number; // default 10%
-  compoundGallonsPer100SqFt: number; // USG rule-of-thumb default 1.4 gal per 100 sq ft (3 coats)
+  compoundGallonsPer100SqFt: number; // USG rule-of-thumb default 1.125 gal per 100 sq ft (0.01125 gal/sq ft, or one 4.5-gal pail per 400 sq ft)
   screwsPerSheet: number; // USG Sheetrock Handbook default 32 screws per 4x8 sheet
   pricePerSheet: number; // default $15.80 for 1/2" 4x8 sheet
 }
@@ -42,8 +42,8 @@ export function calculateDrywall(input: DrywallCalculatorInput): CalculationResu
   const roundedSheets = ceilUnits(exactSheets);
 
   // USG Sheetrock Handbook rule of thumb:
-  // ~0.053 gal/sq ft (5.3 gal per 100 sq ft) or ~1.4 gal per 100 sq ft for residential 3-coat finish
-  const mudRatePer100 = Math.max(0.5, input.compoundGallonsPer100SqFt || 1.4);
+  // ~1.125 gal per 100 sq ft (0.01125 gal/sq ft, or one 4.5-gal pail per 400 sq ft) for 3-coat finish
+  const mudRatePer100 = Math.max(0.5, input.compoundGallonsPer100SqFt || 1.125);
   const exactMudGallons = (netArea / 100) * mudRatePer100;
   const mudBuckets45Gal = Math.max(1, ceilUnits(exactMudGallons / 4.5));
 
@@ -156,7 +156,7 @@ export function getDrywallQuickReference(): QuickReferenceRow[] {
       windows: r.win,
       sheetLengthFeet: 8,
       wastePercent: 10,
-      compoundGallonsPer100SqFt: 1.4,
+      compoundGallonsPer100SqFt: 1.125,
       screwsPerSheet: 32,
       pricePerSheet: 15.8,
     });

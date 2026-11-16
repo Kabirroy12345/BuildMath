@@ -1410,6 +1410,7 @@ describe('28. Drywall Calculator Formula', () => {
   it('Case 1: 12x12 room, 8ft walls + ceiling, 2 doors, 2 windows, 4x8 sheets, 10% waste', () => {
     // Walls = 384, Ceiling = 144, Openings = 72 -> Net = 456 sq ft.
     // With 10% waste = 501.6 sq ft. / 32 = 15.675 -> 16 sheets.
+    // Mud = 4.56 * 1.125 = 5.13 gal -> 2 buckets (4.5-gal).
     const res = calculateDrywall({
       roomLengthFeet: 12,
       roomWidthFeet: 12,
@@ -1419,13 +1420,14 @@ describe('28. Drywall Calculator Formula', () => {
       windows: 2,
       sheetLengthFeet: 8,
       wastePercent: 10,
-      compoundGallonsPer100SqFt: 1.4,
+      compoundGallonsPer100SqFt: 1.125,
       screwsPerSheet: 32,
       pricePerSheet: 15.8,
     });
     expect(res.secondaryResults[0].value).toBe(456);
     expect(res.primaryResult.exactValue).toBe(15.68);
     expect(res.primaryResult.value).toBe(16);
+    expect(res.secondaryResults[1].value).toBe('5.1 gal (2 buckets)');
     expect(res.secondaryResults[3].value).toBe(512); // 16 * 32 screws
   });
 
@@ -1439,14 +1441,14 @@ describe('28. Drywall Calculator Formula', () => {
       windows: 2,
       sheetLengthFeet: 12,
       wastePercent: 10,
-      compoundGallonsPer100SqFt: 1.4,
+      compoundGallonsPer100SqFt: 1.125,
       screwsPerSheet: 48,
       pricePerSheet: 22.5,
     });
     expect(res.primaryResult.value).toBe(11);
   });
 
-  it('Case 3: Walls only (no ceiling) on 10x10 room, 8ft height, 0 openings, 0% waste -> 320 sq ft = 10 sheets', () => {
+  it('Case 3: Walls only (no ceiling) on 10x10 room, 8ft height, 0 openings, 0% waste -> 320 sq ft = 10 sheets, 1 bucket mud', () => {
     const res = calculateDrywall({
       roomLengthFeet: 10,
       roomWidthFeet: 10,
@@ -1456,11 +1458,12 @@ describe('28. Drywall Calculator Formula', () => {
       windows: 0,
       sheetLengthFeet: 8,
       wastePercent: 0,
-      compoundGallonsPer100SqFt: 1.4,
+      compoundGallonsPer100SqFt: 1.125,
       screwsPerSheet: 32,
       pricePerSheet: 15.8,
     });
     expect(res.primaryResult.value).toBe(10);
+    expect(res.secondaryResults[1].value).toBe('3.6 gal (1 buckets)');
   });
 });
 

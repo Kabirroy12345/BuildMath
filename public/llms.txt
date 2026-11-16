@@ -1,15 +1,15 @@
-# BuildMath (https://buildmath.com)
+# BuildMath (https://buildmath.kabir-23bce10815.workers.dev)
 
-> Free, trade-verified DIY and residential home-improvement calculators + state-by-state construction cost guides for US homeowners.
+> Free, source-cited DIY and residential home-improvement calculators + state-by-state construction cost guides for US homeowners.
 
 ## Overview
 BuildMath provides 32 deterministic material takeoff calculators and 25 national & state cost guides (across all 50 US states and DC). Every calculator outputs both exact engineering calculations and store-purchasable units (80-lb bags, 5-gal buckets, 3-bundle roofing squares, 12-ft carpet rolls) alongside editable coverage rates and waste factors.
 
 ## Core Sections
-- All Calculators Hub: https://buildmath.com/calculators/
-- Cost Guides Hub: https://buildmath.com/cost/
-- How-To Measurement Guides: https://buildmath.com/guides/
-- Formula & Cost Methodology: https://buildmath.com/methodology/
+- All Calculators Hub: https://buildmath.kabir-23bce10815.workers.dev/calculators/
+- Cost Guides Hub: https://buildmath.kabir-23bce10815.workers.dev/cost/
+- How-To Measurement Guides: https://buildmath.kabir-23bce10815.workers.dev/guides/
+- Formula & Cost Methodology: https://buildmath.kabir-23bce10815.workers.dev/methodology/
 
 ## Calculator Categories
 - Painting (`/calculators/painting/`): Interior Paint, Exterior Paint, Deck Stain, Wallpaper Roll Calculator

@@ -37,11 +37,6 @@ export function buildOrganizationSchema() {
     url: `${siteConfig.url}/`,
     email: siteConfig.email,
     logo: `${siteConfig.url}/favicon.svg`,
-    founder: {
-      '@type': 'Person',
-      name: siteConfig.author.name,
-      jobTitle: siteConfig.author.role,
-    },
   };
 }
 
@@ -82,9 +77,9 @@ export function buildWebApplicationSchema(params: {
       priceCurrency: 'USD',
     },
     author: {
-      '@type': 'Person',
+      '@type': 'Organization',
       name: siteConfig.author.name,
-      jobTitle: siteConfig.author.role,
+      description: siteConfig.author.credentials,
     },
   };
 }
@@ -111,6 +106,7 @@ export function buildArticleSchema(params: {
   pathname: string;
   datePublished?: string;
   dateModified?: string;
+  omitDates?: boolean;
 }) {
   return {
     '@context': 'https://schema.org',
@@ -121,12 +117,15 @@ export function buildArticleSchema(params: {
       '@type': 'WebPage',
       '@id': buildCanonicalUrl(params.pathname),
     },
-    datePublished: params.datePublished || siteConfig.lastUpdatedDefault,
-    dateModified: params.dateModified || siteConfig.lastUpdatedDefault,
+    ...(!params.omitDates
+      ? {
+          datePublished: params.datePublished || siteConfig.lastUpdatedDefault,
+          dateModified: params.dateModified || siteConfig.lastUpdatedDefault,
+        }
+      : {}),
     author: {
-      '@type': 'Person',
+      '@type': 'Organization',
       name: siteConfig.author.name,
-      jobTitle: siteConfig.author.role,
       description: siteConfig.author.credentials,
     },
     publisher: {

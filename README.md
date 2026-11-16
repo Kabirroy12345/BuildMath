@@ -2,8 +2,9 @@
 
 # 🏗️ BuildMath
 
-### Trade-Verified DIY & Residential Construction Calculators + Programmatic US Cost Engine
+### Source-Cited DIY & Residential Construction Calculators + Programmatic US Cost Engine
 
+[![CI](https://github.com/Kabirroy12345/BuildMath/actions/workflows/ci.yml/badge.svg)](https://github.com/Kabirroy12345/BuildMath/actions/workflows/ci.yml)
 [![Live Site](https://img.shields.io/badge/Live_Demo-buildmath.kabir--23bce10815.workers.dev-0284c7?style=for-the-badge&logo=cloudflare&logoColor=white)](https://buildmath.kabir-23bce10815.workers.dev/)
 [![Astro 5](https://img.shields.io/badge/Astro_5-Static_SSG-ff5d01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build/)
 [![Preact Islands](https://img.shields.io/badge/Preact-Islands_Architecture-673ab8?style=for-the-badge&logo=preact&logoColor=white)](https://preactjs.com/)
@@ -120,7 +121,7 @@ Every calculator supports **Imperial (`ft` / `in`) & Metric (`m` / `cm`) toggles
 | 25 | **Landscaping** | Grass Seed Rate Calculator | `/calculators/grass-seed-calculator/` | $(\text{Sq Ft}\div 1,000) \times \text{Cultivar Rate}$ (New Lawn vs. Overseeding) |
 | 26 | **Fencing/Deck** | Wood Fence Post, Rail & Picket Calc | `/calculators/fence-calculator/` | $\lceil L \div \text{Spacing}\rceil + 1$ posts, rails, pickets & post-hole concrete bags |
 | 27 | **Fencing/Deck** | Deck Board, Joist & Fastener Calc | `/calculators/deck-calculator/` | Decking boards (12/16/20-ft), joists (12/16/24" OC), ledger & hidden fasteners |
-| 28 | **Drywall/Walls** | Drywall Sheet, Mud, Tape & Screw Calc | `/calculators/drywall-calculator/` | 4×8 / 4×12 sheets + USG handbook mud ($0.053\text{ gal/sq ft}$), tape & screws |
+| 28 | **Drywall/Walls** | Drywall Sheet, Mud, Tape & Screw Calc | `/calculators/drywall-calculator/` | 4×8 / 4×12 sheets + USG handbook mud ($1.125\text{ gal/100 sq ft}$), tape & screws |
 | 29 | **Drywall/Walls** | Stair Stringer & IRC Code Calculator | `/calculators/stair-calculator/` | Risers, treads, stringer hypotenuse & **2024 IRC R311.7.5 compliance check** |
 | 30 | **Conversions** | Square Footage Calculator | `/calculators/square-footage-calculator/` | Multi-shape area ($\text{ft}^2$, $\text{yd}^2$, $\text{m}^2$, acres) + unit cost estimator |
 | 31 | **Conversions** | Cubic Yard Calculator | `/calculators/cubic-yard-calculator/` | Rectangular & circular prism volume ($\text{ft}^3 \leftrightarrow \text{yd}^3 \leftrightarrow \text{m}^3$) |
@@ -148,8 +149,8 @@ Each state page renders genuinely localized data from [`src/data/costs/states.js
 
 ## 🔍 5. Technical SEO, Structured Data & Guardrails
 
-- **Zero Unverified Thin Pages Indexed:** Every job in [`src/data/costs/jobs.json`](./src/data/costs/jobs.json) carries a `"verified"` boolean. While `"verified": false`, all corresponding `/cost/[job]/` and `/cost/[job]/[state]/` pages automatically output `<meta name="robots" content="noindex, follow">` and are excluded from [`sitemap-cost.xml`](./src/pages/sitemap-cost.xml.ts).
-- **Batch State Rollout (`indexedStates`):** [`src/config/seo.ts`](./src/config/seo.ts) restricts initial state indexing to the 10 most populous states in Batch 1 once a job is verified, preventing programmatic crawl spikes.
+- **Bottom-Up Flagship Cost Verification & Noindex Guardrail:** Jobs in [`src/data/costs/jobs.json`](./src/data/costs/jobs.json) carry a `"verified"` flag. Currently **3 flagship jobs** (`roof-replacement`, `interior-painting`, `concrete-patio`) are verified bottom-up from BuildMath calculator takeoffs (`prices.json`) plus BLS OEWS crew hours; the remaining 22 draft jobs output `<meta name="robots" content="noindex, follow">` and are excluded from [`sitemap-cost.xml`](./src/pages/sitemap-cost.xml.ts).
+- **Batch State Rollout (`indexedStates`):** [`src/config/seo.ts`](./src/config/seo.ts) restricts state indexing to the 10 most populous states in Batch 1 (30 state pages + 3 national guides + 1 `/cost/` hub = 34 indexed cost URLs), preventing programmatic crawl spikes.
 - **Rich JSON-LD Schema Graph (`src/lib/seo/schema.ts`):**
   - `WebSite` (with `SearchAction`) + `Organization` on `/`
   - `BreadcrumbList` on every page
@@ -161,16 +162,14 @@ Each state page renders genuinely localized data from [`src/data/costs/states.js
 
 ## 💰 6. Monetization & Conversion Architecture
 
-Controlled centrally via [`src/config/monetization.ts`](./src/config/monetization.ts):
+Controlled centrally via [`src/config/monetization.ts`](./src/config/monetization.ts) (all paid flags start disabled until approved):
 
-1. **Primary Result Affiliate CTA + Materials Shopping List (`affiliateEnabled: true`):**
-   - Right inside the main calculator result box (e.g., `56 bags (80-lb)`), users get an immediate, high-intent action button: **`Buy 56 bags (80-lb Pre-Mixed Concrete Bags) at Home Depot ↗`**.
-   - Bulk building materials (concrete, lumber, drywall, shingles, mulch) route to **Home Depot (Impact)**; tools and accessories (rollers, trowels, tape, fasteners) route to **Amazon Associates**.
-   - All outbound links route through `/go/[id]/` with `rel="sponsored nofollow noopener"` and `X-Robots-Tag / meta noindex, nofollow`.
+1. **Primary Result Material CTA & Shopping List (`affiliateEnabled: false` at launch):**
+   - Disabled until affiliate accounts (Amazon Associates / Impact) are approved so disclosure statements remain strictly accurate. When enabled, calculators display high-intent CTA links routed through `/go/[id]/` with `rel="sponsored nofollow noopener"` and `meta noindex, nofollow`.
 2. **Zero-CLS Display Ad Containers (`adsEnabled: false` at launch):**
    - [`src/components/AdSlot.astro`](./src/components/AdSlot.astro) reserves fixed minimum heights (`250px` / `90px`) and never renders above or inside the calculator widget, guaranteeing `CLS = 0.00`.
-3. **Google Consent Mode v2 (`cmpEnabled: true`):**
-   - [`src/components/ConsentBanner.astro`](./src/components/ConsentBanner.astro) defaults `ad_storage`, `ad_user_data`, `ad_personalization`, and `analytics_storage` to `'denied'` until user consent is granted.
+3. **Consent Management (`cmpEnabled: false` at launch):**
+   - Keeps custom consent UI disabled at launch; when display ads are activated, enable Google AdSense's certified TCF v2.2 CMP for EEA/UK traffic rather than a custom non-certified banner.
 4. **Contractor Lead-Gen Widget (`leadGenEnabled: false` at launch):**
    - [`src/components/LeadGenWidget.astro`](./src/components/LeadGenWidget.astro) sits on cost pages, ready to activate ZIP-code contractor quote matching once organic traffic matures.
 
@@ -181,7 +180,7 @@ Controlled centrally via [`src/config/monetization.ts`](./src/config/monetizatio
 | Metric | Target | Actual Build Output |
 | :--- | :--- | :--- |
 | **Total Static HTML Pages** | 1,350+ | **1,421 pages** (+ 32 SVG OG images + 5 XML sitemaps) |
-| **Full Static Build Time** | `< 60s` | **12.57 seconds** |
+| **Full Static Build Time** | `< 60s` | **19.04 seconds** |
 | **Total Client JS (Gzipped)** | `< 70 KB` | **~27.5 KB** (`CalculatorWidget`: `19.88 KB`, `Preact`: `4.48 KB`, `Signals`: `3.09 KB`) |
 | **Formula Unit Tests** | 90+ | **100 / 100 passed** (`vitest run`) |
 | **Broken Links / Orphan Pages** | `0` | **0 broken links / 0 orphan pages** (`npm run orphan:check`) |
@@ -192,6 +191,9 @@ Controlled centrally via [`src/config/monetization.ts`](./src/config/monetizatio
 
 ```text
 BuildMath/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # GitHub Actions CI: test, data:check, build, orphan:check
 ├── public/
 │   ├── _headers                    # HSTS, CSP, X-Frame-Options, immutable asset caching
 │   ├── _redirects                  # 301 canonical redirects
@@ -217,13 +219,13 @@ BuildMath/
 │   ├── config/
 │   │   ├── monetization.ts         # Ads, affiliate, lead-gen & CMP feature flags
 │   │   ├── seo.ts                  # Batch state indexing controls & character limits
-│   │   └── site.ts                 # Brand, domain, author E-E-A-T & env variable bindings
+│   │   └── site.ts                 # Brand, domain, source citations & env variable bindings
 │   ├── data/
 │   │   ├── calculators.json        # 32 complete calculator definitions
 │   │   ├── categories.json         # 8 trade categories
 │   │   ├── guides.json             # 5 how-to measurement articles
 │   │   ├── prices.json             # 27 national material unit prices with lastReviewed dates
-│   │   ├── products.json           # 62 affiliate products (Home Depot & Amazon)
+│   │   ├── products.json           # 62 retail product links (Home Depot & Amazon)
 │   │   └── costs/
 │   │       ├── jobs.json           # 25 residential jobs (national baselines & labor shares)
 │   │       └── states.json         # 51 US states/DC (BLS wages, BEA RPP, climate & licensing)

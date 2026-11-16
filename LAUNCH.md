@@ -62,8 +62,8 @@ People using a materials calculator have **high purchase intent** ("You need 56 
 ## Phase 3: Display Ads — Your Second Layer
 
 1. **Google AdSense (After 2–4 Weeks of Indexing)**:
-   - Once your 57 initial pages (32 calculators + 8 category hubs + 5 guides + legal pages) are indexed and getting steady impressions, apply for AdSense.
-   - Replace `pub-XXXXXXXXXXXXXXXX` in `public/ads.txt` and `src/config/monetization.ts`, then flip `adsEnabled: true` in `src/config/monetization.ts`.
+   - Once your 57 initial pages + 33 Batch-1 cost pages are indexed and getting steady impressions, apply for AdSense.
+   - Add your issued Publisher ID (`google.com, pub-..., DIRECT, f08c47fec0942fa0`) to `public/ads.txt` and `adsensePublisherId` in `src/config/monetization.ts`, then flip `adsEnabled: true` in `src/config/monetization.ts` and enable Google's built-in certified CMP in AdSense Privacy & Messaging for EEA/UK traffic.
    - All ad slots (`<AdSlot />`) reserve fixed minimum heights (`250px` / `90px`) and never sit above the calculator, keeping CLS at `0.00`.
 2. **Mediavine Journey (At 1,000 Monthly Sessions)**:
    - Apply for **Journey by Mediavine** once you reach ~1,000 monthly sessions for significantly higher RPMs than AdSense.
