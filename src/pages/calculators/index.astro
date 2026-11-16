@@ -2,6 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SearchBox, { type SearchableItem } from '../../components/SearchBox';
+import Icon from '../../components/Icon.astro';
+import { getCategoryIconName } from '../../lib/lucide-icons';
 import categories from '../../data/categories.json';
 import calculators from '../../data/calculators.json';
 
@@ -26,56 +28,83 @@ const searchItems: SearchableItem[] = calculators.map((calc) => ({
 >
   <Breadcrumbs items={[{ name: 'Calculators', href: '/calculators/' }]} />
 
-  <header class="mb-8">
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      All DIY & Home-Improvement Calculators
-    </h1>
-    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
-      Filter by trade category or search by project keyword. Every calculator runs locally in your browser with editable coverage rates, waste factors, and unit prices.
-    </p>
+  <header class="mb-8 pb-6 border-b border-hairline flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div>
+      <span class="bm-eyebrow-blue mb-2.5">
+        <Icon name="calculator" size={13} />
+        Instrument Directory // 32 Calculators
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        All DIY &amp; Home-Improvement Calculators
+      </h1>
+      <p class="mt-2 text-sm sm:text-base text-ink-muted max-w-3xl leading-relaxed">
+        Filter by trade category or keyword. Every instrument computes locally in your browser with editable coverage rates, waste factors, and unit prices.
+      </p>
+    </div>
+    <a href="/my-project/" class="bm-btn-secondary text-xs shrink-0 self-start lg:self-auto">
+      <Icon name="clipboard-list" size={15} class="text-blueprint" />
+      <span>Open Project Shopping List</span>
+    </a>
   </header>
 
   <!-- Interactive Search & Category Filter Grid -->
   <SearchBox
     client:load
     items={searchItems}
-    categories={categories.map((c) => ({ slug: c.slug, name: c.name }))}
+    categories={categories.map((c) => ({ slug: c.slug, name: c.shortName }))}
     placeholder="Filter calculators by keyword (e.g., paint, concrete, shingle, mulch, stairs)..."
     showGridFilter={true}
   />
 
-  <!-- Static Pre-Rendered Directory by Category for SEO & Noscript Users -->
-  <section class="mt-14 pt-10 border-t border-slate-200 dark:border-slate-800" aria-labelledby="directory-heading">
-    <h2 id="directory-heading" class="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-      Complete Calculator Directory by Category
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Static Pre-Rendered Directory by Category for SEO & Direct Navigation -->
+  <section class="mt-14 pt-10 border-t border-hairline" aria-labelledby="directory-heading">
+    <div class="mb-6">
+      <span class="bm-eyebrow mb-2">Complete Index // 08 Trades</span>
+      <h2 id="directory-heading" class="text-2xl font-bold text-ink tracking-tight">
+        Complete Calculator Directory by Category
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       {categories.map((cat) => {
         const catCalcs = calculators.filter((c) => c.category === cat.slug);
         return (
-          <div class="card p-6">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">
-              <a href={`/calculators/${cat.slug}/`} class="hover:text-brand-600">
-                {cat.name} Calculators
-              </a>
-            </h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 mb-4">
+          <div class="bm-panel p-5 sm:p-6">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <div class="flex items-center gap-2.5">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
+                  <Icon name={getCategoryIconName(cat.slug)} size={16} />
+                </span>
+                <h3 class="text-base sm:text-lg font-bold text-ink">
+                  <a href={`/calculators/${cat.slug}/`} class="hover:text-blueprint transition-colors">
+                    {cat.name} Calculators
+                  </a>
+                </h3>
+              </div>
+              <span class="font-mono text-[11px] text-ink-muted tabular-nums">
+                {catCalcs.length} tools
+              </span>
+            </div>
+
+            <p class="text-xs text-ink-muted mb-4 leading-relaxed">
               {cat.description}
             </p>
-            <ul class="space-y-2 text-sm">
+
+            <ul class="divide-y divide-hairline border-t border-hairline text-xs sm:text-sm">
               {catCalcs.map((calc) => (
-                <li class="flex items-center justify-between gap-2">
+                <li class="py-2.5 flex items-center justify-between gap-3">
                   <a
                     href={`/calculators/${calc.slug}/`}
-                    class="font-medium text-brand-700 dark:text-brand-300 hover:underline"
+                    class="font-medium text-ink hover:text-blueprint transition-colors"
                   >
                     {calc.name}
                   </a>
                   <a
                     href={`/cost/${calc.relatedCostJobSlug}/`}
-                    class="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                    class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-muted hover:text-blueprint shrink-0"
                   >
-                    Cost Guide →
+                    <span>Cost Guide</span>
+                    <Icon name="arrow-right" size={12} />
                   </a>
                 </li>
               ))}

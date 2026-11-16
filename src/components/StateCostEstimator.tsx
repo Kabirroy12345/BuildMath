@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'preact/hooks';
 import { calculateStateJobCost, type JobCostData, type StateCostData } from '../lib/formulas/state-cost';
+import LucideIcon from './LucideIcon';
 
 export interface StateCostEstimatorProps {
   job: JobCostData;
@@ -28,77 +29,90 @@ export default function StateCostEstimator({
     };
   }, [job, state, size, tier]);
 
+  const laborPct = Math.round(job.laborShare * 100);
+  const matPct = 100 - laborPct;
+
   return (
-    <div class="my-6 card p-5 sm:p-6 border-2 border-brand-600/80 dark:border-brand-500/80">
-      <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-200 dark:border-slate-800">
+    <div class="my-6 bm-panel overflow-hidden">
+      <div class="px-5 py-4 border-b border-hairline bg-surface-subtle/50 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-            Interactive {state.name} Estimator
+          <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-blueprint">
+            Interactive {state.name} Cost Model
           </span>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-            Customize Your {job.name} Size
+          <h2 class="text-base sm:text-lg font-bold text-ink mt-0.5">
+            Customize {job.name} Scope &amp; Spec Level
           </h2>
         </div>
-        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
-          State Multiplier: {(result.compositeMultiplier * 100).toFixed(1)}% of US Avg
+        <span class="bm-eyebrow tabular-nums">
+          Regional Index: {(result.compositeMultiplier * 100).toFixed(1)}% of US Avg
         </span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-        <div class="md:col-span-6 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-12">
+        <div class="md:col-span-6 p-5 sm:p-6 space-y-5 border-b md:border-b-0 md:border-r border-hairline">
           <div>
             <label
               htmlFor="estimator-size-input"
-              class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5"
+              class="block text-sm font-semibold text-ink mb-1.5"
             >
-              Project Size ({job.unitPlural || job.unit})
+              Project Size
             </label>
-            <input
-              id="estimator-size-input"
-              type="number"
-              inputMode="decimal"
-              min={1}
-              max={100000}
-              value={size}
-              onInput={(e) => setSize(Math.max(1, parseFloat((e.target as HTMLInputElement).value) || 1))}
-              class="input-field"
-            />
+            <div class="relative">
+              <input
+                id="estimator-size-input"
+                type="number"
+                inputMode="decimal"
+                min={1}
+                max={100000}
+                value={size}
+                onInput={(e) => setSize(Math.max(1, parseFloat((e.target as HTMLInputElement).value) || 1))}
+                class="bm-input pr-20 tabular-nums"
+              />
+              <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center font-mono text-xs text-ink-muted">
+                {job.unitPlural || job.unit}
+              </span>
+            </div>
           </div>
 
           <div>
-            <span class="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Material & Finish Grade
+            <span class="block text-sm font-semibold text-ink mb-2">
+              Material &amp; Finish Specification
             </span>
-            <div class="grid grid-cols-3 gap-2" role="group" aria-label="Material finish grade">
+            <div class="grid grid-cols-3 gap-2 p-1 rounded-lg bg-surface-subtle border border-hairline" role="group" aria-label="Material finish grade">
               {[
                 { id: 'budget', label: 'Economy' },
                 { id: 'typical', label: 'Mid-Grade' },
                 { id: 'highEnd', label: 'Premium' },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setTier(opt.id as 'budget' | 'typical' | 'highEnd')}
-                  aria-pressed={tier === opt.id}
-                  class={`py-2 px-3 rounded-lg text-xs font-semibold border transition-colors min-h-[42px] ${
-                    tier === opt.id
-                      ? 'bg-brand-600 text-white border-brand-600'
-                      : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
+              ].map((opt) => {
+                const active = tier === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setTier(opt.id as 'budget' | 'typical' | 'highEnd')}
+                    aria-pressed={active}
+                    class={`py-2 px-2.5 rounded-md text-xs font-semibold transition-all min-h-[38px] ${
+                      active
+                        ? 'bg-graphite-900 text-[#F8F8F5] dark:bg-lime-500 dark:text-graphite-900 shadow-sm'
+                        : 'text-ink-muted hover:text-ink'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {relatedCalculatorSlug && (
-            <div class="pt-2">
+            <div class="pt-1">
               <a
                 href={`/calculators/${relatedCalculatorSlug}/`}
-                class="inline-flex items-center text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+                class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blueprint hover:underline"
               >
-                Need exact DIY material quantities? Open the {job.name} Calculator →
+                <LucideIcon name="calculator" size={15} />
+                <span>Calculate exact DIY material quantities instead</span>
+                <LucideIcon name="arrow-right" size={14} />
               </a>
             </div>
           )}
@@ -106,31 +120,60 @@ export default function StateCostEstimator({
 
         <div
           aria-live="polite"
-          class="md:col-span-6 p-5 rounded-xl bg-slate-900 text-white dark:bg-slate-800 space-y-3"
+          class="md:col-span-6 p-5 sm:p-6 bg-graphite-900 text-[#F8F8F5] flex flex-col justify-between space-y-5"
         >
-          <div class="text-xs uppercase tracking-wider text-slate-300">
-            Estimated Cost in {state.name} ({size.toLocaleString()} {job.unit})
-          </div>
-          <div class="text-3xl font-extrabold text-accent-500">
-            ${result.typical.toLocaleString()}
-          </div>
-          <div class="text-xs text-slate-300">
-            Typical Range:{' '}
-            <strong class="text-white">
-              ${result.low.toLocaleString()} – ${result.high.toLocaleString()}
-            </strong>
+          <div>
+            <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#9BA1AA]">
+              <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+              <span>
+                {state.name} Estimate ({size.toLocaleString()} {job.unit})
+              </span>
+            </div>
+            <div class="mt-2 text-3xl sm:text-4xl font-extrabold text-lime-500 tabular-nums tracking-tight">
+              ${result.typical.toLocaleString()}
+            </div>
+            <div class="mt-1 font-mono text-xs text-[#9BA1AA] tabular-nums">
+              Range:{' '}
+              <span class="text-[#F8F8F5] font-semibold">
+                ${result.low.toLocaleString()} – ${result.high.toLocaleString()}
+              </span>
+            </div>
           </div>
 
-          <div class="pt-3 border-t border-slate-700 grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <span class="text-slate-400 block">Est. Labor ({Math.round(job.laborShare * 100)}%)</span>
-              <span class="text-sm font-bold text-white">${result.laborCost.toLocaleString()}</span>
+          {/* Visual Labor vs Materials Split Bar */}
+          <div class="space-y-2.5 pt-4 border-t border-graphite-700">
+            <div class="h-2 w-full rounded-full bg-graphite-800 overflow-hidden flex">
+              <div
+                style={{ width: `${laborPct}%` }}
+                class="h-full bg-[#6FA3D2]"
+                title={`Labor: ${laborPct}%`}
+              />
+              <div
+                style={{ width: `${matPct}%` }}
+                class="h-full bg-[#C6F36A]"
+                title={`Materials: ${matPct}%`}
+              />
             </div>
-            <div>
-              <span class="text-slate-400 block">Est. Materials ({Math.round((1 - job.laborShare) * 100)}%)</span>
-              <span class="text-sm font-bold text-white">
-                ${result.materialCost.toLocaleString()}
-              </span>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="p-2.5 rounded-lg bg-graphite-950/70 border border-graphite-700">
+                <span class="flex items-center gap-1.5 text-[#9BA1AA]">
+                  <span class="h-2 w-2 rounded-sm bg-[#6FA3D2]"></span>
+                  Labor ({laborPct}%)
+                </span>
+                <span class="mt-1 block text-sm font-bold text-[#F8F8F5] tabular-nums">
+                  ${result.laborCost.toLocaleString()}
+                </span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-graphite-950/70 border border-graphite-700">
+                <span class="flex items-center gap-1.5 text-[#9BA1AA]">
+                  <span class="h-2 w-2 rounded-sm bg-[#C6F36A]"></span>
+                  Materials ({matPct}%)
+                </span>
+                <span class="mt-1 block text-sm font-bold text-[#F8F8F5] tabular-nums">
+                  ${result.materialCost.toLocaleString()}
+                </span>
+              </div>
             </div>
           </div>
         </div>

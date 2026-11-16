@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProjectListManager from '../../components/ProjectListManager';
+import Icon from '../../components/Icon.astro';
 ---
 
 <BaseLayout
@@ -12,13 +13,23 @@ import ProjectListManager from '../../components/ProjectListManager';
 >
   <Breadcrumbs items={[{ name: 'My Project List', href: '/my-project/' }]} />
 
-  <header class="mb-6">
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      My Project Shopping List
-    </h1>
-    <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl">
-      Your saved calculator measurements and material takeoffs are stored privately in your browser. Print this page for the hardware store aisle or copy the list to your notes.
-    </p>
+  <header class="mb-6 pb-6 border-b border-hairline flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div>
+      <span class="bm-eyebrow-blue mb-2">
+        <Icon name="clipboard-list" size={13} />
+        Client-Side Storage // Private BOM
+      </span>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        My Project Shopping List
+      </h1>
+      <p class="mt-2 text-sm sm:text-base text-ink-muted max-w-3xl leading-relaxed">
+        Saved calculator takeoffs and hardware store material quantities remain strictly in your local browser storage. Print or copy your combined bill of materials for ordering.
+      </p>
+    </div>
+    <a href="/calculators/" class="bm-btn-secondary text-xs shrink-0 self-start sm:self-auto">
+      <Icon name="calculator" size={14} class="text-blueprint" />
+      <span>Add Another Calculation</span>
+    </a>
   </header>
 
   <ProjectListManager client:load />

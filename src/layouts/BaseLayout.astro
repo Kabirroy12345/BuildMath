@@ -4,6 +4,7 @@ import { siteConfig } from '../config/site';
 import { buildPageMeta, type PageMetaInput } from '../lib/seo/meta';
 import { buildOrganizationSchema, buildWebSiteSchema } from '../lib/seo/schema';
 import ConsentBanner from '../components/ConsentBanner.astro';
+import Icon from '../components/Icon.astro';
 import categories from '../data/categories.json';
 
 interface Props extends PageMetaInput {
@@ -37,6 +38,14 @@ const allSchemas = [
   ...(pathname === '/' ? [buildWebSiteSchema(), buildOrganizationSchema()] : []),
   ...schemas,
 ];
+
+const navLinks = [
+  { label: 'Calculators', href: '/calculators/', active: pathname.startsWith('/calculators') },
+  { label: 'Cost Guides', href: '/cost/', active: pathname.startsWith('/cost') },
+  { label: 'How-To Guides', href: '/guides/', active: pathname.startsWith('/guides') },
+  { label: 'Methodology', href: '/methodology/', active: pathname.startsWith('/methodology') },
+  { label: 'About', href: '/about/', active: pathname.startsWith('/about') },
+];
 ---
 
 <!doctype html>
@@ -50,6 +59,8 @@ const allSchemas = [
     <link rel="canonical" href={meta.canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:site_name" content={siteConfig.name} />
@@ -66,7 +77,7 @@ const allSchemas = [
     <meta name="twitter:description" content={meta.description} />
     <meta name="twitter:image" content={meta.ogImage} />
 
-    <!-- Theme initialization (no flash) -->
+    <!-- Theme initialization (zero FOUC) -->
     <script is:inline>
       (function () {
         try {
@@ -88,52 +99,71 @@ const allSchemas = [
   <body class="min-h-screen flex flex-col">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-brand-600 focus:text-white focus:font-semibold"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-lime-500 focus:text-graphite-900 focus:font-semibold"
     >
       Skip to main content
     </a>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur">
+    <!-- Precision Header -->
+    <header class="sticky top-0 z-40 border-b border-hairline bg-canvas/90 backdrop-blur-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        <a href="/" class="flex items-center gap-2.5 group">
-          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white font-extrabold text-lg shadow-sm group-hover:bg-brand-700 transition-colors">
+        <a href="/" class="flex items-center gap-3 group shrink-0">
+          <span class="relative flex h-9 w-9 items-center justify-center rounded-lg bg-graphite-900 dark:bg-surface-subtle border border-hairline text-[#F8F8F5] font-mono font-bold text-sm tracking-tight transition-transform duration-150 group-hover:scale-[1.03]">
             BM
+            <span aria-hidden="true" class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-sm bg-lime-500 border-2 border-canvas"></span>
           </span>
-          <div>
-            <span class="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
-              {siteConfig.name}
-            </span>
-            <span class="hidden sm:block text-[11px] text-slate-500 dark:text-slate-400 leading-none">
-              Source-Cited DIY Calculators
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="text-base sm:text-lg font-extrabold tracking-tight text-ink">
+                {siteConfig.name}
+              </span>
+              <span class="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-surface-subtle text-ink-muted border border-hairline">
+                US Specs
+              </span>
+            </div>
+            <span class="hidden sm:block text-[11px] font-mono text-ink-muted leading-none mt-0.5">
+              Source-Cited Material &amp; Cost Engine
             </span>
           </div>
         </a>
 
-        <nav aria-label="Main navigation" class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-700 dark:text-slate-300">
-          <a href="/calculators/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            All Calculators
-          </a>
-          <a href="/cost/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            Cost Guides
-          </a>
-          <a href="/guides/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            How-To Guides
-          </a>
-          <a href="/methodology/" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-            Methodology
-          </a>
+        <nav aria-label="Main navigation" class="hidden md:flex items-center gap-1 text-sm font-medium">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              aria-current={link.active ? 'page' : undefined}
+              class={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
+                link.active
+                  ? 'bg-surface text-ink border border-hairline font-semibold'
+                  : 'text-ink-muted hover:text-ink hover:bg-surface-subtle/70'
+              }`}
+            >
+              {link.active && (
+                <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+              )}
+              <span>{link.label}</span>
+            </a>
+          ))}
         </nav>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 shrink-0">
+          <a
+            href="/calculators/"
+            aria-label="Search calculators"
+            class="hidden sm:inline-flex md:hidden items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
+          >
+            <Icon name="search" size={16} />
+          </a>
+
           <a
             href="/my-project/"
-            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 hover:bg-brand-100 transition-colors min-h-[40px]"
+            class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-surface border border-hairline hover:border-hairline-strong text-ink transition-colors min-h-[40px]"
           >
-            <span>My Project</span>
+            <Icon name="clipboard-list" size={16} class="text-blueprint" />
+            <span class="hidden xs:inline sm:inline">My Project</span>
             <span
               id="project-count-badge"
-              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-brand-600 text-white"
+              class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-mono font-bold rounded bg-surface-subtle text-ink border border-hairline tabular-nums transition-colors"
             >
               0
             </span>
@@ -142,25 +172,81 @@ const allSchemas = [
           <button
             id="theme-toggle-btn"
             type="button"
-            aria-label="Toggle dark mode"
-            class="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Toggle color theme"
+            class="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-hairline bg-surface text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
           >
-            <span aria-hidden="true" class="dark:hidden">🌙</span>
-            <span aria-hidden="true" class="hidden dark:inline">☀️</span>
+            <span aria-hidden="true" class="dark:hidden flex items-center justify-center">
+              <Icon name="moon" size={17} />
+            </span>
+            <span aria-hidden="true" class="hidden dark:flex items-center justify-center text-lime-500">
+              <Icon name="sun" size={17} />
+            </span>
+          </button>
+
+          <button
+            id="mobile-menu-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav-drawer"
+            aria-label="Open navigation menu"
+            class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-hairline bg-surface text-ink hover:bg-surface-subtle transition-colors"
+          >
+            <span id="menu-icon-open" class="flex items-center justify-center">
+              <Icon name="menu" size={18} />
+            </span>
+            <span id="menu-icon-close" class="hidden items-center justify-center">
+              <Icon name="x" size={18} />
+            </span>
           </button>
         </div>
       </div>
 
-      <!-- Mobile Quick Sub-Nav -->
+      <!-- Mobile Quick Sub-Nav + Collapsible Drawer -->
       <nav
-        aria-label="Mobile navigation"
-        class="md:hidden border-t border-slate-100 dark:border-slate-900 px-4 py-2 flex items-center justify-around text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-50/80 dark:bg-slate-900/80"
+        aria-label="Mobile quick navigation"
+        class="md:hidden border-t border-hairline bg-surface/90 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-ink-muted overflow-x-auto gap-3"
       >
-        <a href="/calculators/" class="py-1 hover:text-brand-600">Calculators</a>
-        <a href="/cost/" class="py-1 hover:text-brand-600">Cost Guides</a>
-        <a href="/guides/" class="py-1 hover:text-brand-600">How-To Guides</a>
-        <a href="/methodology/" class="py-1 hover:text-brand-600">Methodology</a>
+        <a href="/calculators/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/calculators') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
+          Calculators
+        </a>
+        <a href="/cost/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/cost') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
+          Cost Guides
+        </a>
+        <a href="/guides/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/guides') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
+          How-To Guides
+        </a>
+        <a href="/methodology/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/methodology') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
+          Methodology
+        </a>
       </nav>
+
+      <div
+        id="mobile-nav-drawer"
+        class="hidden md:hidden border-t border-hairline bg-surface px-4 py-4 space-y-2 shadow-lg"
+      >
+        <div class="grid grid-cols-2 gap-2">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium border ${
+                link.active
+                  ? 'border-graphite-900 bg-graphite-900 text-[#F8F8F5] dark:border-lime-500 dark:bg-surface-subtle dark:text-ink'
+                  : 'border-hairline bg-canvas text-ink'
+              }`}
+            >
+              <span>{link.label}</span>
+              <Icon name="chevron-right" size={15} class="opacity-60" />
+            </a>
+          ))}
+          <a
+            href="/contact/"
+            class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium border border-hairline bg-canvas text-ink"
+          >
+            <span>Contact</span>
+            <Icon name="chevron-right" size={15} class="opacity-60" />
+          </a>
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
@@ -168,33 +254,35 @@ const allSchemas = [
       <slot />
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-16 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div>
-            <a href="/" class="flex items-center gap-2 font-extrabold text-lg text-slate-900 dark:text-white">
-              <span class="flex h-7 w-7 items-center justify-center rounded bg-brand-600 text-white text-sm">
+    <!-- Architectural Dark Graphite Footer -->
+    <footer class="mt-16 bg-graphite-900 text-[#D2D6DC] border-t border-graphite-700">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+          <div class="lg:col-span-4 space-y-4">
+            <a href="/" class="inline-flex items-center gap-2.5 font-extrabold text-lg text-[#F8F8F5]">
+              <span class="relative flex h-8 w-8 items-center justify-center rounded-md bg-graphite-800 border border-graphite-700 font-mono text-xs font-bold text-[#F8F8F5]">
                 BM
+                <span aria-hidden="true" class="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-sm bg-lime-500"></span>
               </span>
-              {siteConfig.name}
+              <span>{siteConfig.name}</span>
             </a>
-            <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p class="text-xs sm:text-sm text-[#9BA1AA] leading-relaxed max-w-sm">
               {siteConfig.description}
             </p>
-            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">
-              Maintained by <strong>{siteConfig.author.name}</strong> · {siteConfig.author.role}.
-            </p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-graphite-800 border border-graphite-700 font-mono text-[11px] text-[#9BA1AA]">
+              <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+              <span>Maintained by {siteConfig.author.name}</span>
+            </div>
           </div>
 
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
-              Calculator Categories
+          <div class="lg:col-span-3">
+            <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
+              Trade Categories
             </h2>
-            <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
               {categories.map((cat) => (
                 <li>
-                  <a href={`/calculators/${cat.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
+                  <a href={`/calculators/${cat.slug}/`} class="hover:text-lime-500 transition-colors">
                     {cat.name}
                   </a>
                 </li>
@@ -202,45 +290,46 @@ const allSchemas = [
             </ul>
           </div>
 
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
-              Popular Tools & Costs
+          <div class="lg:col-span-3">
+            <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
+              Popular Calculators &amp; Costs
             </h2>
-            <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              <li><a href="/calculators/paint-calculator/" class="hover:text-brand-600">Interior Paint Calculator</a></li>
-              <li><a href="/calculators/concrete-slab-calculator/" class="hover:text-brand-600">Concrete Slab Calculator</a></li>
-              <li><a href="/calculators/roofing-calculator/" class="hover:text-brand-600">Roofing Shingle Calculator</a></li>
-              <li><a href="/calculators/mulch-calculator/" class="hover:text-brand-600">Mulch & Bed Calculator</a></li>
-              <li><a href="/calculators/stair-calculator/" class="hover:text-brand-600">Stair Stringer Calculator</a></li>
-              <li><a href="/cost/" class="hover:text-brand-600">All 25 Home Improvement Cost Guides</a></li>
-              <li><a href="/guides/" class="hover:text-brand-600">DIY Measurement How-To Guides</a></li>
+            <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
+              <li><a href="/calculators/paint-calculator/" class="hover:text-lime-500 transition-colors">Interior Paint Calculator</a></li>
+              <li><a href="/calculators/concrete-slab-calculator/" class="hover:text-lime-500 transition-colors">Concrete Slab Calculator</a></li>
+              <li><a href="/calculators/roofing-calculator/" class="hover:text-lime-500 transition-colors">Roofing Shingle Calculator</a></li>
+              <li><a href="/calculators/mulch-calculator/" class="hover:text-lime-500 transition-colors">Mulch &amp; Bed Calculator</a></li>
+              <li><a href="/calculators/stair-calculator/" class="hover:text-lime-500 transition-colors">Stair Stringer Calculator</a></li>
+              <li><a href="/cost/" class="hover:text-lime-500 transition-colors">All 25 Project Cost Guides</a></li>
+              <li><a href="/guides/" class="hover:text-lime-500 transition-colors">Measurement Field Guides</a></li>
             </ul>
           </div>
 
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
-              About, Trust & Legal
+          <div class="lg:col-span-2">
+            <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
+              Trust &amp; Legal
             </h2>
-            <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-              <li><a href="/about/" class="hover:text-brand-600">About {siteConfig.name}</a></li>
-              <li><a href="/methodology/" class="hover:text-brand-600">Our Formula & Cost Methodology</a></li>
-              <li><a href="/contact/" class="hover:text-brand-600">Contact Us</a></li>
-              <li><a href="/affiliate-disclosure/" class="hover:text-brand-600">Affiliate Disclosure</a></li>
-              <li><a href="/disclaimer/" class="hover:text-brand-600">Construction Disclaimer</a></li>
-              <li><a href="/privacy-policy/" class="hover:text-brand-600">Privacy Policy</a></li>
-              <li><a href="/cookie-policy/" class="hover:text-brand-600">Cookie Policy</a></li>
-              <li><a href="/terms/" class="hover:text-brand-600">Terms of Use</a></li>
+            <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
+              <li><a href="/about/" class="hover:text-lime-500 transition-colors">About {siteConfig.name}</a></li>
+              <li><a href="/methodology/" class="hover:text-lime-500 transition-colors">Methodology</a></li>
+              <li><a href="/contact/" class="hover:text-lime-500 transition-colors">Contact Us</a></li>
+              <li><a href="/affiliate-disclosure/" class="hover:text-lime-500 transition-colors">Affiliate Disclosure</a></li>
+              <li><a href="/disclaimer/" class="hover:text-lime-500 transition-colors">Disclaimer</a></li>
+              <li><a href="/privacy-policy/" class="hover:text-lime-500 transition-colors">Privacy Policy</a></li>
+              <li><a href="/cookie-policy/" class="hover:text-lime-500 transition-colors">Cookie Policy</a></li>
+              <li><a href="/terms/" class="hover:text-lime-500 transition-colors">Terms of Use</a></li>
             </ul>
           </div>
         </div>
 
-        <div class="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div class="mt-10 pt-6 border-t border-graphite-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#8E949D]">
           <p>
-            © {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved. Estimates are for planning purposes; always verify local building codes before construction.
+            © {new Date().getFullYear()} {siteConfig.legalName}. Estimates are for planning purposes; always confirm local codes and manufacturer data sheets before construction.
           </p>
-          <p>
-            <a href="/sitemap-index.xml" class="hover:underline">XML Sitemap</a> •{' '}
-            <a href="/llms.txt" class="hover:underline">LLMs.txt</a>
+          <p class="font-mono flex items-center gap-3 shrink-0">
+            <a href="/sitemap-index.xml" class="hover:text-[#F8F8F5] transition-colors">sitemap-index.xml</a>
+            <span>//</span>
+            <a href="/llms.txt" class="hover:text-[#F8F8F5] transition-colors">llms.txt</a>
           </p>
         </div>
       </div>
@@ -256,7 +345,13 @@ const allSchemas = [
             if (!badge) return;
             var raw = localStorage.getItem('buildmath_project_list');
             var list = raw ? JSON.parse(raw) : [];
-            badge.textContent = String(Array.isArray(list) ? list.length : 0);
+            var count = Array.isArray(list) ? list.length : 0;
+            badge.textContent = String(count);
+            if (count > 0) {
+              badge.classList.add('!bg-[#C6F36A]', '!text-[#17191C]', '!border-transparent');
+            } else {
+              badge.classList.remove('!bg-[#C6F36A]', '!text-[#17191C]', '!border-transparent');
+            }
           } catch (e) {}
         }
 
@@ -271,6 +366,23 @@ const allSchemas = [
             try {
               localStorage.setItem('buildmath_theme', isDark ? 'dark' : 'light');
             } catch (e) {}
+          });
+        }
+
+        var menuBtn = document.getElementById('mobile-menu-btn');
+        var drawer = document.getElementById('mobile-nav-drawer');
+        var iconOpen = document.getElementById('menu-icon-open');
+        var iconClose = document.getElementById('menu-icon-close');
+        if (menuBtn && drawer) {
+          menuBtn.addEventListener('click', function () {
+            var isHidden = drawer.classList.toggle('hidden');
+            menuBtn.setAttribute('aria-expanded', String(!isHidden));
+            if (iconOpen && iconClose) {
+              iconOpen.classList.toggle('hidden', !isHidden);
+              iconOpen.classList.toggle('flex', isHidden);
+              iconClose.classList.toggle('hidden', isHidden);
+              iconClose.classList.toggle('flex', !isHidden);
+            }
           });
         }
       })();

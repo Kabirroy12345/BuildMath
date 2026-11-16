@@ -1,8 +1,13 @@
 ---
 import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
-import CalculatorWidget, { type ProductItem } from '../../../components/CalculatorWidget';
+import CalculatorWidget, {
+  type ProductItem,
+  type CalculatorDiagramType,
+} from '../../../components/CalculatorWidget';
 import AdSlot from '../../../components/AdSlot.astro';
 import FAQSection from '../../../components/FAQSection.astro';
+import Icon from '../../../components/Icon.astro';
+import { getCategoryIconName } from '../../../lib/lucide-icons';
 import { getQuickReferenceTable } from '../../../lib/formulas';
 import { siteConfig } from '../../../config/site';
 import { monetizationConfig } from '../../../config/monetization';
@@ -54,12 +59,14 @@ const relatedCalcs = (calc.relatedCalculators || [])
 const relatedJob = jobs.find((j) => j.slug === calc.relatedCostJobSlug) || jobs[0];
 const sampleStates = states.slice(0, 6);
 
-const diagramMap: Record<string, 'room-walls' | 'roof-pitch' | 'stair-stringer' | 'fence-layout'> = {
+const diagramMap: Record<string, CalculatorDiagramType> = {
   'paint-calculator': 'room-walls',
+  'drywall-calculator': 'room-walls',
   'roof-pitch-calculator': 'roof-pitch',
   'roofing-calculator': 'roof-pitch',
   'stair-calculator': 'stair-stringer',
   'fence-calculator': 'fence-layout',
+  'concrete-slab-calculator': 'concrete-slab',
 };
 const diagramType = diagramMap[calc.slug] || null;
 ---
@@ -77,21 +84,41 @@ const diagramType = diagramMap[calc.slug] || null;
     { name: calc.shortName, href: `/calculators/${calc.slug}/` },
   ]}
 >
-  <!-- 1. H1 + One-sentence intro (above the fold, no hero image pushing the tool down) -->
-  <header class="mb-4">
-    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      {calc.h1 || calc.name}
-    </h1>
-    <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-4xl">
-      {calc.intro}
-    </p>
+  <!-- 1. Compact Technical Instrument Header -->
+  <header class="mb-5 pb-5 border-b border-hairline flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div>
+      <div class="flex flex-wrap items-center gap-2 mb-2.5">
+        <a
+          href={`/calculators/${categoryObj.slug}/`}
+          class="bm-eyebrow-blue hover:opacity-85 transition-opacity"
+        >
+          <Icon name={getCategoryIconName(categoryObj.slug)} size={12} />
+          {categoryObj.name}
+        </a>
+        <span class="bm-eyebrow">Source-Cited Formula</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        {calc.h1 || calc.name}
+      </h1>
+      <p class="mt-2 text-sm sm:text-base text-ink-body max-w-3xl leading-relaxed">
+        {calc.intro}
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0 text-xs font-mono text-ink-muted">
+      <Icon name="shield-check" size={15} class="text-blueprint" />
+      <span>Verified {calc.lastReviewed || siteConfig.lastUpdatedDefault}</span>
+    </div>
   </header>
 
-  <!-- 2. The Interactive Calculator Widget (Inputs left, live Results + Materials + Cost right) -->
+  <!-- 2. Interactive Calculator Workbench (Inputs left, Graphite Readout right) -->
   <CalculatorWidget
     client:load
     slug={calc.slug}
     title={calc.name}
+    shortName={calc.shortName}
+    category={calc.category}
+    categoryName={categoryObj.name}
     fields={calc.inputs}
     diagramType={diagramType}
     productsMap={productsMap}
@@ -99,34 +126,39 @@ const diagramType = diagramMap[calc.slug] || null;
     affiliateEnabled={monetizationConfig.affiliateEnabled}
   />
 
-  <!-- 3. Ad slot #1 (below the calculator results, never above or inside the calculator) -->
+  <!-- 3. Ad slot #1 (strictly below calculator widget) -->
   <AdSlot position="belowCalculator" />
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-10">
-    <div class="lg:col-span-8 space-y-10">
-      <!-- 4. Quick-reference table (pre-computed at build time from the same formula function) -->
+    <div class="lg:col-span-8 space-y-8">
+      <!-- 4. Quick-reference table -->
       {quickRefTable && (
-        <section class="card p-6" aria-labelledby="quick-ref-heading">
-          <h2 id="quick-ref-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
-            {quickRefTable.title}
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Pre-calculated reference chart generated directly from our published formula:
-          </p>
+        <section class="bm-panel overflow-hidden" aria-labelledby="quick-ref-heading">
+          <div class="px-5 sm:px-6 py-4 border-b border-hairline bg-surface-subtle/40">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-blueprint">
+              Reference Specification Table
+            </span>
+            <h2 id="quick-ref-heading" class="text-lg sm:text-xl font-bold text-ink mt-0.5">
+              {quickRefTable.title}
+            </h2>
+          </div>
+
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-sm">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
               <thead>
-                <tr class="border-b-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
+                <tr class="border-b border-hairline bg-surface-subtle/60">
                   {quickRefTable.headers.map((h) => (
-                    <th class="py-3 px-4 font-bold text-slate-900 dark:text-white">{h}</th>
+                    <th class="py-3 px-4 font-mono text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody class="divide-y divide-hairline">
                 {quickRefTable.rows.map((row) => (
-                  <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-900/50">
+                  <tr class="hover:bg-surface-subtle/40 transition-colors">
                     {row.map((cell, idx) => (
-                      <td class={`py-2.5 px-4 ${idx === 0 ? 'font-semibold text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
+                      <td class={`py-2.5 px-4 ${idx === 0 ? 'font-semibold text-ink' : 'text-ink-body font-mono text-xs sm:text-sm'}`}>
                         {cell}
                       </td>
                     ))}
@@ -136,57 +168,72 @@ const diagramType = diagramMap[calc.slug] || null;
             </table>
           </div>
           {quickRefTable.footnote && (
-            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400 italic">
+            <p class="px-5 py-3 border-t border-hairline bg-surface-subtle/30 text-xs text-ink-muted">
               {quickRefTable.footnote}
             </p>
           )}
         </section>
       )}
 
-      <!-- 5. How the calculation works: plain-English explanation + exact formula + worked example -->
-      <section class="card p-6 space-y-4" aria-labelledby="how-it-works-heading">
-        <h2 id="how-it-works-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-          How the {calc.shortName} Calculation Works
-        </h2>
-        <div class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs sm:text-sm overflow-x-auto">
-          <span class="text-accent-500 font-bold uppercase tracking-wider block text-[11px] mb-1">
-            Exact Mathematical Formula
+      <!-- 5. How the calculation works -->
+      <section class="bm-panel p-5 sm:p-6 space-y-5" aria-labelledby="how-it-works-heading">
+        <div>
+          <span class="bm-eyebrow mb-2">Mathematical Spec</span>
+          <h2 id="how-it-works-heading" class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+            How the {calc.shortName} Calculation Works
+          </h2>
+        </div>
+
+        <div class="p-4 rounded-lg bg-graphite-900 text-[#F8F8F5] border border-graphite-700 font-mono text-xs sm:text-sm overflow-x-auto">
+          <span class="text-lime-500 font-semibold uppercase tracking-wider block text-[10px] mb-1.5">
+            Formula Specification
           </span>
           {calc.howToCalculate.formula}
         </div>
-        <ol class="list-decimal pl-5 space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
-          {calc.howToCalculate.steps.map((st) => (
-            <li>{st}</li>
+
+        <ol class="space-y-2.5 text-sm text-ink-body">
+          {calc.howToCalculate.steps.map((st, idx) => (
+            <li class="flex items-start gap-3">
+              <span class="font-mono text-xs font-bold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded mt-0.5 shrink-0 tabular-nums">
+                {String(idx + 1).padStart(2, '0')}
+              </span>
+              <span class="leading-relaxed">{st}</span>
+            </li>
           ))}
         </ol>
-        <div class="p-4 rounded-xl bg-brand-50/60 dark:bg-slate-800/60 border border-brand-200 dark:border-slate-700 space-y-2">
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white">
+
+        <div class="p-4 sm:p-5 rounded-lg bg-surface-subtle/60 border border-hairline border-l-4 border-l-blueprint space-y-2.5">
+          <h3 class="text-sm font-bold text-ink">
             Worked Example: {calc.howToCalculate.workedExample.title}
           </h3>
-          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          <p class="text-xs sm:text-sm text-ink-body leading-relaxed">
             {calc.howToCalculate.workedExample.scenario}
           </p>
-          <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          <ul class="space-y-1 text-xs sm:text-sm text-ink-body font-mono">
             {calc.howToCalculate.workedExample.steps.map((s) => (
-              <li>{s}</li>
+              <li class="flex items-start gap-2">
+                <span class="text-blueprint">→</span>
+                <span>{s}</span>
+              </li>
             ))}
           </ul>
-          <p class="text-xs sm:text-sm font-bold text-brand-700 dark:text-brand-300 pt-1">
-            Result: {calc.howToCalculate.workedExample.finalAnswer}
+          <p class="text-xs sm:text-sm font-bold text-ink pt-1.5 border-t border-hairline">
+            Final Result: <span class="text-blueprint">{calc.howToCalculate.workedExample.finalAnswer}</span>
           </p>
         </div>
       </section>
 
       <!-- 6. Practical tips & common mistakes -->
-      <section class="card p-6" aria-labelledby="tips-heading">
-        <h2 id="tips-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">
-          Practical Trade Tips & Common Mistakes to Avoid
+      <section class="bm-panel p-5 sm:p-6" aria-labelledby="tips-heading">
+        <span class="bm-eyebrow mb-2">Field Best Practices</span>
+        <h2 id="tips-heading" class="text-xl sm:text-2xl font-bold text-ink tracking-tight mb-4">
+          Practical Trade Tips &amp; Mistakes to Avoid
         </h2>
         <ul class="space-y-3">
           {calc.tipsAndMistakes.map((tip) => (
-            <li class="flex items-start gap-3 text-sm sm:text-base text-slate-700 dark:text-slate-300">
-              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold text-xs mt-0.5">
-                ✓
+            <li class="flex items-start gap-3 text-sm text-ink-body leading-relaxed">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-lime-500/20 text-ink mt-0.5">
+                <Icon name="check" size={14} class="text-ink dark:text-lime-500" />
               </span>
               <span>{tip}</span>
             </li>
@@ -194,37 +241,36 @@ const diagramType = diagramMap[calc.slug] || null;
         </ul>
       </section>
 
-      <!-- 7. "What it might cost" box linking to matching /cost/[job]/ and state pages -->
-      <section class="card p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-900 border-brand-200 dark:border-brand-900" aria-labelledby="cost-box-heading">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+      <!-- 7. "What it might cost" DIY vs Pro comparison -->
+      <section class="bm-panel p-5 sm:p-6 bg-surface-subtle/40" aria-labelledby="cost-box-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-hairline">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-              DIY vs. Hiring a Contractor
-            </span>
-            <h2 id="cost-box-heading" class="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
-              What {relatedJob.name} Might Cost Installed
+            <span class="bm-eyebrow-blue mb-1.5">DIY vs. Installed Cost</span>
+            <h2 id="cost-box-heading" class="text-lg sm:text-xl font-bold text-ink">
+              What {relatedJob.name} Costs Professionally Installed
             </h2>
           </div>
-          <a href={`/cost/${relatedJob.slug}/`} class="btn-primary text-xs shrink-0">
-            View National Cost Guide →
+          <a href={`/cost/${relatedJob.slug}/`} class="bm-btn-graphite text-xs shrink-0">
+            <span>National Cost Guide</span>
+            <Icon name="arrow-right" size={14} />
           </a>
         </div>
 
-        <p class="text-sm text-slate-700 dark:text-slate-300 mb-4">
-          Hiring a licensed professional for <strong>{relatedJob.name.toLowerCase()}</strong> averages{' '}
-          <strong>${Math.round(relatedJob.nationalTypicalPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> nationally (typical range:{' '}
-          <strong>${Math.round(relatedJob.nationalLowPerUnit * relatedJob.typicalProjectSize).toLocaleString()} – ${Math.round(relatedJob.nationalHighPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> for {relatedJob.typicalProjectSize.toLocaleString()} {relatedJob.unit}), with labor accounting for roughly {Math.round(relatedJob.laborShare * 100)}% of the total project bill.
+        <p class="text-sm text-ink-body mb-4 leading-relaxed tabular-nums">
+          Hiring a licensed contractor for <strong>{relatedJob.name.toLowerCase()}</strong> averages{' '}
+          <strong class="text-ink">${Math.round(relatedJob.nationalTypicalPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> nationally (range:{' '}
+          <strong class="text-ink">${Math.round(relatedJob.nationalLowPerUnit * relatedJob.typicalProjectSize).toLocaleString()} – ${Math.round(relatedJob.nationalHighPerUnit * relatedJob.typicalProjectSize).toLocaleString()}</strong> for {relatedJob.typicalProjectSize.toLocaleString()} {relatedJob.unit}), with labor representing roughly {Math.round(relatedJob.laborShare * 100)}% of total billing.
         </p>
 
         <div>
-          <span class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-            Compare Local {relatedJob.name} Costs by State:
+          <span class="block font-mono text-[11px] uppercase tracking-wider text-ink-muted mb-2.5">
+            Compare {relatedJob.name} Local Rates:
           </span>
           <div class="flex flex-wrap gap-2">
             {sampleStates.map((st) => (
               <a
                 href={`/cost/${relatedJob.slug}/${st.slug}/`}
-                class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-300"
+                class="px-3 py-1.5 rounded-md text-xs font-medium bg-surface border border-hairline hover:border-blueprint text-ink transition-colors"
               >
                 {st.name}
               </a>
@@ -236,48 +282,56 @@ const diagramType = diagramMap[calc.slug] || null;
       <!-- 8. Ad slot #2 -->
       <AdSlot position="inContent" />
 
-      <!-- 9. FAQ (5-7 specific questions, marked up with FAQPage schema) -->
+      <!-- 9. FAQ -->
       <FAQSection
         faqs={calc.faqs}
         title={`${calc.shortName} Calculator: Frequently Asked Questions`}
       />
 
-      <!-- 11. Author / source attribution line + "Last updated" date + link to /methodology/ -->
-      <footer class="card p-5 bg-slate-50 dark:bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
+      <!-- 10. Source attribution footer -->
+      <footer class="bm-panel p-5 bg-surface-subtle/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-ink-muted">
         <div>
-          <p class="font-semibold text-slate-900 dark:text-white">
-            Formula & Standards Compiled by {siteConfig.author.name}
+          <p class="font-semibold text-ink">
+            Formula &amp; Standards Compiled by {siteConfig.author.name}
           </p>
           <p class="mt-0.5">
-            {siteConfig.author.role} • {siteConfig.author.credentials}
+            {siteConfig.author.role} · {siteConfig.author.credentials}
           </p>
         </div>
-        <div class="sm:text-right shrink-0">
-          <p>Last Updated: <strong>{calc.lastReviewed || siteConfig.lastUpdatedDefault}</strong></p>
-          <a href="/methodology/" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
-            Read Our Formula Methodology →
+        <div class="sm:text-right shrink-0 space-y-1">
+          <p class="font-mono">Last Reviewed: <strong class="text-ink">{calc.lastReviewed || siteConfig.lastUpdatedDefault}</strong></p>
+          <a href="/methodology/" class="inline-flex items-center gap-1 text-blueprint font-semibold hover:underline">
+            <span>Formula Methodology</span>
+            <Icon name="arrow-right" size={13} />
           </a>
         </div>
       </footer>
     </div>
 
-    <!-- Sidebar: 10. Related calculators (4-6 internal links) -->
+    <!-- Sidebar: Related Calculators -->
     <aside class="lg:col-span-4 space-y-6">
-      <div class="card p-5 sticky top-20">
-        <h2 class="text-base font-bold text-slate-900 dark:text-white mb-3">
-          Related DIY Calculators
-        </h2>
-        <ul class="space-y-2.5">
+      <div class="bm-panel p-5 lg:sticky lg:top-20">
+        <div class="flex items-center justify-between gap-2 mb-3.5">
+          <h2 class="text-sm font-mono font-semibold uppercase tracking-wider text-ink">
+            Related Instruments
+          </h2>
+          <Icon name="compass" size={15} class="text-blueprint" />
+        </div>
+
+        <ul class="space-y-2">
           {relatedCalcs.map((rc) => (
             <li>
               <a
                 href={`/calculators/${rc.slug}/`}
-                class="block p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 hover:border-brand-500 transition-colors"
+                class="block p-3 rounded-lg bg-canvas border border-hairline hover:border-blueprint transition-colors group"
               >
-                <div class="text-sm font-bold text-slate-900 dark:text-white">
-                  {rc.name}
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-sm font-semibold text-ink group-hover:text-blueprint transition-colors">
+                    {rc.name}
+                  </span>
+                  <Icon name="arrow-right" size={13} class="text-ink-muted group-hover:text-blueprint shrink-0" />
                 </div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                <div class="text-xs text-ink-muted line-clamp-1 mt-1">
                   {rc.intro}
                 </div>
               </a>
@@ -285,12 +339,13 @@ const diagramType = diagramMap[calc.slug] || null;
           ))}
         </ul>
 
-        <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="mt-5 pt-4 border-t border-hairline space-y-2.5">
           <a
             href={`/calculators/${categoryObj.slug}/`}
-            class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline block"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blueprint hover:underline"
           >
-            ← All {categoryObj.name} Calculators
+            <Icon name="chevron-left" size={14} />
+            <span>All {categoryObj.name} Calculators</span>
           </a>
         </div>
       </div>

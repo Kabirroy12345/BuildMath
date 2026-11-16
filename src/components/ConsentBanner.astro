@@ -9,26 +9,26 @@ import { monetizationConfig } from '../config/monetization';
       role="dialog"
       aria-live="polite"
       aria-label="Cookie and privacy consent"
-      class="consent-banner hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur shadow-lg p-4"
+      class="consent-banner hidden fixed bottom-0 inset-x-0 z-50 border-t border-hairline bg-surface/95 backdrop-blur-md shadow-xl p-4"
     >
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          We use essential local storage to save your project list and optional cookies for anonymous analytics and advertising (Google Consent Mode v2). Read our{' '}
-          <a href="/privacy-policy/" class="underline font-medium text-brand-600 dark:text-brand-400">Privacy Policy</a> and{' '}
-          <a href="/cookie-policy/" class="underline font-medium text-brand-600 dark:text-brand-400">Cookie Policy</a>.
+        <p class="text-xs sm:text-sm text-ink-body leading-relaxed">
+          We use essential browser storage for your saved project list and optional cookies for analytics and advertising. Read our{' '}
+          <a href="/privacy-policy/" class="underline font-medium text-blueprint">Privacy Policy</a> and{' '}
+          <a href="/cookie-policy/" class="underline font-medium text-blueprint">Cookie Policy</a>.
         </p>
         <div class="flex items-center gap-2 shrink-0">
           <button
             id="consent-reject"
             type="button"
-            class="btn-secondary text-xs px-3 py-2 min-h-[38px]"
+            class="bm-btn-secondary text-xs px-3 py-2 min-h-[38px]"
           >
             Essential Only
           </button>
           <button
             id="consent-accept"
             type="button"
-            class="btn-primary text-xs px-4 py-2 min-h-[38px]"
+            class="bm-btn-lime text-xs px-4 py-2 min-h-[38px]"
           >
             Accept All
           </button>

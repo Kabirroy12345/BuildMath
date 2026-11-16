@@ -1,5 +1,6 @@
 ---
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Icon from '../../components/Icon.astro';
 import { siteConfig } from '../../config/site';
 ---
 
@@ -12,45 +13,62 @@ import { siteConfig } from '../../config/site';
 >
   <section class="space-y-4">
     <p>
-      <strong>{siteConfig.name}</strong> ({siteConfig.domain}) was built with a single mission: give US homeowners, DIYers, and residential remodelers an accurate material takeoff and realistic local cost estimate in under 10 seconds—without popups, paywalls, or forced email sign-ups.
+      <strong>{siteConfig.name}</strong> ({siteConfig.domain}) was engineered with a straightforward goal: give US homeowners, DIYers, and residential estimators accurate material takeoffs and transparent regional cost baselines in under 10 seconds—without popups, paywalls, or forced email registration.
     </p>
     <p>
-      Too many online calculators give you a raw mathematical number (like <code>2.37 cubic yards</code> or <code>412.6 square feet</code>) without telling you how many actual 80-lb bags, 5-gallon buckets, 3-bundle roofing squares, or 12-foot carpet roll lengths you need to buy at the store. Every tool on {siteConfig.name} rounds up to real purchasable store units while still displaying the exact unrounded engineering value.
+      Most online calculators output an unactionable raw number (like <code class="font-mono text-ink">2.37 cubic yards</code> or <code class="font-mono text-ink">412.6 square feet</code>) without translating it into store-ready 80-lb concrete bags, 5-gallon buckets, 3-bundle roofing squares, or carton boxes. Every BuildMath tool displays both the unrounded engineering math and rounded hardware-store purchasing units.
     </p>
   </section>
 
-  <section class="card p-6 my-8 bg-slate-50 dark:bg-slate-900/60">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-      Published Standards & Technical Sources
-    </h2>
-    <p class="text-sm font-semibold text-brand-700 dark:text-brand-300">
+  <section class="bm-instrument p-6 my-8">
+    <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lime-500 mb-2">
+      <Icon name="shield-check" size={14} />
+      <span>Published Standards &amp; Technical Sources</span>
+    </div>
+    <h2 class="text-lg font-bold text-[#F8F8F5]">
       {siteConfig.author.name} — {siteConfig.author.role}
-    </p>
-    <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">
+    </h2>
+    <p class="mt-2 text-sm text-[#D2D6DC] leading-relaxed">
       {siteConfig.author.bio}
     </p>
-    <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+    <p class="mt-3 pt-3 border-t border-graphite-700 font-mono text-xs text-[#9BA1AA]">
       Standards Referenced: {siteConfig.author.credentials}
     </p>
   </section>
 
   <section class="space-y-4">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-      Our 4 Core Principles
+    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+      4 Core Engineering Principles
     </h2>
-    <ul class="list-disc pl-6 space-y-2">
-      <li>
-        <strong>Transparent, Editable Defaults:</strong> Every coverage rate, mortar joint thickness, waste factor, and unit price includes a source citation and can be customized to match your exact product label.
-      </li>
-      <li>
-        <strong>No Manufactured Numbers:</strong> Our material prices and regional labor multipliers are maintained in versioned datasets with explicit <code>lastReviewed</code> dates. Read our full <a href="/methodology/" class="text-brand-600 underline">Formula & Cost Methodology</a>.
-      </li>
-      <li>
-        <strong>100% Browser-Side Privacy:</strong> All calculator math and your saved <a href="/my-project/" class="text-brand-600 underline">Project Shopping List</a> run locally in your browser.
-      </li>
-      <li>
-        <strong>Clear Monetization Disclosure:</strong> We keep our calculators free through non-intrusive display advertising and retail affiliate links. Read our <a href="/affiliate-disclosure/" class="text-brand-600 underline">Affiliate Disclosure</a>.
-      </li>
-    </ul>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="bm-panel p-4 space-y-1.5">
+        <span class="font-mono text-[11px] font-bold text-blueprint">01 // EDITABLE DEFAULTS</span>
+        <h3 class="text-sm font-bold text-ink">Full Rate Transparency</h3>
+        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
+          Every coverage rate, mortar joint thickness, waste factor, and unit price includes a clear explanation and can be overridden to match your product label.
+        </p>
+      </div>
+      <div class="bm-panel p-4 space-y-1.5">
+        <span class="font-mono text-[11px] font-bold text-blueprint">02 // VERSIONED DATASETS</span>
+        <h3 class="text-sm font-bold text-ink">Explicit Verification Status</h3>
+        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
+          Material benchmarks and regional labor indices carry explicit verification flags. Review our <a href="/methodology/" class="text-blueprint font-semibold underline">Methodology</a>.
+        </p>
+      </div>
+      <div class="bm-panel p-4 space-y-1.5">
+        <span class="font-mono text-[11px] font-bold text-blueprint">03 // CLIENT-SIDE PRIVACY</span>
+        <h3 class="text-sm font-bold text-ink">Zero Backend Tracking</h3>
+        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
+          Every formula executes locally in your browser; your <a href="/my-project/" class="text-blueprint font-semibold underline">Project Shopping List</a> never leaves your device.
+        </p>
+      </div>
+      <div class="bm-panel p-4 space-y-1.5">
+        <span class="font-mono text-[11px] font-bold text-blueprint">04 // CLEAR DISCLOSURES</span>
+        <h3 class="text-sm font-bold text-ink">Editorial Independence</h3>
+        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
+          External links never influence mathematical outputs. Inspect current status in our <a href="/affiliate-disclosure/" class="text-blueprint font-semibold underline">Affiliate Disclosure</a>.
+        </p>
+      </div>
+    </div>
   </section>
 </ArticleLayout>

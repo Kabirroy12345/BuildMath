@@ -34,12 +34,12 @@ const relAttr = monetizationConfig.affiliateEnabled
     <meta http-equiv="refresh" content={`0;url=${targetUrl}`} />
     <link rel="canonical" href={targetUrl} />
   </head>
-  <body style="font-family: system-ui, sans-serif; padding: 2rem; text-align: center; color: #1e293b;">
-    <p>
+  <body style="font-family: system-ui, sans-serif; padding: 3rem 1.5rem; text-align: center; background: #F8F8F5; color: #17191C;">
+    <p style="font-size: 0.95rem;">
       Redirecting to <strong>{product.name}</strong> at {product.retailer}...
     </p>
-    <p>
-      <a href={targetUrl} rel={relAttr}>Click here if you are not redirected automatically</a>.
+    <p style="font-size: 0.85rem;">
+      <a href={targetUrl} rel={relAttr} style="color: #4779A8; font-weight: 600;">Click here if you are not redirected automatically</a>.
     </p>
     <script is:inline define:vars={{ targetUrl }}>
       window.location.replace(targetUrl);

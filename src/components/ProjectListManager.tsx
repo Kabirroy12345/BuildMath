@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { MaterialLineItem } from '../lib/formulas/types';
+import LucideIcon from './LucideIcon';
 
 export interface SavedProjectEntry {
   id: string;
@@ -37,7 +38,7 @@ export default function ProjectListManager() {
     try {
       localStorage.setItem('buildmath_project_list', JSON.stringify(next));
       window.dispatchEvent(new CustomEvent('buildmath:project-updated'));
-    } catch (e) {}
+    } catch {}
   };
 
   const removeEntry = (id: string) => {
@@ -53,7 +54,7 @@ export default function ProjectListManager() {
   const totalHigh = entries.reduce((sum, e) => sum + (e.costHigh || 0), 0);
 
   const handleCopyText = () => {
-    const lines: string[] = ['BuildMath Combined Project Shopping List', '========================================', ''];
+    const lines: string[] = ['BuildMath Combined Project Bill of Materials', '===========================================', ''];
     for (const entry of entries) {
       lines.push(`${entry.title}: ${entry.primaryValue} ${entry.primaryUnit} (Est. $${entry.costTypical})`);
       for (const m of entry.materials) {
@@ -61,7 +62,9 @@ export default function ProjectListManager() {
       }
       lines.push('');
     }
-    lines.push(`Grand Total Estimate: $${totalTypical.toLocaleString()} (Range: $${totalLow.toLocaleString()} - $${totalHigh.toLocaleString()})`);
+    lines.push(
+      `Grand Total Estimate: $${totalTypical.toLocaleString()} (Range: $${totalLow.toLocaleString()} - $${totalHigh.toLocaleString()})`
+    );
     if (navigator.clipboard) {
       navigator.clipboard.writeText(lines.join('\n')).catch(() => {});
     }
@@ -71,15 +74,19 @@ export default function ProjectListManager() {
 
   if (entries.length === 0) {
     return (
-      <div class="card p-8 text-center my-6">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+      <div class="bm-panel p-10 text-center my-6">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface-subtle border border-hairline text-blueprint">
+          <LucideIcon name="clipboard-list" size={22} />
+        </div>
+        <h2 class="text-xl font-bold text-ink mb-2">
           Your Project Shopping List is Empty
         </h2>
-        <p class="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-6">
-          Use any of our 32 DIY calculators and click <strong>"+ Add to My Project List"</strong> to combine materials and cost estimates into one printable shopping list.
+        <p class="text-sm text-ink-muted max-w-md mx-auto mb-6 leading-relaxed">
+          Open any of our 32 DIY calculators and click <strong>+ Add to My Project List</strong> to aggregate materials and hardware store budgets in one printable takeoff sheet.
         </p>
-        <a href="/calculators/" class="btn-primary">
-          Browse All Calculators →
+        <a href="/calculators/" class="bm-btn-lime text-sm">
+          <span>Browse All Calculators</span>
+          <LucideIcon name="arrow-right" size={16} />
         </a>
       </div>
     );
@@ -87,81 +94,97 @@ export default function ProjectListManager() {
 
   return (
     <div class="my-6 space-y-6">
-      {/* Summary Header Card */}
-      <div class="card p-6 bg-slate-900 text-white dark:bg-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Combined Budget Readout Header */}
+      <div class="bm-instrument p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div>
-          <span class="text-xs uppercase tracking-wider text-slate-300">
-            Combined Project Total ({entries.length} {entries.length === 1 ? 'Calculation' : 'Calculations'})
-          </span>
-          <div class="text-3xl font-extrabold text-accent-500 mt-1">
-            ${totalTypical.toLocaleString()}{' '}
-            <span class="text-sm font-normal text-slate-300">
-              (Range: ${totalLow.toLocaleString()} – ${totalHigh.toLocaleString()})
+          <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#9BA1AA]">
+            <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+            <span>
+              Combined Project BOM // {entries.length} {entries.length === 1 ? 'Takeoff' : 'Takeoffs'}
+            </span>
+          </div>
+          <div class="mt-2 flex flex-wrap items-baseline gap-3">
+            <span class="text-3xl sm:text-4xl font-extrabold text-lime-500 tabular-nums tracking-tight">
+              ${totalTypical.toLocaleString()}
+            </span>
+            <span class="font-mono text-xs text-[#9BA1AA] tabular-nums">
+              Range: ${totalLow.toLocaleString()} – ${totalHigh.toLocaleString()}
             </span>
           </div>
         </div>
         <div class="no-print flex flex-wrap gap-2">
-          <button type="button" onClick={handleCopyText} class="btn-accent text-xs">
-            {copied ? '✓ Copied to Clipboard' : 'Copy Shopping List'}
+          <button type="button" onClick={handleCopyText} class="bm-btn-lime text-xs min-h-[38px]">
+            <LucideIcon name={copied ? 'check' : 'copy'} size={14} />
+            <span>{copied ? 'Copied BOM' : 'Copy Shopping List'}</span>
           </button>
           <button
             type="button"
             onClick={() => window.print()}
-            class="btn-secondary text-xs !bg-slate-800 !text-white !border-slate-700"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors min-h-[38px]"
           >
-            Print List
+            <LucideIcon name="printer" size={14} />
+            <span>Print</span>
           </button>
           <button
             type="button"
             onClick={clearAll}
-            class="px-3 py-2 rounded-lg text-xs font-medium text-red-300 hover:bg-red-950/50 transition-colors"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-red-300 hover:bg-red-950/60 border border-transparent hover:border-red-900 transition-colors min-h-[38px]"
           >
-            Clear All
+            <LucideIcon name="trash-2" size={14} />
+            <span>Clear All</span>
           </button>
         </div>
       </div>
 
-      {/* Saved Items */}
+      {/* Individual Takeoff Cards */}
       <div class="space-y-4">
-        {entries.map((entry) => (
-          <div key={entry.id} class="card p-5">
-            <div class="flex flex-wrap items-start justify-between gap-3 pb-3 mb-3 border-b border-slate-200 dark:border-slate-800">
-              <div>
-                <a
-                  href={entry.shareUrl || `/calculators/${entry.slug}/`}
-                  class="text-lg font-bold text-slate-900 dark:text-white hover:text-brand-600"
-                >
-                  {entry.title}
-                </a>
-                <div class="text-sm text-brand-700 dark:text-brand-300 font-semibold">
-                  {entry.primaryLabel}: {entry.primaryValue} {entry.primaryUnit} • Est. $
-                  {entry.costTypical.toLocaleString()}
+        {entries.map((entry, idx) => (
+          <div key={entry.id} class="bm-panel overflow-hidden">
+            <div class="px-5 py-4 bg-surface-subtle/40 border-b border-hairline flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <span class="font-mono text-xs font-semibold text-ink-muted bg-surface border border-hairline px-2 py-1 rounded tabular-nums">
+                  #{String(idx + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <a
+                    href={entry.shareUrl || `/calculators/${entry.slug}/`}
+                    class="text-base sm:text-lg font-bold text-ink hover:text-blueprint transition-colors"
+                  >
+                    {entry.title}
+                  </a>
+                  <div class="mt-0.5 font-mono text-xs text-blueprint font-semibold tabular-nums">
+                    {entry.primaryLabel}: {entry.primaryValue} {entry.primaryUnit} • Est. $
+                    {entry.costTypical.toLocaleString()}
+                  </div>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => removeEntry(entry.id)}
-                class="no-print text-xs font-medium text-red-600 dark:text-red-400 hover:underline"
+                class="no-print inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
               >
-                Remove
+                <LucideIcon name="trash-2" size={13} />
+                <span>Remove</span>
               </button>
             </div>
 
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {entry.materials.map((m) => (
-                <li
-                  key={m.name}
-                  class="flex items-center justify-between text-xs sm:text-sm p-2.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800"
-                >
-                  <span class="font-medium text-slate-800 dark:text-slate-200">
-                    {m.quantity.toLocaleString()} {m.unit} — {m.name}
-                  </span>
-                  <span class="font-semibold text-slate-900 dark:text-white">
-                    ${m.totalTypical.toLocaleString()}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div class="p-4 sm:p-5">
+              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {entry.materials.map((m) => (
+                  <li
+                    key={m.name}
+                    class="flex items-center justify-between gap-3 text-xs sm:text-sm px-3.5 py-2.5 rounded-lg bg-canvas border border-hairline"
+                  >
+                    <span class="font-medium text-ink tabular-nums">
+                      <strong class="font-bold">{m.quantity.toLocaleString()} {m.unit}</strong> — {m.name}
+                    </span>
+                    <span class="font-mono font-semibold text-ink tabular-nums shrink-0">
+                      ${m.totalTypical.toLocaleString()}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))}
       </div>

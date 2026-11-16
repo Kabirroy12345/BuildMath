@@ -2,14 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+}
+
 @layer base {
   :root {
     color-scheme: light dark;
+    --bg-canvas: 248 248 245; /* #F8F8F5 */
+    --bg-surface: 255 255 255; /* #FFFFFF */
+    --bg-surface-subtle: 242 242 238; /* #F2F2EE */
+    --bg-graphite: 23 27 32; /* #171B20 */
+    --text-primary: 23 25 28; /* #17191C */
+    --text-body: 62 67 75;
+    --text-secondary: 116 121 129; /* #747981 */
+    --border-subtle: 229 231 229; /* #E5E7E5 */
+    --border-strong: 207 211 207;
+    --accent-lime: #c6f36a;
+    --accent-blue: 71 121 168; /* #4779A8 */
+    --grid-line: rgba(23, 25, 28, 0.04);
+  }
+
+  html.dark {
+    --bg-canvas: 17 20 24;
+    --bg-surface: 23 27 32; /* #171B20 */
+    --bg-surface-subtle: 30 35 42;
+    --bg-graphite: 13 16 19;
+    --text-primary: 244 244 241;
+    --text-body: 207 212 220;
+    --text-secondary: 142 148 157;
+    --border-subtle: 38 44 53;
+    --border-strong: 55 64 76;
+    --accent-lime: #c6f36a;
+    --accent-blue: 111 163 210;
+    --grid-line: rgba(255, 255, 255, 0.035);
   }
 
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -27,38 +71,185 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-brand-600 selection:text-white;
+    background-color: rgb(var(--bg-canvas));
+    color: rgb(var(--text-primary));
+    @apply antialiased overflow-x-hidden selection:bg-[#C6F36A] selection:text-[#17191C];
   }
 
-  /* Ensure visible focus outlines for keyboard accessibility */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand-600 dark:outline-brand-400;
+    outline: 2px solid rgb(var(--accent-blue));
+    outline-offset: 2px;
   }
 }
 
 @layer components {
-  .btn-primary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-lg font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 transition-colors shadow-sm;
+  .card,
+  .bm-panel {
+    background-color: rgb(var(--bg-surface));
+    border: 1px solid rgb(var(--border-subtle));
+    border-radius: 10px;
+    transition: border-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  .btn-secondary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 rounded-lg font-medium text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors;
+  .bm-panel-hover:hover {
+    border-color: rgb(var(--border-strong));
+    box-shadow: 0 4px 16px -6px rgba(23, 25, 28, 0.08);
+  }
+
+  html.dark .bm-panel-hover:hover {
+    box-shadow: 0 4px 20px -6px rgba(0, 0, 0, 0.45);
+  }
+
+  .bm-instrument {
+    background-color: #171b20;
+    color: #f4f4f1;
+    border: 1px solid #282e37;
+    border-radius: 10px;
+  }
+
+  .bm-cad-grid {
+    background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .btn-primary,
+  .bm-btn-lime {
+    @apply inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 cursor-pointer select-none active:scale-[0.99];
+    background-color: #c6f36a;
+    color: #17191c;
+    border: 1px solid rgba(23, 25, 28, 0.14);
+  }
+
+  .btn-primary:hover,
+  .bm-btn-lime:hover {
+    background-color: #b5e84f;
+  }
+
+  .bm-btn-graphite {
+    @apply inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 cursor-pointer select-none active:scale-[0.99];
+    background-color: #171b20;
+    color: #f8f8f5;
+    border: 1px solid #282e37;
+  }
+
+  .bm-btn-graphite:hover {
+    background-color: #22272f;
+  }
+
+  html.dark .bm-btn-graphite {
+    background-color: #f4f4f1;
+    color: #17191c;
+    border-color: transparent;
+  }
+
+  html.dark .bm-btn-graphite:hover {
+    background-color: #ffffff;
+  }
+
+  .btn-secondary,
+  .bm-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-lg font-medium text-sm transition-colors duration-150 cursor-pointer select-none;
+    background-color: rgb(var(--bg-surface));
+    color: rgb(var(--text-primary));
+    border: 1px solid rgb(var(--border-subtle));
+  }
+
+  .btn-secondary:hover,
+  .bm-btn-secondary:hover {
+    background-color: rgb(var(--bg-surface-subtle));
+    border-color: rgb(var(--border-strong));
   }
 
   .btn-accent {
-    @apply inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 rounded-lg font-semibold text-slate-950 bg-accent-500 hover:bg-accent-600 transition-colors shadow-sm;
+    @apply inline-flex items-center justify-center gap-2 min-h-[42px] px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-150;
+    background-color: #c6f36a;
+    color: #17191c;
   }
 
-  .input-field {
-    @apply w-full min-h-[44px] px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-base focus:border-brand-600 dark:focus:border-brand-400 focus:ring-2 focus:ring-brand-500/20;
+  .input-field,
+  .bm-input {
+    @apply w-full min-h-[42px] px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150;
+    font-variant-numeric: tabular-nums;
+    background-color: rgb(var(--bg-surface));
+    color: rgb(var(--text-primary));
+    border: 1px solid rgb(var(--border-strong));
   }
 
-  .card {
-    @apply bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm;
+  .input-field::placeholder,
+  .bm-input::placeholder {
+    color: rgb(var(--text-secondary));
+  }
+
+  .input-field:focus,
+  .bm-input:focus {
+    outline: none;
+    border-color: rgb(var(--accent-blue));
+    box-shadow: 0 0 0 3px rgb(var(--accent-blue) / 0.14);
+  }
+
+  .bm-eyebrow {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-[11px] font-semibold uppercase tracking-wider;
+    background-color: rgb(var(--bg-surface-subtle));
+    color: rgb(var(--text-secondary));
+    border: 1px solid rgb(var(--border-subtle));
+  }
+
+  .bm-eyebrow-blue {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-mono text-[11px] font-semibold uppercase tracking-wider;
+    background-color: rgb(var(--accent-blue) / 0.1);
+    color: rgb(var(--accent-blue));
+    border: 1px solid rgb(var(--accent-blue) / 0.25);
+  }
+
+  .bm-range {
+    @apply w-full h-1.5 rounded-lg appearance-none cursor-pointer;
+    background-color: rgb(var(--border-subtle));
+    accent-color: #4779a8;
+  }
+
+  html.dark .bm-range {
+    accent-color: #c6f36a;
   }
 }
 
-/* Print stylesheet: clean results and shopping list only */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes resultSettle {
+  0% {
+    box-shadow: 0 0 0 0 rgba(198, 243, 106, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(198, 243, 106, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(198, 243, 106, 0);
+  }
+}
+
+.animate-result-pulse {
+  animation: resultSettle 550ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+details[open] .faq-body {
+  animation: fadeSlideDown 160ms ease-out;
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media print {
   header,
   footer,
@@ -73,7 +264,7 @@
 
   body {
     background: #ffffff !important;
-    color: #000000 !important;
+    color: #17191c !important;
     font-size: 11pt;
   }
 
@@ -84,8 +275,12 @@
     padding: 0 !important;
   }
 
-  .card {
-    border: 1px solid #cbd5e1 !important;
+  .card,
+  .bm-panel,
+  .bm-instrument {
+    background: #ffffff !important;
+    color: #17191c !important;
+    border: 1px solid #d1d5db !important;
     box-shadow: none !important;
     break-inside: avoid;
   }

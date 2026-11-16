@@ -10,33 +10,34 @@ import { siteConfig } from '../../config/site';
   pathname="/cookie-policy/"
   breadcrumbs={[{ name: 'Cookie Policy', href: '/cookie-policy/' }]}
 >
-  <p>
-    <strong>Last Updated:</strong> {siteConfig.lastUpdatedDefault}
+  <p class="font-mono text-xs text-ink-muted">
+    Last Updated: <strong class="text-ink">{siteConfig.lastUpdatedDefault}</strong>
   </p>
   <p>
     This Cookie Policy explains how <strong>{siteConfig.name}</strong> uses browser local storage and cookies, and how you can control your preferences at any time.
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+  <h2 class="text-xl font-bold text-ink mt-6">
     1. Strictly Necessary Local Storage
   </h2>
   <p>
-    We use browser <code>localStorage</code> for three functional features that operate entirely on your device:
+    We use browser <code class="font-mono text-ink">localStorage</code> for functional features that operate entirely on your device:
   </p>
   <ul class="list-disc pl-6 space-y-2">
-    <li><code>buildmath_project_list</code>: Stores the calculations and material shopping lists you explicitly add to "My Project".</li>
-    <li><code>buildmath_theme</code>: Remembers whether you selected Light Mode or Dark Mode.</li>
-    <li><code>buildmath_consent_v2</code>: Remembers your cookie consent choice so you are not prompted on every page load.</li>
+    <li><code class="font-mono text-ink">buildmath_project_list</code>: Stores the calculations and material shopping lists you explicitly add to "My Project".</li>
+    <li><code class="font-mono text-ink">buildmath_recent_calculators</code>: Stores your recently opened calculators locally for quick navigation.</li>
+    <li><code class="font-mono text-ink">buildmath_theme</code>: Remembers whether you selected Light Mode or Dark Mode.</li>
+    <li><code class="font-mono text-ink">buildmath_consent_v2</code>: Remembers your cookie consent choice when optional consent banners are active.</li>
   </ul>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    2. Advertising & Analytics Cookies
+  <h2 class="text-xl font-bold text-ink mt-6">
+    2. Advertising &amp; Analytics Cookies
   </h2>
   <p>
     Currently, display advertising and third-party ad cookies are disabled by default across {siteConfig.name}. When display ads are enabled, optional EU/UK advertising consent is handled through Google AdSense's certified TCF v2.2 Consent Management Platform (CMP).
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+  <h2 class="text-xl font-bold text-ink mt-6">
     3. How to Clear Your Browser Storage
   </h2>
   <p>
@@ -45,8 +46,8 @@ import { siteConfig } from '../../config/site';
   <div class="my-4">
     <button
       type="button"
-      onclick="localStorage.removeItem('buildmath_consent_v2'); localStorage.removeItem('buildmath_theme'); window.location.reload();"
-      class="btn-secondary text-xs"
+      onclick="localStorage.removeItem('buildmath_consent_v2'); localStorage.removeItem('buildmath_theme'); localStorage.removeItem('buildmath_recent_calculators'); window.location.reload();"
+      class="bm-btn-secondary text-xs"
     >
       Clear Local Storage Preferences
     </button>

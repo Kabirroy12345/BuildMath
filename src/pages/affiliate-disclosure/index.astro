@@ -11,24 +11,24 @@ import { monetizationConfig } from '../../config/monetization';
   pathname="/affiliate-disclosure/"
   breadcrumbs={[{ name: 'Affiliate Disclosure', href: '/affiliate-disclosure/' }]}
 >
-  <p>
-    <strong>Last Updated:</strong> {siteConfig.lastUpdatedDefault}
+  <p class="font-mono text-xs text-ink-muted">
+    Last Updated: <strong class="text-ink">{siteConfig.lastUpdatedDefault}</strong>
   </p>
 
-  <div class="p-5 rounded-xl bg-brand-50 dark:bg-slate-900 border border-brand-200 dark:border-slate-800 font-medium text-slate-900 dark:text-slate-100">
+  <div class="p-5 rounded-xl bg-surface border border-hairline border-l-4 border-l-blueprint font-medium text-ink text-sm sm:text-base">
     {monetizationConfig.affiliateDisclosureShort}
   </div>
 
   {monetizationConfig.affiliateEnabled ? (
     <>
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+      <h2 class="text-xl font-bold text-ink mt-6">
         1. FTC Compliance (16 CFR Part 255)
       </h2>
       <p>
-        In accordance with the Federal Trade Commission's 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), <strong>{siteConfig.name}</strong> discloses that outbound product links in our calculator shopping lists routed through <code>/go/</code> may be affiliate referral links. If you click one of these links and make a qualifying purchase at a partner retailer, we may receive a referral commission at <strong>zero additional cost to you</strong>.
+        In accordance with the Federal Trade Commission's 16 CFR Part 255 ("Guides Concerning the Use of Endorsements and Testimonials in Advertising"), <strong>{siteConfig.name}</strong> discloses that outbound product links in our calculator shopping lists routed through <code class="font-mono text-ink">/go/</code> may be affiliate referral links. If you click one of these links and make a qualifying purchase at a partner retailer, we may receive a referral commission at <strong>zero additional cost to you</strong>.
       </p>
 
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+      <h2 class="text-xl font-bold text-ink mt-6">
         2. Retail Affiliate Program Participation
       </h2>
       <p>
@@ -37,23 +37,23 @@ import { monetizationConfig } from '../../config/monetization';
     </>
   ) : (
     <>
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+      <h2 class="text-xl font-bold text-ink mt-6">
         1. Current Pre-Affiliate Status
       </h2>
       <p>
         At this time, <strong>{siteConfig.name}</strong> has not activated any paid affiliate programs (including Amazon Associates or Impact/Home Depot affiliate links), and affiliate buy buttons are disabled across all calculators. We receive zero commissions or referral fees from any retailer or brand.
       </p>
 
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+      <h2 class="text-xl font-bold text-ink mt-6">
         2. Planned Future Disclosures (FTC 16 CFR Part 255)
       </h2>
       <p>
-        If {siteConfig.legalName} is approved for and enables affiliate partnerships in the future, this disclosure and every tagged outbound link (<code>rel="sponsored nofollow noopener"</code>) will be updated prior to activation in accordance with FTC 16 CFR Part 255 rules.
+        If {siteConfig.legalName} is approved for and enables affiliate partnerships in the future, this disclosure and every tagged outbound link (<code class="font-mono text-ink">rel="sponsored nofollow noopener"</code>) will be updated prior to activation in accordance with FTC 16 CFR Part 255 rules.
       </p>
     </>
   )}
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+  <h2 class="text-xl font-bold text-ink mt-6">
     3. Editorial Independence
   </h2>
   <p>

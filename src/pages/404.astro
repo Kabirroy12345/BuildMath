@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBox, { type SearchableItem } from '../components/SearchBox';
+import Icon from '../components/Icon.astro';
 import categories from '../data/categories.json';
 import calculators from '../data/calculators.json';
 
@@ -23,25 +24,29 @@ const searchItems: SearchableItem[] = calculators.map((calc) => ({
   pathname="/404.html"
   noindex={true}
 >
-  <div class="max-w-3xl mx-auto text-center py-12">
-    <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-3 py-1 rounded-full mb-3">
-      Error 404 — Measure Twice, Cut Once
+  <div class="max-w-3xl mx-auto text-center py-12 bm-panel p-8 sm:p-12 bm-cad-grid">
+    <span class="bm-eyebrow-blue mb-4">
+      <Icon name="alert-triangle" size={13} />
+      Status 404 // Route Not Found
     </span>
-    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-ink tracking-tight">
       We Couldn't Find That Page
     </h1>
-    <p class="mt-3 text-base text-slate-600 dark:text-slate-400">
-      The link may have moved or been mistyped. Search all 32 calculators below or jump directly to our most popular tools:
+    <p class="mt-3 text-sm sm:text-base text-ink-muted max-w-xl mx-auto leading-relaxed">
+      The link may have moved or been mistyped. Search all 32 calculators below or return to one of our main indexes.
     </p>
 
-    <div class="mt-7">
+    <div class="mt-8">
       <SearchBox client:load items={searchItems} />
     </div>
 
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
-      <a href="/calculators/" class="btn-primary text-sm">Browse All 32 Calculators</a>
-      <a href="/cost/" class="btn-secondary text-sm">Explore Cost Guides</a>
-      <a href="/" class="btn-secondary text-sm">Back to Homepage</a>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a href="/calculators/" class="bm-btn-lime text-sm font-bold">
+        <span>Browse All 32 Calculators</span>
+        <Icon name="arrow-right" size={15} />
+      </a>
+      <a href="/cost/" class="bm-btn-secondary text-sm">Explore Cost Guides</a>
+      <a href="/" class="bm-btn-secondary text-sm">Back to Homepage</a>
     </div>
   </div>
 </BaseLayout>

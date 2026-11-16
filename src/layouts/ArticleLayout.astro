@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
 import { buildArticleSchema, type BreadcrumbItem } from '../lib/seo/schema';
 import { siteConfig } from '../config/site';
 
@@ -42,25 +43,31 @@ const articleSchema = buildArticleSchema({
 >
   <Breadcrumbs items={breadcrumbs} />
   <article class="max-w-4xl mx-auto">
-    <header class="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-        {title}
-      </h1>
-      <div class="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-        <span>
-          Reviewed by <strong class="text-slate-900 dark:text-slate-200">{siteConfig.author.name}</strong> ({siteConfig.author.role})
+    <header class="mb-8 pb-6 border-b border-hairline">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="bm-eyebrow-blue">
+          <Icon name="file-text" size={13} />
+          Documentation
         </span>
-        <span>•</span>
-        <span>Updated {lastUpdated}</span>
         {readingTimeMinutes && (
-          <>
-            <span>•</span>
-            <span>{readingTimeMinutes} min read</span>
-          </>
+          <span class="bm-eyebrow">
+            <Icon name="clock" size={13} />
+            {readingTimeMinutes} min read
+          </span>
         )}
       </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight leading-tight">
+        {title}
+      </h1>
+      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-ink-muted">
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="shield-check" size={14} class="text-blueprint" />
+          Compiled by <strong class="text-ink font-semibold">{siteConfig.author.name}</strong> ({siteConfig.author.role})
+        </span>
+        <span class="font-mono">Updated {lastUpdated}</span>
+      </div>
     </header>
-    <div class="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed">
+    <div class="space-y-6 text-ink-body leading-relaxed text-sm sm:text-base">
       <slot />
     </div>
   </article>

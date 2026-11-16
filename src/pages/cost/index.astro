@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
 import jobs from '../../data/costs/jobs.json';
 import states from '../../data/costs/states.json';
+
+const verifiedJobs = jobs.filter((j) => j.verified);
+const draftJobs = jobs.filter((j) => !j.verified);
 ---
 
 <BaseLayout
@@ -12,56 +16,141 @@ import states from '../../data/costs/states.json';
 >
   <Breadcrumbs items={[{ name: 'Cost Guides', href: '/cost/' }]} />
 
-  <header class="mb-8">
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      Home Improvement & Remodeling Cost Guides
-    </h1>
-    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
-      Compare DIY material expenses against professional contractor installation costs across 25 residential jobs and all 50 US states + DC.
-    </p>
+  <header class="mb-8 pb-6 border-b border-hairline flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+    <div>
+      <span class="bm-eyebrow-blue mb-2.5">
+        <Icon name="bar-chart-3" size={13} />
+        Regional Cost Models // 50 States + DC
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        Home Improvement &amp; Remodeling Cost Guides
+      </h1>
+      <p class="mt-2 text-sm sm:text-base text-ink-muted max-w-3xl leading-relaxed">
+        Compare DIY material expenses against installed contractor quotes across 25 residential projects calibrated with BLS occupational wages and BEA Regional Price Parities.
+      </p>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="bm-eyebrow tabular-nums">
+        <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+        {verifiedJobs.length} Verified Models // {draftJobs.length} Draft
+      </span>
+    </div>
   </header>
 
-  <section class="mb-14" aria-labelledby="jobs-heading">
-    <h2 id="jobs-heading" class="text-2xl font-bold text-slate-900 dark:text-white mb-5">
-      All 25 Project Cost Guides
-    </h2>
+  <!-- Verified Bottom-Up Cost Models -->
+  {verifiedJobs.length > 0 && (
+    <section class="mb-12" aria-labelledby="verified-jobs-heading">
+      <div class="flex items-center gap-2 mb-4">
+        <Icon name="shield-check" size={17} class="text-blueprint" />
+        <h2 id="verified-jobs-heading" class="text-lg sm:text-xl font-bold text-ink">
+          Bottom-Up Verified Cost Models ({verifiedJobs.length})
+        </h2>
+      </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {jobs.map((job) => {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {verifiedJobs.map((job) => {
+          const natLow = Math.round(job.nationalLowPerUnit * job.typicalProjectSize);
+          const natHigh = Math.round(job.nationalHighPerUnit * job.typicalProjectSize);
+          const natTypical = Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize);
+          return (
+            <article class="bm-panel bm-panel-hover p-5 sm:p-6 border-t-4 border-t-[#C6F36A] flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-lime-500/20 text-ink dark:text-lime-500 border border-lime-500/40">
+                    Verified Model
+                  </span>
+                  <span class="font-mono text-[11px] text-ink-muted tabular-nums">
+                    {job.typicalProjectSize.toLocaleString()} {job.unit}
+                  </span>
+                </div>
+                <h3 class="text-lg font-bold text-ink">
+                  <a href={`/cost/${job.slug}/`} class="hover:text-blueprint transition-colors">
+                    Cost of {job.name}
+                  </a>
+                </h3>
+                <p class="mt-1.5 text-xs text-ink-muted leading-relaxed">
+                  {job.diySavingsNote}
+                </p>
+
+                <div class="mt-4 p-3.5 rounded-lg bg-graphite-900 text-[#F8F8F5] border border-graphite-700">
+                  <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                    US National Typical
+                  </span>
+                  <div class="mt-0.5 flex items-baseline justify-between gap-2">
+                    <strong class="text-lg font-extrabold text-lime-500 tabular-nums">
+                      ${natTypical.toLocaleString()}
+                    </strong>
+                    <span class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
+                      ${natLow.toLocaleString()}–${natHigh.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold">
+                <a href={`/cost/${job.slug}/`} class="inline-flex items-center gap-1 text-blueprint hover:underline">
+                  <span>State Breakdown</span>
+                  <Icon name="arrow-right" size={13} />
+                </a>
+                <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-ink-muted hover:text-ink transition-colors">
+                  DIY Calculator →
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Preliminary Draft Cost Guides -->
+  <section class="mb-14" aria-labelledby="jobs-heading">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+      <h2 id="jobs-heading" class="text-lg sm:text-xl font-bold text-ink">
+        Preliminary Project Cost Guides ({draftJobs.length})
+      </h2>
+      <span class="font-mono text-[11px] text-ink-muted">
+        Material calculator baseline · noindex pending full line-item audit
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {draftJobs.map((job) => {
         const natLow = Math.round(job.nationalLowPerUnit * job.typicalProjectSize);
         const natHigh = Math.round(job.nationalHighPerUnit * job.typicalProjectSize);
         return (
-          <article class="card p-5 flex flex-col justify-between hover:border-brand-500 transition-colors">
+          <article class="bm-panel bm-panel-hover p-5 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between gap-2 mb-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950 px-2.5 py-0.5 rounded">
+                <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-0.5 rounded tabular-nums">
                   {job.typicalProjectSize.toLocaleString()} {job.unit}
                 </span>
-                <span class={`text-[11px] font-semibold px-2 py-0.5 rounded ${job.verified ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300' : 'text-slate-500'}`}>
-                  {job.verified ? 'Verified Model' : `Labor: ${Math.round(job.laborShare * 100)}%`}
+                <span class="font-mono text-[11px] text-ink-muted tabular-nums">
+                  Labor {Math.round(job.laborShare * 100)}%
                 </span>
               </div>
-              <h3 class="text-lg font-bold text-slate-900 dark:text-white">
-                <a href={`/cost/${job.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
+              <h3 class="text-base font-bold text-ink">
+                <a href={`/cost/${job.slug}/`} class="hover:text-blueprint transition-colors">
                   Cost of {job.name}
                 </a>
               </h3>
-              <p class="mt-1.5 text-xs text-slate-600 dark:text-slate-400">
+              <p class="mt-1.5 text-xs text-ink-muted line-clamp-2 leading-relaxed">
                 {job.diySavingsNote}
               </p>
-              <div class="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-                <span class="text-slate-500">US Typical Range:</span>
-                <strong class="text-slate-900 dark:text-white">
+              <div class="mt-3.5 px-3 py-2 rounded-md bg-canvas border border-hairline flex items-center justify-between text-xs tabular-nums">
+                <span class="text-ink-muted">US Range</span>
+                <strong class="font-mono font-semibold text-ink">
                   ${natLow.toLocaleString()} – ${natHigh.toLocaleString()}
                 </strong>
               </div>
             </div>
 
-            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
-              <a href={`/cost/${job.slug}/`} class="text-brand-600 dark:text-brand-400 hover:underline">
-                National & State Guide →
+            <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold">
+              <a href={`/cost/${job.slug}/`} class="inline-flex items-center gap-1 text-blueprint hover:underline">
+                <span>View Breakdown</span>
+                <Icon name="arrow-right" size={13} />
               </a>
-              <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-slate-500 hover:text-slate-900 dark:hover:text-white">
+              <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-ink-muted hover:text-ink transition-colors">
                 DIY Calculator →
               </a>
             </div>
@@ -72,21 +161,24 @@ import states from '../../data/costs/states.json';
   </section>
 
   <!-- Browse by State Directory -->
-  <section class="card p-6" aria-labelledby="states-directory-heading">
-    <h2 id="states-directory-heading" class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-      Browse Regional Labor & Material Multipliers by State
-    </h2>
-    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-5">
-      Select any state below to view localized roof replacement estimates and navigate all 25 trades in that state:
+  <section class="bm-panel p-5 sm:p-6" aria-labelledby="states-directory-heading">
+    <div class="flex items-center gap-2 mb-2">
+      <Icon name="map-pin" size={16} class="text-blueprint" />
+      <h2 id="states-directory-heading" class="text-lg sm:text-xl font-bold text-ink">
+        Regional Labor &amp; Material Multipliers by State
+      </h2>
+    </div>
+    <p class="text-xs sm:text-sm text-ink-muted mb-5">
+      Select any US jurisdiction below to inspect localized roof replacement benchmarks, BLS occupational wages, climate zone considerations, and contractor board links:
     </p>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
       {states.map((st) => (
         <a
           href={`/cost/roof-replacement/${st.slug}/`}
-          class="px-3 py-2 rounded-lg text-xs font-medium bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-brand-500 flex items-center justify-between"
+          class="px-3 py-2 rounded-md text-xs font-medium bg-canvas border border-hairline hover:border-blueprint flex items-center justify-between transition-colors"
         >
-          <span class="text-slate-800 dark:text-slate-200 font-semibold">{st.name}</span>
-          <span class="text-[11px] text-slate-400">{st.abbr}</span>
+          <span class="text-ink font-semibold truncate mr-1">{st.name}</span>
+          <span class="font-mono text-[10px] text-ink-muted shrink-0">{st.abbr}</span>
         </a>
       ))}
     </div>

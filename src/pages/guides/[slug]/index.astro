@@ -1,6 +1,7 @@
 ---
 import ArticleLayout from '../../../layouts/ArticleLayout.astro';
 import FAQSection from '../../../components/FAQSection.astro';
+import Icon from '../../../components/Icon.astro';
 import guides from '../../../data/guides.json';
 import calculators from '../../../data/calculators.json';
 
@@ -28,36 +29,44 @@ const relatedCalcs = (guide.relatedCalculators || [])
     { name: guide.title, href: `/guides/${guide.slug}/` },
   ]}
 >
-  <p class="text-base sm:text-lg font-medium text-slate-800 dark:text-slate-200 bg-brand-50/70 dark:bg-slate-900 p-5 rounded-xl border border-brand-200 dark:border-slate-800">
+  <div class="p-5 rounded-xl bg-surface border border-hairline border-l-4 border-l-blueprint text-sm sm:text-base font-medium text-ink leading-relaxed">
     {guide.excerpt}
-  </p>
+  </div>
 
-  {guide.sections.map((sec) => (
+  {guide.sections.map((sec, idx) => (
     <section class="mt-8">
-      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
-        {sec.heading}
-      </h2>
-      <p class="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="font-mono text-xs font-bold text-blueprint">
+          {String(idx + 1).padStart(2, '0')} //
+        </span>
+        <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+          {sec.heading}
+        </h2>
+      </div>
+      <p class="text-sm sm:text-base text-ink-body leading-relaxed">
         {sec.body}
       </p>
     </section>
   ))}
 
   {relatedCalcs.length > 0 && (
-    <section class="my-10 card p-6 bg-slate-50 dark:bg-slate-900/60">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-3">
-        Try the Interactive Calculators Mentioned in This Guide
-      </h2>
+    <section class="my-10 bm-panel p-5 sm:p-6 bg-surface-subtle/40">
+      <div class="flex items-center gap-2 mb-3">
+        <Icon name="calculator" size={16} class="text-blueprint" />
+        <h2 class="text-base sm:text-lg font-bold text-ink">
+          Run These Numbers with Interactive Calculators
+        </h2>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {relatedCalcs.map((rc) => (
           <a
             href={`/calculators/${rc.slug}/`}
-            class="card p-4 hover:border-brand-500 transition-colors"
+            class="bm-panel bm-panel-hover p-4 group hover:border-blueprint/70"
           >
-            <div class="text-sm font-bold text-brand-700 dark:text-brand-300">
+            <div class="text-sm font-bold text-ink group-hover:text-blueprint transition-colors">
               {rc.name}
             </div>
-            <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+            <div class="text-xs text-ink-muted mt-1 line-clamp-2">
               {rc.intro}
             </div>
           </a>

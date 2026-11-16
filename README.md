@@ -12,9 +12,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06b6d4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vitest](https://img.shields.io/badge/Vitest-100%2F100_Passing-6e9f18?style=for-the-badge&logo=vitest&logoColor=white)](./tests/unit/formulas.test.ts)
 
-**1,421 Pre-Rendered Static HTML Pages** • **32 Deterministic Trade Calculators** • **1,275 State Cost Guides** • **~27.5 KB Gzipped Client JS**
+**1,421 Pre-Rendered Static HTML Pages** • **32 Deterministic Trade Calculators** • **1,275 State Cost Guides** • **~35.4 KB Gzipped Calculator JS** • **Light & Graphite Dark Modes**
 
-[🌐 **Visit Live Site**](https://buildmath.kabir-23bce10815.workers.dev/) · [🧮 **Browse Calculators**](https://buildmath.kabir-23bce10815.workers.dev/calculators/) · [💵 **Cost Guides**](https://buildmath.kabir-23bce10815.workers.dev/cost/) · [📐 **Methodology**](https://buildmath.kabir-23bce10815.workers.dev/methodology/) · [🚀 **Launch Playbook**](./LAUNCH.md)
+[🌐 **Visit Live Site (`buildmath.kabir-23bce10815.workers.dev`)**](https://buildmath.kabir-23bce10815.workers.dev/) · [🧮 **Browse Calculators**](https://buildmath.kabir-23bce10815.workers.dev/calculators/) · [💵 **Cost Guides**](https://buildmath.kabir-23bce10815.workers.dev/cost/) · [📐 **Methodology**](https://buildmath.kabir-23bce10815.workers.dev/methodology/) · [🚀 **Launch Playbook**](./LAUNCH.md)
 
 </div>
 
@@ -72,10 +72,11 @@ flowchart TD
         SITEMAPS["Segmented XML Sitemaps + Dynamic robots.txt"]
     end
 
-    subgraph PreactIslands["Hydrated Client Islands (~27.5 KB Gzipped)"]
-        WIDGET["CalculatorWidget.tsx (Imperial/Metric, URL Sync, SVG Diagrams)"]
+    subgraph PreactIslands["Hydrated Client Islands (~35.4 KB Gzipped Calculator Bundle)"]
+        WIDGET["CalculatorWidget.tsx (Imperial/Metric, CAD SVG, Copy/BOM)"]
         ESTIMATOR["StateCostEstimator.tsx (Interactive Local Multiplier)"]
-        SEARCH["SearchBox.tsx (Instant Fuzzy Search + Category Filter)"]
+        SEARCH["SearchBox.tsx (Command Search + Category Filter)"]
+        RECENT["RecentCalculators.tsx (localStorage Quick Resume)"]
         PROJECT["ProjectListManager.tsx (localStorage Shopping List)"]
     end
 
@@ -180,9 +181,10 @@ Controlled centrally via [`src/config/monetization.ts`](./src/config/monetizatio
 | Metric | Target | Actual Build Output |
 | :--- | :--- | :--- |
 | **Total Static HTML Pages** | 1,350+ | **1,421 pages** (+ 32 SVG OG images + 5 XML sitemaps) |
-| **Full Static Build Time** | `< 60s` | **19.04 seconds** |
-| **Total Client JS (Gzipped)** | `< 70 KB` | **~27.5 KB** (`CalculatorWidget`: `19.88 KB`, `Preact`: `4.48 KB`, `Signals`: `3.09 KB`) |
+| **Full Static Build Time** | `< 60s` | **8.74 seconds** |
+| **Calculator Route JS (Gzipped)** | `< 70 KB` | **~35.4 KB** (`CalculatorWidget`: `22.29 KB`, `Preact`: `4.48 KB`, `Signals`: `3.09 KB`, `LucideIcon`: `2.79 KB`) |
 | **Formula Unit Tests** | 90+ | **100 / 100 passed** (`vitest run`) |
+| **Playwright E2E Suite** | Desktop & Mobile | **10 / 10 passed** (all 32 calculators, 8 categories, search, validation, overflow & console checks) |
 | **Broken Links / Orphan Pages** | `0` | **0 broken links / 0 orphan pages** (`npm run orphan:check`) |
 
 ---
@@ -195,6 +197,7 @@ BuildMath/
 │   └── workflows/
 │       └── ci.yml                  # GitHub Actions CI: test, data:check, build, orphan:check
 ├── public/
+│   ├── fonts/                      # Self-hosted Inter & JetBrains Mono variable WOFF2 fonts
 │   ├── _headers                    # HSTS, CSP, X-Frame-Options, immutable asset caching
 │   ├── _redirects                  # 301 canonical redirects
 │   ├── ads.txt                     # Google AdSense / authorized digital sellers declaration
@@ -209,13 +212,16 @@ BuildMath/
 │   ├── components/
 │   │   ├── AdSlot.astro            # Zero-CLS reserved-height ad container
 │   │   ├── Breadcrumbs.astro       # Accessible breadcrumb nav + BreadcrumbList JSON-LD
-│   │   ├── CalculatorWidget.tsx    # Interactive Preact calculator island + SVG diagrams
+│   │   ├── CalculatorWidget.tsx    # Precision CAD-style Preact calculator & BOM island
 │   │   ├── ConsentBanner.astro     # Google Consent Mode v2 banner
 │   │   ├── FAQSection.astro        # Collapsible <details> FAQ + FAQPage JSON-LD
+│   │   ├── Icon.astro              # Zero-dependency Lucide SVG icon helper for Astro
 │   │   ├── LeadGenWidget.astro     # Feature-flagged ZIP-code contractor quote box
+│   │   ├── LucideIcon.tsx          # Zero-dependency Lucide SVG icon helper for Preact
 │   │   ├── ProjectListManager.tsx  # Combined localStorage shopping list & print manager
-│   │   ├── SearchBox.tsx           # Instant fuzzy search + category filter grid
-│   │   └── StateCostEstimator.tsx  # Interactive regional project cost estimator
+│   │   ├── RecentCalculators.tsx   # Recently used calculator quick-resume island
+│   │   ├── SearchBox.tsx           # Command-bar search + category filter grid
+│   │   └── StateCostEstimator.tsx  # Interactive regional project cost & split estimator
 │   ├── config/
 │   │   ├── monetization.ts         # Ads, affiliate, lead-gen & CMP feature flags
 │   │   ├── seo.ts                  # Batch state indexing controls & character limits
@@ -236,10 +242,11 @@ BuildMath/
 │   │   └── CostLayout.astro        # Cost guide shell with Article schema
 │   ├── lib/
 │   │   ├── formulas/               # 32 pure TS calculator modules + state-cost.ts + units.ts
+│   │   ├── lucide-icons.ts         # Shared 24x24 Lucide SVG path registry
 │   │   └── seo/                    # meta.ts & schema.ts JSON-LD builders
 │   └── pages/                      # Astro file-based routes, XML sitemaps, OG SVG & robots.txt
 ├── tests/
-│   ├── e2e/smoke.spec.ts           # Playwright end-to-end smoke test suite
+│   ├── e2e/smoke.spec.ts           # Playwright desktop & mobile E2E suite (10 checks)
 │   └── unit/formulas.test.ts       # 100 Vitest unit tests across all formulas
 ├── LAUNCH.md                       # Step-by-step post-launch & monetization playbook
 ├── wrangler.jsonc                  # Cloudflare Workers static assets configuration

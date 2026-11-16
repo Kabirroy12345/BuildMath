@@ -4,9 +4,9 @@ import StateCostEstimator from '../../../../components/StateCostEstimator';
 import LeadGenWidget from '../../../../components/LeadGenWidget.astro';
 import FAQSection from '../../../../components/FAQSection.astro';
 import AdSlot from '../../../../components/AdSlot.astro';
+import Icon from '../../../../components/Icon.astro';
 import { calculateStateJobCost } from '../../../../lib/formulas/state-cost';
 import { shouldIndexCostPage } from '../../../../config/seo';
-import { siteConfig } from '../../../../config/site';
 import jobs from '../../../../data/costs/jobs.json';
 import states from '../../../../data/costs/states.json';
 
@@ -76,63 +76,77 @@ const faqs = [
   ]}
 >
   {!job.verified && (
-    <div class="mb-5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
-      <strong>Preliminary Draft Estimate:</strong> This trade guide uses our material calculator baseline and BLS wage ratios for {state.name} while full line-item verification is in progress (excluded from search indexing).
+    <div class="mb-5 p-3.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+      <Icon name="alert-triangle" size={16} class="shrink-0 mt-0.5" />
+      <span>
+        <strong>Preliminary Draft Estimate:</strong> This trade guide uses our material calculator baseline and BLS wage ratios for {state.name} while full line-item verification is in progress (excluded from search indexing).
+      </span>
     </div>
   )}
 
-  <!-- 1. H1: Cost to [Job] in [State] (Year) -->
   <header class="mb-5">
-    <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-2.5 py-1 rounded-md mb-2">
-      {state.name} ({state.abbr}) Regional Cost Guide
-    </span>
-    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+    <div class="flex flex-wrap items-center gap-2 mb-2.5">
+      <span class="bm-eyebrow-blue">
+        <Icon name="map-pin" size={12} />
+        {state.name} ({state.abbr}) Regional Model
+      </span>
+      {job.verified && (
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-lime-500/20 text-ink dark:text-lime-500 border border-lime-500/40 font-mono text-[11px] font-semibold">
+          <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+          Bottom-Up Verified
+        </span>
+      )}
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
       Cost of {job.name} in {state.name} ({currentYear})
     </h1>
   </header>
 
-  <!-- 2. Answer box above the fold -->
-  <section
-    aria-label="Quick cost summary"
-    class="card p-5 sm:p-6 bg-gradient-to-br from-brand-50/80 to-white dark:from-slate-900 dark:to-slate-900 border-brand-200 dark:border-brand-900 mb-6"
-  >
-    <p class="text-sm sm:text-base text-slate-800 dark:text-slate-200 leading-relaxed mb-4">
-      In <strong>{state.name}</strong>, the typical cost for <strong>{job.name.toLowerCase()}</strong> is{' '}
-      <strong class="text-brand-700 dark:text-brand-300">${estimate.typical.toLocaleString()}</strong> for a standard{' '}
-      {job.typicalProjectSize.toLocaleString()} {job.unit} project, with most homeowners spending between{' '}
-      <strong>${estimate.low.toLocaleString()} and ${estimate.high.toLocaleString()}</strong> (${estimate.lowPerUnit} – ${estimate.highPerUnit} per {job.unit}). Overall project pricing in {state.name} runs{' '}
-      <strong>{diffWord}</strong> the US national average of ${estimate.nationalTotalTypical.toLocaleString()}.
-    </p>
+  <!-- Summary Answer Box -->
+  <section aria-label="Quick cost summary" class="bm-panel overflow-hidden mb-6">
+    <div class="p-5 sm:p-6 border-b border-hairline">
+      <p class="text-sm sm:text-base text-ink-body leading-relaxed">
+        In <strong class="text-ink">{state.name}</strong>, the typical cost for <strong class="text-ink">{job.name.toLowerCase()}</strong> is{' '}
+        <strong class="text-blueprint">${estimate.typical.toLocaleString()}</strong> for a standard{' '}
+        {job.typicalProjectSize.toLocaleString()} {job.unit} project, with most homeowners paying between{' '}
+        <strong class="text-ink">${estimate.low.toLocaleString()} and ${estimate.high.toLocaleString()}</strong> (${estimate.lowPerUnit} – ${estimate.highPerUnit} per {job.unit}). Overall project pricing in {state.name} runs{' '}
+        <strong class="text-ink">{diffWord}</strong> the US national average of ${estimate.nationalTotalTypical.toLocaleString()}.
+      </p>
+    </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-      <div class="p-3.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <span class="text-[11px] uppercase tracking-wider text-slate-500 block">Typical {state.abbr} Cost</span>
-        <strong class="text-xl sm:text-2xl font-extrabold text-brand-700 dark:text-brand-400">
+    <div class="bg-graphite-900 p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+      <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Typical {state.abbr} Cost</span>
+        <strong class="text-xl sm:text-2xl font-extrabold text-lime-500 tabular-nums mt-1 block">
           ${estimate.typical.toLocaleString()}
         </strong>
       </div>
-      <div class="p-3.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <span class="text-[11px] uppercase tracking-wider text-slate-500 block">Low – High Range</span>
-        <strong class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+      <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Low – High Range</span>
+        <strong class="text-base sm:text-lg font-bold text-[#F8F8F5] tabular-nums mt-1 block">
           ${estimate.low.toLocaleString()} – ${estimate.high.toLocaleString()}
         </strong>
       </div>
-      <div class="p-3.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <span class="text-[11px] uppercase tracking-wider text-slate-500 block">Per {job.unit}</span>
-        <strong class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+      <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Per {job.unit}</span>
+        <strong class="text-base sm:text-lg font-bold text-[#6FA3D2] tabular-nums mt-1 block">
           ${estimate.lowPerUnit} – ${estimate.highPerUnit}
         </strong>
       </div>
-      <div class="p-3.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <span class="text-[11px] uppercase tracking-wider text-slate-500 block">vs. National Avg</span>
-        <strong class={`text-base sm:text-lg font-bold ${estimate.percentDiffVsNational > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
+      <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">vs. National Avg</span>
+        <strong
+          class={`text-base sm:text-lg font-bold font-mono tabular-nums mt-1 block ${
+            estimate.percentDiffVsNational > 0 ? 'text-amber-400' : 'text-lime-500'
+          }`}
+        >
           {estimate.percentDiffVsNational > 0 ? '+' : ''}{estimate.percentDiffVsNational}%
         </strong>
       </div>
     </div>
   </section>
 
-  <!-- 3. Interactive mini-estimator pre-filled with state multiplier -->
+  <!-- Interactive State Estimator -->
   <StateCostEstimator
     client:load
     job={job}
@@ -142,44 +156,47 @@ const faqs = [
 
   <AdSlot position="belowCalculator" />
 
-  <!-- 4. Cost breakdown table: materials vs labor, low / typical / high -->
-  <section class="card p-6 my-8" aria-labelledby="breakdown-heading">
-    <h2 id="breakdown-heading" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
-      {state.name} {job.name}: Materials vs. Labor Breakdown
-    </h2>
-    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
-      Itemized estimate for a {job.typicalProjectSize.toLocaleString()} {job.unit} project in {state.name} (labor index: {(estimate.laborMultiplier * 100).toFixed(0)}%, material RPP index: {state.rpp}%):
-    </p>
+  <!-- Materials vs Labor Table -->
+  <section class="bm-panel overflow-hidden my-8" aria-labelledby="breakdown-heading">
+    <div class="px-5 sm:px-6 py-4 border-b border-hairline bg-surface-subtle/40">
+      <h2 id="breakdown-heading" class="text-lg sm:text-xl font-bold text-ink">
+        {state.name} {job.name}: Materials vs. Labor Breakdown
+      </h2>
+      <p class="text-xs sm:text-sm text-ink-muted mt-1 tabular-nums">
+        Itemized estimate for {job.typicalProjectSize.toLocaleString()} {job.unit} in {state.name} (labor index: {(estimate.laborMultiplier * 100).toFixed(0)}%, BEA RPP material index: {state.rpp}%)
+      </p>
+    </div>
+
     <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse text-sm">
+      <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
         <thead>
-          <tr class="border-b-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
-            <th class="py-3 px-4 font-bold">Expense Category</th>
-            <th class="py-3 px-4 font-bold">Share of Total</th>
-            <th class="py-3 px-4 font-bold">Low Range ({state.abbr})</th>
-            <th class="py-3 px-4 font-bold">Typical ({state.abbr})</th>
-            <th class="py-3 px-4 font-bold">High Range ({state.abbr})</th>
+          <tr class="border-b border-hairline bg-surface-subtle/60 font-mono text-[11px] uppercase text-ink-muted">
+            <th class="py-3 px-4 font-semibold">Expense Category</th>
+            <th class="py-3 px-4 font-semibold">Share</th>
+            <th class="py-3 px-4 font-semibold">Low ({state.abbr})</th>
+            <th class="py-3 px-4 font-semibold">Typical ({state.abbr})</th>
+            <th class="py-3 px-4 font-semibold">High ({state.abbr})</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+        <tbody class="divide-y divide-hairline">
           <tr>
-            <td class="py-3 px-4 font-semibold text-slate-900 dark:text-white">
+            <td class="py-3 px-4 font-semibold text-ink">
               Contractor Labor ({job.tradeName})
             </td>
-            <td class="py-3 px-4">{Math.round(job.laborShare * 100)}%</td>
-            <td class="py-3 px-4">${Math.round(estimate.low * job.laborShare).toLocaleString()}</td>
-            <td class="py-3 px-4 font-bold">${estimate.laborCost.toLocaleString()}</td>
-            <td class="py-3 px-4">${Math.round(estimate.high * job.laborShare).toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono text-ink-muted">{Math.round(job.laborShare * 100)}%</td>
+            <td class="py-3 px-4 font-mono">${Math.round(estimate.low * job.laborShare).toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono font-bold text-ink">${estimate.laborCost.toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono">${Math.round(estimate.high * job.laborShare).toLocaleString()}</td>
           </tr>
           {job.materialsBreakdown.map((m) => {
             const matShare = (1 - job.laborShare) * (m.sharePercent / 100);
             return (
               <tr>
-                <td class="py-3 px-4 text-slate-700 dark:text-slate-300">{m.item}</td>
-                <td class="py-3 px-4">{Math.round(matShare * 100)}%</td>
-                <td class="py-3 px-4">${Math.round(estimate.low * matShare).toLocaleString()}</td>
-                <td class="py-3 px-4 font-semibold">${Math.round(estimate.materialCost * (m.sharePercent / 100)).toLocaleString()}</td>
-                <td class="py-3 px-4">${Math.round(estimate.high * matShare).toLocaleString()}</td>
+                <td class="py-3 px-4 text-ink-body">{m.item}</td>
+                <td class="py-3 px-4 font-mono text-ink-muted">{Math.round(matShare * 100)}%</td>
+                <td class="py-3 px-4 font-mono text-ink-muted">${Math.round(estimate.low * matShare).toLocaleString()}</td>
+                <td class="py-3 px-4 font-mono font-semibold text-ink">${Math.round(estimate.materialCost * (m.sharePercent / 100)).toLocaleString()}</td>
+                <td class="py-3 px-4 font-mono text-ink-muted">${Math.round(estimate.high * matShare).toLocaleString()}</td>
               </tr>
             );
           })}
@@ -188,98 +205,115 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 5. State-specific factors: BLS wage data, climate/frost-line notes, permit & licensing board URL -->
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-5 my-8" aria-labelledby="state-factors-heading">
+  <!-- State-Specific Factors -->
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8" aria-labelledby="state-factors-heading">
     <h2 id="state-factors-heading" class="sr-only">
       {state.name}-Specific Labor, Climate, and Licensing Factors
     </h2>
 
-    <div class="card p-5">
-      <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-        1. Local Trade Wages (BLS)
-      </span>
-      <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1">
+    <div class="bm-panel p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint">
+          01 // Trade Wages (BLS)
+        </span>
+        <Icon name="wrench" size={15} class="text-ink-muted" />
+      </div>
+      <h3 class="text-base font-bold text-ink">
         {job.tradeName} in {state.name}
       </h3>
-      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-        Per Bureau of Labor Statistics (SOC {job.socCode}), the mean hourly wage for {job.tradeName.toLowerCase()} in {state.name} is <strong>${tradeHourlyWage.toFixed(2)}/hr</strong> (vs. ${job.nationalTradeWage.toFixed(2)}/hr nationally). Including workers' comp, insurance, and overhead, expect contractor billing rates of <strong>${Math.round(tradeHourlyWage * 2.1)}–${Math.round(tradeHourlyWage * 2.75)}/hr</strong>.
+      <p class="text-xs sm:text-sm text-ink-body mt-2 leading-relaxed tabular-nums">
+        Per Bureau of Labor Statistics (SOC {job.socCode}), the mean hourly wage in {state.name} is{' '}
+        <strong class="text-ink">${tradeHourlyWage.toFixed(2)}/hr</strong> (vs. ${job.nationalTradeWage.toFixed(2)}/hr US average). Billed contractor rates typically range{' '}
+        <strong class="text-ink">${Math.round(tradeHourlyWage * 2.1)}–${Math.round(tradeHourlyWage * 2.75)}/hr</strong>.
       </p>
     </div>
 
-    <div class="card p-5">
-      <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-        2. Climate & Code Specs
-      </span>
-      <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1">
+    <div class="bm-panel p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint">
+          02 // Climate &amp; Specs
+        </span>
+        <Icon name="compass" size={15} class="text-ink-muted" />
+      </div>
+      <h3 class="text-base font-bold text-ink">
         {state.climateZone}
       </h3>
-      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+      <p class="text-xs sm:text-sm text-ink-body mt-2 leading-relaxed">
         {state.climateConsiderations}
       </p>
     </div>
 
-    <div class="card p-5">
-      <span class="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-        3. Permits & Contractor Licensing
-      </span>
-      <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1">
-        {state.licensingBoardName}
-      </h3>
-      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-        {state.permitNote}
-      </p>
+    <div class="bm-panel p-5 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint">
+            03 // Permits &amp; Licensing
+          </span>
+          <Icon name="shield-check" size={15} class="text-ink-muted" />
+        </div>
+        <h3 class="text-base font-bold text-ink">
+          {state.licensingBoardName}
+        </h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-2 leading-relaxed">
+          {state.permitNote}
+        </p>
+      </div>
       <a
         href={state.licensingBoardUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="mt-3 inline-flex items-center text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+        class="mt-3.5 inline-flex items-center gap-1.5 text-xs font-semibold text-blueprint hover:underline"
       >
-        Verify a {state.name} Contractor License ↗
+        <span>Verify a {state.name} License</span>
+        <Icon name="external-link" size={13} />
       </a>
     </div>
   </section>
 
-  <!-- 6. Neighboring states comparison table -->
+  <!-- Neighboring States Comparison -->
   {neighborStates.length > 0 && (
-    <section class="card p-6 my-8" aria-labelledby="neighbors-heading">
-      <h2 id="neighbors-heading" class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-        How {state.name} Compares to Neighboring States
-      </h2>
-      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-4">
-        Regional comparison for a {job.typicalProjectSize.toLocaleString()} {job.unit} {job.name.toLowerCase()} project:
-      </p>
+    <section class="bm-panel overflow-hidden my-8" aria-labelledby="neighbors-heading">
+      <div class="px-5 sm:px-6 py-4 border-b border-hairline bg-surface-subtle/40">
+        <h2 id="neighbors-heading" class="text-lg font-bold text-ink">
+          How {state.name} Compares to Neighboring States
+        </h2>
+        <p class="text-xs sm:text-sm text-ink-muted mt-0.5 tabular-nums">
+          Regional comparison for {job.typicalProjectSize.toLocaleString()} {job.unit} of {job.name.toLowerCase()}
+        </p>
+      </div>
+
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-sm">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
           <thead>
-            <tr class="border-b-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
-              <th class="py-2.5 px-4 font-bold">State</th>
-              <th class="py-2.5 px-4 font-bold">Typical Cost</th>
-              <th class="py-2.5 px-4 font-bold">Low – High Range</th>
-              <th class="py-2.5 px-4 font-bold">RPP Index</th>
-              <th class="py-2.5 px-4 font-bold">vs. US Avg</th>
+            <tr class="border-b border-hairline bg-surface-subtle/60 font-mono text-[11px] uppercase text-ink-muted">
+              <th class="py-2.5 px-4 font-semibold">State</th>
+              <th class="py-2.5 px-4 font-semibold">Typical Cost</th>
+              <th class="py-2.5 px-4 font-semibold">Low – High Range</th>
+              <th class="py-2.5 px-4 font-semibold">RPP Index</th>
+              <th class="py-2.5 px-4 font-semibold text-right">vs. US Avg</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-            <tr class="bg-brand-50/50 dark:bg-brand-950/30 font-semibold">
-              <td class="py-2.5 px-4">{state.name} (Current)</td>
-              <td class="py-2.5 px-4 text-brand-700 dark:text-brand-300">${estimate.typical.toLocaleString()}</td>
-              <td class="py-2.5 px-4">${estimate.low.toLocaleString()} – ${estimate.high.toLocaleString()}</td>
-              <td class="py-2.5 px-4">{state.rpp}%</td>
-              <td class="py-2.5 px-4">{estimate.percentDiffVsNational > 0 ? '+' : ''}{estimate.percentDiffVsNational}%</td>
+          <tbody class="divide-y divide-hairline">
+            <tr class="bg-lime-500/15 font-semibold">
+              <td class="py-2.5 px-4 text-ink">{state.name} (Selected)</td>
+              <td class="py-2.5 px-4 font-mono font-bold text-ink">${estimate.typical.toLocaleString()}</td>
+              <td class="py-2.5 px-4 font-mono">${estimate.low.toLocaleString()} – ${estimate.high.toLocaleString()}</td>
+              <td class="py-2.5 px-4 font-mono">{state.rpp}%</td>
+              <td class="py-2.5 px-4 font-mono text-right">{estimate.percentDiffVsNational > 0 ? '+' : ''}{estimate.percentDiffVsNational}%</td>
             </tr>
             {neighborStates.map((ns) => {
               const nEst = calculateStateJobCost(job, ns);
               return (
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <tr class="hover:bg-surface-subtle/40 transition-colors">
                   <td class="py-2.5 px-4 font-medium">
-                    <a href={`/cost/${job.slug}/${ns.slug}/`} class="text-brand-600 dark:text-brand-400 hover:underline">
-                      {ns.name} ({ns.abbr})
+                    <a href={`/cost/${job.slug}/${ns.slug}/`} class="text-blueprint hover:underline">
+                      {ns.name} <span class="font-mono text-[11px] text-ink-muted">({ns.abbr})</span>
                     </a>
                   </td>
-                  <td class="py-2.5 px-4 font-semibold">${nEst.typical.toLocaleString()}</td>
-                  <td class="py-2.5 px-4">${nEst.low.toLocaleString()} – ${nEst.high.toLocaleString()}</td>
-                  <td class="py-2.5 px-4">{ns.rpp}%</td>
-                  <td class="py-2.5 px-4">{nEst.percentDiffVsNational > 0 ? '+' : ''}{nEst.percentDiffVsNational}%</td>
+                  <td class="py-2.5 px-4 font-mono font-semibold text-ink">${nEst.typical.toLocaleString()}</td>
+                  <td class="py-2.5 px-4 font-mono text-ink-muted">${nEst.low.toLocaleString()} – ${nEst.high.toLocaleString()}</td>
+                  <td class="py-2.5 px-4 font-mono text-ink-muted">{ns.rpp}%</td>
+                  <td class="py-2.5 px-4 font-mono text-right text-ink-muted">{nEst.percentDiffVsNational > 0 ? '+' : ''}{nEst.percentDiffVsNational}%</td>
                 </tr>
               );
             })}
@@ -289,54 +323,54 @@ const faqs = [
     </section>
   )}
 
-  <!-- 7. Ways to save (DIY vs hiring a pro, linking back to the DIY calculator) -->
-  <section class="card p-6 my-8" aria-labelledby="ways-to-save-heading">
-    <h2 id="ways-to-save-heading" class="text-xl font-bold text-slate-900 dark:text-white mb-3">
-      Ways to Save on {job.name} in {state.name} (DIY vs. Hiring a Pro)
+  <!-- Ways to Save -->
+  <section class="bm-panel p-5 sm:p-6 my-8" aria-labelledby="ways-to-save-heading">
+    <h2 id="ways-to-save-heading" class="text-lg sm:text-xl font-bold text-ink mb-4">
+      Ways to Optimize Costs on {job.name} in {state.name}
     </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700 dark:text-slate-300">
-      <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <h3 class="font-bold text-slate-900 dark:text-white mb-1">
-          1. Calculate & Buy Your Own Materials
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-ink-body leading-relaxed">
+      <div class="p-4 rounded-lg bg-canvas border border-hairline">
+        <span class="font-mono text-[11px] font-semibold text-blueprint">01 // MATERIAL CONTROL</span>
+        <h3 class="font-bold text-ink mt-1 mb-1.5">
+          Calculate Exact Material Quantities First
         </h3>
-        <p class="text-xs sm:text-sm">
-          {job.diySavingsNote} Use our free{' '}
-          <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-brand-600 dark:text-brand-400 font-semibold underline">
+        <p>
+          {job.diySavingsNote} Use our{' '}
+          <a href={`/calculators/${job.relatedCalculatorSlug}/`} class="text-blueprint font-semibold underline">
             {job.name} Material Calculator
           </a>{' '}
-          to verify exact quantities so you never pay for padded material estimates.
+          to audit contractor bill-of-materials takeoff quantities before signing.
         </p>
       </div>
-      <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-        <h3 class="font-bold text-slate-900 dark:text-white mb-1">
-          2. Schedule in the Off-Peak Season ({job.bestSeason})
+      <div class="p-4 rounded-lg bg-canvas border border-hairline">
+        <span class="font-mono text-[11px] font-semibold text-blueprint">02 // SCHEDULING WINDOW</span>
+        <h3 class="font-bold text-ink mt-1 mb-1.5">
+          Book Off-Peak Labor ({job.bestSeason})
         </h3>
-        <p class="text-xs sm:text-sm">
-          With professional labor in {state.name} accounting for ${estimate.laborCost.toLocaleString()} ({Math.round(job.laborShare * 100)}%) of a typical project, booking during {job.bestSeason.toLowerCase()} and handling site prep yourself significantly reduces billed crew hours.
+        <p class="tabular-nums">
+          With labor in {state.name} averaging ${estimate.laborCost.toLocaleString()} ({Math.round(job.laborShare * 100)}%), scheduling during {job.bestSeason.toLowerCase()} and handling basic site prep reduces billable crew hours.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- 8. Lead-gen placeholder block (feature-flagged) -->
   <LeadGenWidget jobTitle={job.name} stateName={state.name} />
 
-  <!-- 9. FAQ (4-6 data-driven questions) -->
   <FAQSection
     faqs={faqs}
     title={`${job.name} in ${state.name}: Frequently Asked Questions`}
   />
 
-  <footer class="card p-5 mt-8 bg-slate-50 dark:bg-slate-900/60 text-xs text-slate-600 dark:text-slate-400 space-y-2">
+  <footer class="bm-panel p-5 mt-8 bg-surface-subtle/50 text-xs text-ink-muted space-y-2">
     <div class="flex flex-wrap items-center justify-between gap-2">
-      <strong class="text-slate-900 dark:text-white">
+      <strong class="text-ink font-semibold">
         {job.verified ? `Verified Bottom-Up Cost Sources (${state.name})` : `Model Data Sources (${state.name})`}
       </strong>
       {job.verified && job.lastReviewed && (
-        <span>Last Reviewed: <strong>{job.lastReviewed}</strong></span>
+        <span class="font-mono">Last Reviewed: <strong class="text-ink">{job.lastReviewed}</strong></span>
       )}
     </div>
-    <ul class="list-disc pl-5 space-y-1">
+    <ul class="list-disc pl-5 space-y-1 leading-relaxed">
       {job.sources.map((src) => (
         <li>{src}</li>
       ))}

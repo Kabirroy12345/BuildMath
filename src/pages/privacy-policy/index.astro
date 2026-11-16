@@ -10,22 +10,22 @@ import { siteConfig } from '../../config/site';
   pathname="/privacy-policy/"
   breadcrumbs={[{ name: 'Privacy Policy', href: '/privacy-policy/' }]}
 >
-  <p>
-    <strong>Effective Date:</strong> {siteConfig.lastUpdatedDefault}
+  <p class="font-mono text-xs text-ink-muted">
+    Effective Date: <strong class="text-ink">{siteConfig.lastUpdatedDefault}</strong>
   </p>
   <p>
     At <strong>{siteConfig.name}</strong> ({siteConfig.url}), operated by {siteConfig.legalName}, we respect your privacy and are committed to transparency about how information is handled when you use our calculators and cost guides.
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    1. Information We Collect & Browser Local Storage
+  <h2 class="text-xl font-bold text-ink mt-6">
+    1. Information We Collect &amp; Browser Local Storage
   </h2>
   <p>
-    All calculator inputs, room dimensions, and saved project items on our <a href="/my-project/" class="text-brand-600 underline">My Project Shopping List</a> page are processed and stored locally in your browser's <code>localStorage</code>. We do not transmit your calculator measurements to any backend database. If you contact us via our <a href="/contact/" class="text-brand-600 underline">Contact Form</a>, we receive the name, email address, and message content you voluntarily submit so we can reply to your inquiry.
+    All calculator inputs, room dimensions, recently used calculator history, and saved project items on our <a href="/my-project/" class="text-blueprint underline">My Project Shopping List</a> page are processed and stored locally in your browser's <code class="font-mono text-ink">localStorage</code>. We do not transmit your calculator measurements to any backend database. If you contact us via our <a href="/contact/" class="text-blueprint underline">Contact Form</a>, we receive the name, email address, and message content you voluntarily submit so we can reply to your inquiry.
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    2. Google AdSense & the DoubleClick DART Cookie
+  <h2 class="text-xl font-bold text-ink mt-6">
+    2. Google AdSense &amp; the DoubleClick DART Cookie
   </h2>
   <p>
     We may use third-party advertising companies, including Google AdSense, to serve advertisements when you visit {siteConfig.name}:
@@ -38,26 +38,26 @@ import { siteConfig } from '../../config/site';
       Google's use of advertising cookies (including the DoubleClick DART cookie) enables it and its partners to serve ads to our users based on their visit to {siteConfig.domain} and/or other sites on the Internet.
     </li>
     <li>
-      Users may opt out of personalized advertising by visiting <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">Google Ads Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">www.aboutads.info</a> or <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" class="text-brand-600 underline">Network Advertising Initiative Opt-Out</a>.
+      Users may opt out of personalized advertising by visiting <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" class="text-blueprint underline">Google Ads Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer" class="text-blueprint underline">www.aboutads.info</a> or <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" class="text-blueprint underline">Network Advertising Initiative Opt-Out</a>.
     </li>
   </ul>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    3. Retail Links & Future Affiliate Programs
+  <h2 class="text-xl font-bold text-ink mt-6">
+    3. Retail Links &amp; Future Affiliate Programs
   </h2>
   <p>
-    Where retail reference or product links are enabled (routed via <code>/go/</code>), destination retailers may set their own cookies in accordance with their privacy policies. Please review our <a href="/affiliate-disclosure/" class="text-brand-600 underline">Affiliate & Monetization Disclosure</a> for current participation status.
+    Where retail reference or product links are enabled (routed via <code class="font-mono text-ink">/go/</code>), destination retailers may set their own cookies in accordance with their privacy policies. Please review our <a href="/affiliate-disclosure/" class="text-blueprint underline">Affiliate &amp; Monetization Disclosure</a> for current participation status.
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    4. Analytics & Consent
+  <h2 class="text-xl font-bold text-ink mt-6">
+    4. Analytics &amp; Consent
   </h2>
   <p>
     If privacy-friendly analytics or Google AdSense are enabled, EEA/UK advertising consent is managed through a Google-certified CMP in compliance with TCF v2.2 and Google Consent Mode v2 requirements.
   </p>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
-    5. Your Privacy Rights (CCPA / CPRA & GDPR / UK GDPR)
+  <h2 class="text-xl font-bold text-ink mt-6">
+    5. Your Privacy Rights (CCPA / CPRA &amp; GDPR / UK GDPR)
   </h2>
   <p>
     Depending on your location (including California, Virginia, Colorado, the European Economic Area, and the United Kingdom), you have the right to:
@@ -68,10 +68,10 @@ import { siteConfig } from '../../config/site';
     <li>Opt out of the "sale" or "sharing" of personal information for cross-context behavioral advertising under CCPA/CPRA.</li>
   </ul>
 
-  <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-6">
+  <h2 class="text-xl font-bold text-ink mt-6">
     6. Contact Us Regarding Privacy
   </h2>
   <p>
-    For any privacy questions or data requests, contact us at <a href={`mailto:${siteConfig.email}`} class="text-brand-600 underline">{siteConfig.email}</a>.
+    For any privacy questions or data requests, contact us at <a href={`mailto:${siteConfig.email}`} class="text-blueprint underline">{siteConfig.email}</a>.
   </p>
 </ArticleLayout>

@@ -1,5 +1,6 @@
 ---
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Icon from '../../components/Icon.astro';
 import { siteConfig } from '../../config/site';
 import prices from '../../data/prices.json';
 ---
@@ -11,91 +12,125 @@ import prices from '../../data/prices.json';
   pathname="/methodology/"
   breadcrumbs={[{ name: 'Methodology', href: '/methodology/' }]}
 >
-  <section class="space-y-4">
-    <p>
-      Every calculator and cost guide on <strong>{siteConfig.name}</strong> is built on deterministic, unit-tested mathematical functions stored in open TypeScript modules. We never hide our assumptions: every default coverage rate, bag yield, and waste factor is visible and editable by the user.
+  <section class="bm-panel p-5 sm:p-6 bg-surface-subtle/40">
+    <p class="text-sm sm:text-base text-ink leading-relaxed">
+      Every calculator and cost guide on <strong>{siteConfig.name}</strong> executes deterministic, unit-tested mathematical functions stored in open TypeScript modules. Default coverage rates, bag yields, and waste allowances are transparent and 100% user-editable.
     </p>
   </section>
 
   <section class="space-y-4 mt-8">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-      1. Material Quantity Formulas & Trade Standards
+    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+      1. Material Quantity Formulas &amp; Trade Standards
     </h2>
     <p>
       Our 32 DIY calculators derive their default parameters from published manufacturer technical data sheets (TDS) and residential building codes:
     </p>
-    <ul class="list-disc pl-6 space-y-2 text-sm sm:text-base">
-      <li>
-        <strong>Concrete & Masonry (ACI 318 / Quikrete / Sakrete / BIA):</strong> Pre-mixed concrete yields are calculated at <code>0.60 cu ft</code> per 80-lb bag, <code>0.45 cu ft</code> per 60-lb bag, and <code>0.30 cu ft</code> per 40-lb bag. Standard modular bricks with a 3/8-inch mortar bed are calculated at <code>6.75 bricks per sq ft</code>.
-      </li>
-      <li>
-        <strong>Roofing & Pitch Geometry (NRCA / ARMA):</strong> Roof slope multipliers follow the exact right-triangle secant formula <code>√(1 + (Rise / 12)²)</code>. Asphalt architectural shingles are calculated at 3 bundles per 100 sq ft roofing square.
-      </li>
-      <li>
-        <strong>Flooring & Tile (NWFA / TCNA):</strong> Tile quantities account for actual grout joint width <code>ceil(Area_in² / ((W + Grout) × (L + Grout)) × (1 + Waste))</code>.
-      </li>
-      <li>
-        <strong>Stair Stringers & Framing (2024 IRC R311.7.5):</strong> Stair calculations automatically verify compliance against the International Residential Code maximum riser height of <code>7.75 inches</code> and minimum tread depth of <code>10.0 inches</code>.
-      </li>
-      <li>
-        <strong>Drywall & Joint Compound (USG Gypsum Construction Handbook):</strong> Standard 4×8 (32 sq ft) and 4×12 (48 sq ft) sheets are paired with <code>1.125 gal per 100 sq ft</code> (<code>0.01125 gal/sq ft</code>, or one 4.5-gallon pail per 400 sq ft) ready-mixed joint compound, <code>0.37 linear ft/sq ft</code> joint tape, and <code>32 screws per 4×8 sheet</code> (<code>1 screw per sq ft</code>).
-      </li>
-    </ul>
+    <div class="grid grid-cols-1 gap-3">
+      <div class="bm-panel p-4">
+        <span class="font-mono text-xs font-semibold text-blueprint">ACI 318 / QUIKRETE / SAKRETE / BIA</span>
+        <h3 class="text-sm font-bold text-ink mt-1">Concrete &amp; Masonry</h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-1">
+          Pre-mixed concrete yields are computed at <code class="font-mono text-ink">0.60 cu ft</code> per 80-lb bag, <code class="font-mono text-ink">0.45 cu ft</code> per 60-lb bag, and <code class="font-mono text-ink">0.30 cu ft</code> per 40-lb bag. Standard modular bricks with a 3/8-inch mortar bed use <code class="font-mono text-ink">6.75 bricks per sq ft</code>.
+        </p>
+      </div>
+      <div class="bm-panel p-4">
+        <span class="font-mono text-xs font-semibold text-blueprint">NRCA / ARMA</span>
+        <h3 class="text-sm font-bold text-ink mt-1">Roofing &amp; Pitch Geometry</h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-1">
+          Roof slope multipliers follow the exact right-triangle secant formula <code class="font-mono text-ink">√(1 + (Rise / 12)²)</code>. Asphalt architectural shingles are calculated at 3 bundles per 100 sq ft roofing square.
+        </p>
+      </div>
+      <div class="bm-panel p-4">
+        <span class="font-mono text-xs font-semibold text-blueprint">NWFA / TCNA</span>
+        <h3 class="text-sm font-bold text-ink mt-1">Flooring &amp; Ceramic Tile</h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-1">
+          Tile counts incorporate actual grout joint displacement: <code class="font-mono text-ink">ceil(Area_in² / ((W + Grout) × (L + Grout)) × (1 + Waste))</code>.
+        </p>
+      </div>
+      <div class="bm-panel p-4">
+        <span class="font-mono text-xs font-semibold text-blueprint">2024 IRC R311.7.5</span>
+        <h3 class="text-sm font-bold text-ink mt-1">Stair Stringers &amp; Framing</h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-1">
+          Stair geometry checks automatically flag code violations against the International Residential Code maximum riser height of <code class="font-mono text-ink">7.75 inches</code> and minimum tread depth of <code class="font-mono text-ink">10.0 inches</code>.
+        </p>
+      </div>
+      <div class="bm-panel p-4">
+        <span class="font-mono text-xs font-semibold text-blueprint">USG GYPSUM CONSTRUCTION HANDBOOK</span>
+        <h3 class="text-sm font-bold text-ink mt-1">Drywall &amp; Ready-Mix Compound</h3>
+        <p class="text-xs sm:text-sm text-ink-body mt-1">
+          Standard 4×8 (32 sq ft) and 4×12 (48 sq ft) drywall panels pair with <code class="font-mono text-ink">1.125 gal per 100 sq ft</code> (<code class="font-mono text-ink">0.01125 gal/sq ft</code>, one 4.5-gal pail per 400 sq ft) ready-mixed joint compound, <code class="font-mono text-ink">0.37 linear ft/sq ft</code> joint tape, and <code class="font-mono text-ink">1 screw/sq ft</code>.
+        </p>
+      </div>
+    </div>
   </section>
 
-  <section class="space-y-4 mt-8">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-      2. Regional State Cost Formula
+  <section class="space-y-4 mt-10">
+    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+      2. Regional State Cost Equation
     </h2>
     <p>
-      Our "Cost to [Job] in [State]" guides combine national baseline project costs with state-level labor and material cost indices using a weighted composite formula:
+      Our localized cost guides combine national bottom-up project pricing with state-level labor and material cost indices:
     </p>
-    <div class="p-4 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs sm:text-sm">
+    <div class="p-4 sm:p-5 rounded-lg bg-graphite-900 text-[#F8F8F5] border border-graphite-700 font-mono text-xs sm:text-sm overflow-x-auto">
+      <span class="text-lime-500 text-[10px] font-semibold uppercase tracking-wider block mb-1.5">
+        Weighted State Multiplier Equation
+      </span>
       State_Cost = National_Cost × (Job_Labor_Share × State_Labor_Multiplier + (1 − Job_Labor_Share) × State_Material_Multiplier)
     </div>
-    <ul class="list-disc pl-6 space-y-2 text-sm sm:text-base">
-      <li>
-        <strong>BLS Occupational Employment and Wage Statistics (OEWS):</strong> State labor multipliers and trade hourly rates reference US Bureau of Labor Statistics mean hourly wages for Carpenters (SOC 47-2031), Painters (SOC 47-2141), Roofers (SOC 47-2181), Cement Masons (SOC 47-2051), and Electricians (SOC 47-2111).
+    <ul class="space-y-2.5 text-sm sm:text-base">
+      <li class="flex items-start gap-2.5">
+        <Icon name="check" size={16} class="text-blueprint mt-1 shrink-0" />
+        <span>
+          <strong class="text-ink">BLS Occupational Employment and Wage Statistics (OEWS):</strong> State labor multipliers reference Bureau of Labor Statistics mean hourly wages across Carpenters (SOC 47-2031), Painters (SOC 47-2141), Roofers (SOC 47-2181), Cement Masons (SOC 47-2051), and Electricians (SOC 47-2111).
+        </span>
       </li>
-      <li>
-        <strong>BEA Regional Price Parities (RPP):</strong> Material multipliers reflect regional freight, sales tax, and supply-house pricing variations published by the Bureau of Economic Analysis.
+      <li class="flex items-start gap-2.5">
+        <Icon name="check" size={16} class="text-blueprint mt-1 shrink-0" />
+        <span>
+          <strong class="text-ink">BEA Regional Price Parities (RPP):</strong> Regional material indices account for freight, sales tax, and supply-yard pricing differentials published by the US Bureau of Economic Analysis.
+        </span>
       </li>
-      <li>
-        <strong>Climate & Licensing Verification:</strong> Each state profile includes IECC climate zone classifications, frost-line depth ranges, and direct links to the official state contractor licensing board.
+      <li class="flex items-start gap-2.5">
+        <Icon name="check" size={16} class="text-blueprint mt-1 shrink-0" />
+        <span>
+          <strong class="text-ink">Climate &amp; Licensing Links:</strong> Every state profile provides IECC climate zone classifications and direct official contractor licensing board verification links.
+        </span>
       </li>
     </ul>
   </section>
 
-  <section class="space-y-4 mt-8">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-      3. National Material Price Dataset & Review Cadence
+  <section class="space-y-4 mt-10">
+    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+      3. National Material Price Dataset
     </h2>
     <p>
-      Default retail unit prices are reviewed quarterly against US big-box home improvement retailers (Home Depot, Lowe's, Menards) and local building supply yards. Below is a sample of our current baseline unit price dataset:
+      Baseline retail unit prices reflect US home-improvement supplier pricing (Home Depot, Lowe's, regional supply yards) and are editable directly inside every calculator:
     </p>
-    <div class="overflow-x-auto card p-4">
-      <table class="w-full text-left border-collapse text-xs sm:text-sm">
-        <thead>
-          <tr class="border-b border-slate-200 dark:border-slate-700">
-            <th class="py-2 px-3 font-bold">Material Item</th>
-            <th class="py-2 px-3 font-bold">Unit</th>
-            <th class="py-2 px-3 font-bold">Default Price</th>
-            <th class="py-2 px-3 font-bold">Low – High Range</th>
-            <th class="py-2 px-3 font-bold">Last Reviewed</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-          {prices.slice(0, 12).map((p) => (
-            <tr>
-              <td class="py-2 px-3 font-medium text-slate-900 dark:text-white">{p.name}</td>
-              <td class="py-2 px-3">{p.unit}</td>
-              <td class="py-2 px-3 font-semibold">${p.defaultPrice}</td>
-              <td class="py-2 px-3">${p.lowPrice} – ${p.highPrice}</td>
-              <td class="py-2 px-3 text-slate-500">{p.lastReviewed}</td>
+    <div class="bm-panel overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
+          <thead>
+            <tr class="border-b border-hairline bg-surface-subtle/60 font-mono text-[11px] uppercase text-ink-muted">
+              <th class="py-3 px-4 font-semibold">Material Item</th>
+              <th class="py-3 px-4 font-semibold">Unit</th>
+              <th class="py-3 px-4 font-semibold">Default Price</th>
+              <th class="py-3 px-4 font-semibold">Low – High Range</th>
+              <th class="py-3 px-4 font-semibold">Reviewed</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            {prices.slice(0, 12).map((p) => (
+              <tr class="hover:bg-surface-subtle/40 transition-colors">
+                <td class="py-2.5 px-4 font-medium text-ink">{p.name}</td>
+                <td class="py-2.5 px-4 font-mono text-ink-muted">{p.unit}</td>
+                <td class="py-2.5 px-4 font-mono font-semibold text-ink">${p.defaultPrice}</td>
+                <td class="py-2.5 px-4 font-mono text-ink-muted">${p.lowPrice} – ${p.highPrice}</td>
+                <td class="py-2.5 px-4 font-mono text-ink-muted">{p.lastReviewed}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 </ArticleLayout>

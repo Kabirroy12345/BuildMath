@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import Icon from '../../../components/Icon.astro';
+import { getCategoryIconName } from '../../../lib/lucide-icons';
 import categories from '../../../data/categories.json';
 import calculators from '../../../data/calculators.json';
 
@@ -13,6 +15,73 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 const categoryCalculators = calculators.filter((c) => c.category === category.slug);
+
+const tradeSpecs: Record<
+  string,
+  { standard: string; primaryUnits: string; typicalWaste: string; fieldTip: string; crossSlugs: string[] }
+> = {
+  painting: {
+    standard: 'MPI & ASTM Coverage Ratings',
+    primaryUnits: 'Gallons / Quarts / Double Rolls',
+    typicalWaste: '10% cutting & absorption reserve',
+    fieldTip: 'Measure total wall perimeter instead of estimating room area by floor square footage; deduct 20 sq ft per door and 15 sq ft per standard window.',
+    crossSlugs: ['drywall-calculator', 'baseboard-trim-calculator', 'square-footage-calculator'],
+  },
+  flooring: {
+    standard: 'NWFA / TCNA Mortar & Tile Specs',
+    primaryUnits: 'Boxes / Sq Ft / Grout & Thinset Bags',
+    typicalWaste: '10% straight layout, 15% diagonal',
+    fieldTip: 'Inspect box coverage printed on the carton—vinyl plank varies between 18 and 36 sq ft per box depending on plank width.',
+    crossSlugs: ['square-footage-calculator', 'board-foot-calculator', 'paint-calculator'],
+  },
+  'concrete-masonry': {
+    standard: 'ACI 318 / Quikrete & BIA Yield Specs',
+    primaryUnits: '40/60/80-lb Bags / Cu Yd / Tons',
+    typicalWaste: '5–10% subgrade variation buffer',
+    fieldTip: 'A standard 80-lb bag yields 0.60 cubic feet. Over ~2 cubic yards (90+ bags), ordering a ready-mix truck is usually cheaper and faster.',
+    crossSlugs: ['cubic-yard-calculator', 'gravel-calculator', 'deck-calculator'],
+  },
+  roofing: {
+    standard: 'ARMA / NRCA Secant Pitch Geometry',
+    primaryUnits: 'Squares / Bundles / 10-ft Sections',
+    typicalWaste: '10% gable, 15% hip/valley roof',
+    fieldTip: 'Footprint dimensions alone underestimate roof area: a 6/12 pitch increases surface area by 1.118× relative to flat floor area.',
+    crossSlugs: ['paint-calculator', 'square-footage-calculator', 'stair-calculator'],
+  },
+  landscaping: {
+    standard: 'Loose Volume & Bulk Tonnage Conversion',
+    primaryUnits: 'Cubic Yards / 2 cu ft Bags / Tons',
+    typicalWaste: '5–10% settling & compaction allowance',
+    fieldTip: 'Crushed aggregate compacts roughly 10–15% under plate tamper vibration—factor target compacted depth rather than loose pile thickness.',
+    crossSlugs: ['paver-patio-calculator', 'retaining-wall-calculator', 'cubic-yard-calculator'],
+  },
+  'fencing-decking': {
+    standard: 'DCA6 Prescriptive Span & Fastener Specs',
+    primaryUnits: 'Posts / Pickets / Joists / Deck Boards',
+    typicalWaste: '10% end-trim & knot culling',
+    fieldTip: 'Before digging fence or footing holes in any US state, dial 811 at least 2–3 business days beforehand for free underground utility marking.',
+    crossSlugs: ['concrete-footing-calculator', 'deck-stain-calculator', 'stair-calculator'],
+  },
+  'drywall-walls': {
+    standard: 'USG Gypsum Handbook & 2024 IRC R311.7.5',
+    primaryUnits: '4×8 / 4×12 Sheets / Pails / Risers',
+    typicalWaste: '10% drywall cutouts, 0% stair tolerance',
+    fieldTip: 'IRC residential stair code sets max riser height at 7.75 inches and minimum tread depth at 10.0 inches—our stair calculator flags violations automatically.',
+    crossSlugs: ['paint-calculator', 'baseboard-trim-calculator', 'board-foot-calculator'],
+  },
+  'general-conversions': {
+    standard: 'Multi-Shape Planimetric & Board-Foot Math',
+    primaryUnits: 'Sq Ft / Cu Yd / Cu Ft / Board Feet',
+    typicalWaste: '0–15% user selectable cut allowance',
+    fieldTip: 'Split L-shaped or asymmetrical lots into primary rectangles and add them cleanly in a single pass before ordering bulk materials.',
+    crossSlugs: ['concrete-slab-calculator', 'mulch-calculator', 'flooring-calculator'],
+  },
+};
+
+const spec = tradeSpecs[category.slug] || tradeSpecs['general-conversions'];
+const recommendedCrossCalcs = spec.crossSlugs
+  .map((s) => calculators.find((c) => c.slug === s))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
 ---
 
 <BaseLayout
@@ -27,49 +96,127 @@ const categoryCalculators = calculators.filter((c) => c.category === category.sl
     ]}
   />
 
-  <header class="mb-8">
-    <span class="inline-block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 bg-brand-100 dark:bg-brand-950 px-2.5 py-1 rounded-md mb-2">
-      {categoryCalculators.length} Free Tools
-    </span>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-      {category.name} Calculators
-    </h1>
-    <p class="mt-2 text-base text-slate-600 dark:text-slate-400 max-w-3xl">
-      {category.description}
-    </p>
-  </header>
+  <!-- Trade Category Architectural Header -->
+  <header class="mb-10 bm-panel overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12">
+      <div class="lg:col-span-8 p-6 sm:p-8 bm-cad-grid">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="bm-eyebrow-blue">
+            <Icon name={getCategoryIconName(category.slug)} size={13} />
+            {categoryCalculators.length} Trade Instruments
+          </span>
+          <span class="bm-eyebrow">{spec.standard}</span>
+        </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-    {categoryCalculators.map((calc) => (
-      <article class="card p-6 flex flex-col justify-between hover:border-brand-500 transition-colors">
-        <div>
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white">
-            <a href={`/calculators/${calc.slug}/`} class="hover:text-brand-600 dark:hover:text-brand-400">
-              {calc.name}
-            </a>
-          </h2>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            {calc.intro}
-          </p>
-          <div class="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300">
-            Formula: {calc.howToCalculate.formula}
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+          {category.name} Calculators
+        </h1>
+        <p class="mt-2.5 text-sm sm:text-base text-ink-body max-w-2xl leading-relaxed">
+          {category.description}
+        </p>
+
+        <div class="mt-5 p-3.5 rounded-lg bg-canvas border border-hairline flex items-start gap-2.5 text-xs text-ink-body">
+          <Icon name="info" size={15} class="text-blueprint mt-0.5 shrink-0" />
+          <span>
+            <strong class="text-ink">Field Rule:</strong> {spec.fieldTip}
+          </span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 bg-graphite-900 text-[#F8F8F5] p-6 sm:p-7 border-t lg:border-t-0 lg:border-l border-graphite-700 flex flex-col justify-between gap-4">
+        <div class="space-y-3">
+          <div class="font-mono text-[10px] uppercase tracking-wider text-lime-500">
+            Trade Specification Summary
+          </div>
+          <div>
+            <span class="font-mono text-[10px] uppercase text-[#8E949D] block">Store Packaging Outputs</span>
+            <span class="text-sm font-semibold text-[#F8F8F5]">{spec.primaryUnits}</span>
+          </div>
+          <div>
+            <span class="font-mono text-[10px] uppercase text-[#8E949D] block">Recommended Allowance</span>
+            <span class="text-sm font-semibold text-[#F8F8F5]">{spec.typicalWaste}</span>
           </div>
         </div>
-        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
-          <a href={`/calculators/${calc.slug}/`} class="text-brand-600 dark:text-brand-400 hover:underline">
-            Open Calculator →
+        <a href="/calculators/" class="inline-flex items-center gap-1.5 font-mono text-xs text-[#6FA3D2] hover:underline">
+          <Icon name="search" size={13} />
+          <span>Search All 32 Calculators</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Calculator Grid -->
+  <section class="mb-14" aria-label={`${category.name} calculators`}>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {categoryCalculators.map((calc, idx) => (
+        <article class="bm-panel bm-panel-hover p-6 flex flex-col justify-between hover:border-blueprint/70">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] font-semibold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
+                TOOL #{String(idx + 1).padStart(2, '0')}
+              </span>
+              <span class="font-mono text-[11px] text-ink-muted tabular-nums">
+                {calc.inputs.length} parameters
+              </span>
+            </div>
+
+            <h2 class="text-xl font-bold text-ink">
+              <a href={`/calculators/${calc.slug}/`} class="hover:text-blueprint transition-colors">
+                {calc.name}
+              </a>
+            </h2>
+            <p class="mt-2 text-sm text-ink-muted leading-relaxed">
+              {calc.intro}
+            </p>
+            <div class="mt-4 p-3 rounded-lg bg-graphite-900 text-[#D2D6DC] font-mono text-xs overflow-x-auto border border-graphite-700">
+              <span class="text-lime-500 font-semibold mr-2">fx:</span>
+              {calc.howToCalculate.formula}
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
+            <a
+              href={`/calculators/${calc.slug}/`}
+              class="bm-btn-lime text-xs min-h-[36px] px-3.5 py-1.5 font-bold"
+            >
+              <span>Open Calculator</span>
+              <Icon name="arrow-right" size={14} />
+            </a>
+            <a
+              href={`/cost/${calc.relatedCostJobSlug}/`}
+              class="inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-blueprint transition-colors"
+            >
+              <span>Cost Guide</span>
+              <Icon name="arrow-up-right" size={13} />
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Recommended Cross-Trade Pairings -->
+  {recommendedCrossCalcs.length > 0 && (
+    <section class="mb-12 pt-8 border-t border-hairline" aria-labelledby="recommended-pairings-heading">
+      <h2 id="recommended-pairings-heading" class="text-lg font-bold text-ink mb-4">
+        Often Paired With {category.shortName} Projects
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {recommendedCrossCalcs.map((rc) => (
+          <a href={`/calculators/${rc.slug}/`} class="bm-panel bm-panel-hover p-4 group">
+            <div class="text-sm font-bold text-ink group-hover:text-blueprint transition-colors">
+              {rc.name}
+            </div>
+            <p class="text-xs text-ink-muted mt-1 line-clamp-2">{rc.intro}</p>
           </a>
-          <a href={`/cost/${calc.relatedCostJobSlug}/`} class="text-slate-500 hover:text-slate-900 dark:hover:text-white">
-            View Cost Guide →
-          </a>
-        </div>
-      </article>
-    ))}
-  </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- Explore Other Categories -->
-  <section class="pt-8 border-t border-slate-200 dark:border-slate-800">
-    <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">
+  <section class="pt-8 border-t border-hairline">
+    <h2 class="font-mono text-xs font-semibold uppercase tracking-wider text-ink-muted mb-4">
       Other Calculator Categories
     </h2>
     <div class="flex flex-wrap gap-2">
@@ -78,9 +225,10 @@ const categoryCalculators = calculators.filter((c) => c.category === category.sl
         .map((c) => (
           <a
             href={`/calculators/${c.slug}/`}
-            class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500 text-slate-700 dark:text-slate-300"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-surface border border-hairline hover:border-blueprint text-ink transition-colors"
           >
-            {c.name}
+            <Icon name={getCategoryIconName(c.slug)} size={14} class="text-blueprint" />
+            <span>{c.name}</span>
           </a>
         ))}
     </div>
