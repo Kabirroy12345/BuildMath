@@ -179,12 +179,40 @@ const heroSpecimens: HeroSpecimenItem[] = [
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
       <!-- Hero Left: Value Prop + Command Search + Primary CTAs -->
       <div class="lg:col-span-7 space-y-5">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-graphite-900 text-[#F8F8F5] font-mono text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase">
-          <span class="h-1.5 w-1.5 rounded-full bg-lime-500 shrink-0"></span>
-          <span>Construction Material &amp; Cost Engine // US Specs</span>
+        <div class="flex items-center justify-between gap-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-graphite-900 text-[#F8F8F5] font-mono text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase">
+            <span class="h-1.5 w-1.5 rounded-full bg-lime-500 shrink-0"></span>
+            <span>Construction Material &amp; Cost Engine // US Specs</span>
+          </div>
+
+          <!-- Velocity-Coupled Rotating Vector Spec Seal (eszterbial.com + epic.net craft) -->
+          <a
+            href="/methodology/"
+            title="Inspect Deterministic Formula Standards"
+            class="hidden sm:inline-flex items-center justify-center relative h-14 w-14 shrink-0 group"
+          >
+            <svg
+              viewBox="0 0 100 100"
+              width="56"
+              height="56"
+              data-orbit-stamp
+              aria-hidden="true"
+              class="text-ink-muted group-hover:text-blueprint transition-colors"
+            >
+              <defs>
+                <path id="hero-seal-path" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" />
+              </defs>
+              <text font-size="8.2" font-family="JetBrains Mono, monospace" font-weight="600" letter-spacing="1.4" fill="currentColor">
+                <textPath href="#hero-seal-path">SOURCE-CITED • US SPECS • ACI/USG • </textPath>
+              </text>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center font-mono text-[9px] font-bold text-ink group-hover:text-blueprint transition-colors">
+              32
+            </span>
+          </a>
         </div>
 
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.06]">
+        <h1 data-split-reveal class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.06]">
           Accurate Home-Improvement Math Built for Real Store Orders
         </h1>
 
@@ -198,11 +226,11 @@ const heroSpecimens: HeroSpecimenItem[] = [
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5 pt-1">
-          <a href="/calculators/" class="bm-btn-lime text-xs sm:text-sm font-bold">
+          <a href="/calculators/" class="bm-btn-lime bm-magnetic text-xs sm:text-sm font-bold">
             <span>Explore All 32 Calculators</span>
             <Icon name="arrow-right" size={15} />
           </a>
-          <a href="/my-project/" class="bm-btn-secondary text-xs sm:text-sm">
+          <a href="/my-project/" class="bm-btn-secondary bm-magnetic text-xs sm:text-sm">
             <Icon name="clipboard-list" size={15} class="text-blueprint" />
             <span>Open Project Workspace</span>
           </a>
@@ -243,7 +271,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
     </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
       <div>
-        <h2 id="quick-access-heading" class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+        <h2 id="quick-access-heading" data-split-reveal class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
           Quick-Access Calculators
         </h2>
       </div>
@@ -260,6 +288,8 @@ const heroSpecimens: HeroSpecimenItem[] = [
         return (
           <a
             href={`/calculators/${calc.slug}/`}
+            data-cursor="calc"
+            data-cursor-text="OPEN ↗"
             class="bm-panel bm-card-invert p-3.5 flex flex-col justify-between group"
           >
             <div>
@@ -294,7 +324,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
     </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <h2 id="categories-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+        <h2 id="categories-heading" data-split-reveal class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           Residential Construction Trades
         </h2>
         <p class="text-sm text-ink-muted mt-1">
@@ -375,7 +405,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
     </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <h2 id="popular-calcs-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+        <h2 id="popular-calcs-heading" data-split-reveal class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           12 Essential Estimation Calculators
         </h2>
         <p class="text-sm text-ink-muted mt-1">
@@ -391,6 +421,8 @@ const heroSpecimens: HeroSpecimenItem[] = [
         return (
           <a
             href={`/calculators/${calc.slug}/`}
+            data-cursor="calc"
+            data-cursor-text="CALC ↗"
             class="bm-panel bm-card-invert p-5 group flex flex-col justify-between"
           >
             <div>
@@ -489,39 +521,52 @@ const heroSpecimens: HeroSpecimenItem[] = [
       </div>
     </div>
 
-    <!-- System Methodology Pipeline -->
-    <div class="bm-panel overflow-hidden">
+    <!-- System Methodology Pipeline (Scroll-Scrubbed epic.net Calibration) -->
+    <div class="bm-panel overflow-hidden" data-scroll-pipeline>
       <div class="px-6 py-5 border-b border-hairline bg-surface-subtle/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <span class="bm-eyebrow-blue mb-1.5">Deterministic Estimation Pipeline</span>
-          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+          <h2 data-split-reveal class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
             How BuildMath Translates Dimensions Into Purchasing Lists
           </h2>
         </div>
-        <a href="/methodology/" class="bm-btn-secondary text-xs shrink-0">
+        <a href="/methodology/" class="bm-btn-secondary bm-magnetic text-xs shrink-0">
           <span>Full Formula Documentation</span>
           <Icon name="arrow-right" size={14} />
         </a>
       </div>
 
+      <div class="bm-pipe-track" aria-hidden="true">
+        <div class="bm-pipe-fill"></div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12">
         <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-hairline">
-          <div class="p-5 space-y-2">
-            <span class="font-mono text-[11px] font-bold text-blueprint">01 // MEASURE</span>
+          <div class="p-5 space-y-2" data-pipe-step>
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] font-bold text-blueprint">01 // MEASURE</span>
+              <span class="bm-step-dot h-2 w-2 rounded-full bg-hairline-strong transition-all"></span>
+            </div>
             <h3 class="text-sm font-bold text-ink">Dimensions &amp; Units</h3>
             <p class="text-xs text-ink-muted leading-relaxed">
               Enter ft/in or metric measurements, deduct openings, and adjust thickness or slope geometry directly.
             </p>
           </div>
-          <div class="p-5 space-y-2">
-            <span class="font-mono text-[11px] font-bold text-blueprint">02 // ROUND UP</span>
+          <div class="p-5 space-y-2" data-pipe-step>
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] font-bold text-blueprint">02 // ROUND UP</span>
+              <span class="bm-step-dot h-2 w-2 rounded-full bg-hairline-strong transition-all"></span>
+            </div>
             <h3 class="text-sm font-bold text-ink">Store Packaging</h3>
             <p class="text-xs text-ink-muted leading-relaxed">
               See both net unrounded engineering volume and retail store counts (<code class="font-mono text-ink">Math.ceil</code>) across bag or carton sizes.
             </p>
           </div>
-          <div class="p-5 space-y-2">
-            <span class="font-mono text-[11px] font-bold text-blueprint">03 // LOCALIZE</span>
+          <div class="p-5 space-y-2" data-pipe-step>
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] font-bold text-blueprint">03 // LOCALIZE</span>
+              <span class="bm-step-dot h-2 w-2 rounded-full bg-hairline-strong transition-all"></span>
+            </div>
             <h3 class="text-sm font-bold text-ink">State Labor &amp; BOM</h3>
             <p class="text-xs text-ink-muted leading-relaxed">
               Adjust contractor quotes using BLS occupational wages and BEA Regional Price Parities across 50 states.
@@ -560,7 +605,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
     </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <h2 id="cost-guides-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+        <h2 id="cost-guides-heading" data-split-reveal class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           Home Improvement Cost Guides by State
         </h2>
         <p class="text-sm text-ink-muted mt-1">
@@ -696,7 +741,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
     </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <h2 id="guides-heading" class="text-2xl font-extrabold text-ink tracking-tight">
+        <h2 id="guides-heading" data-split-reveal class="text-2xl font-extrabold text-ink tracking-tight">
           Measurement &amp; Estimation Guides
         </h2>
         <p class="text-sm text-ink-muted mt-1">

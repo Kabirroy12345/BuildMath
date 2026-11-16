@@ -945,7 +945,7 @@ export default function CalculatorWidget({
                 type="button"
                 onClick={handleCalculateConfirm}
                 data-testid="calculate-btn"
-                class="bm-btn-lime flex-1 font-bold text-sm"
+                class="bm-btn-lime bm-magnetic flex-1 font-bold text-sm"
               >
                 <LucideIcon name="calculator" size={16} />
                 <span>{calculatedNotice ? 'Estimate Updated' : 'Calculate Estimate'}</span>
@@ -1016,8 +1016,9 @@ export default function CalculatorWidget({
 
               <div class="mt-2 flex items-baseline gap-2.5 flex-wrap">
                 <span
+                  key={String(output.primaryResult.value)}
                   data-testid="primary-result-value"
-                  class="text-4xl sm:text-5xl font-extrabold text-[#F8F8F5] tracking-tight tabular-nums leading-none"
+                  class="animate-digit-roll text-4xl sm:text-5xl font-extrabold text-[#F8F8F5] tracking-tight tabular-nums leading-none"
                 >
                   {output.primaryResult.value}
                 </span>
@@ -1128,20 +1129,46 @@ export default function CalculatorWidget({
                   <span class="font-mono text-[10px] text-[#9BA1AA]">LIVE</span>
                 </div>
 
-                {diagramType === 'concrete-slab' && (
-                  <svg viewBox="0 0 260 100" class="w-full h-24" role="img" aria-label="Concrete slab length width thickness diagram">
-                    <polygon points="34,36 184,20 226,46 76,62" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
-                    <polygon points="34,36 76,62 76,78 34,52" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" />
-                    <polygon points="76,62 226,46 226,62 76,78" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.5" />
-                    <text x="130" y="94" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      L {blueprintLen}' × W {blueprintWid}' × {values.thicknessInches || 4}" THICK
-                    </text>
-                  </svg>
-                )}
+                {diagramType === 'concrete-slab' && (() => {
+                  const extrudeY = Math.round(Math.min(24, Math.max(8, Number(values.thicknessInches || 4) * 2.4)));
+                  const spanShift = Math.round(Math.min(26, Math.max(-22, (Number(blueprintLen) - Number(blueprintWid)) * 1.8)));
+                  const xA = 44 - Math.round(spanShift * 0.4);
+                  const xB = 182 + Math.round(spanShift * 0.5);
+                  const xC = 224 + Math.round(spanShift * 0.4);
+                  const xD = 86 - Math.round(spanShift * 0.5);
+                  return (
+                    <svg viewBox="0 0 260 104" class="w-full h-24" role="img" aria-label="Concrete slab length width thickness diagram">
+                      <polygon
+                        points={`${xA},34 ${xB},18 ${xC},42 ${xD},58`}
+                        fill="rgba(71,121,168,0.22)"
+                        stroke="#6FA3D2"
+                        stroke-width="1.75"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <polygon
+                        points={`${xA},34 ${xD},58 ${xD},${58 + extrudeY} ${xA},${34 + extrudeY}`}
+                        fill="rgba(198,243,106,0.24)"
+                        stroke="#C6F36A"
+                        stroke-width="1.5"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <polygon
+                        points={`${xD},58 ${xC},42 ${xC},${42 + extrudeY} ${xD},${58 + extrudeY}`}
+                        fill="rgba(71,121,168,0.14)"
+                        stroke="#6FA3D2"
+                        stroke-width="1.5"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <text x="130" y="98" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        L {blueprintLen}' × W {blueprintWid}' × {values.thicknessInches || 4}" THICK
+                      </text>
+                    </svg>
+                  );
+                })()}
 
                 {diagramType === 'concrete-footing' && (
                   <svg viewBox="0 0 260 100" class="w-full h-24" role="img" aria-label="Concrete footing sonotube depth diagram">
-                    <ellipse cx="130" cy="24" rx="34" ry="10" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
+                    <ellipse cx="130" cy="24" rx={values.shape === 'rectangular' ? 38 : Math.min(48, Math.max(22, Number(values.diameterInches || 12) * 2.4))} ry="10" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" class="transition-all duration-300 ease-out" />
                     <path d="M96 24v46c0 5.5 15.2 10 34 10s34-4.5 34-10V24" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.75" />
                     <text x="130" y="95" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
                       {values.shape === 'rectangular' ? `${values.rectLengthInches || 16}"×${values.rectWidthInches || 16}" PAD` : `${values.diameterInches || 12}" DIA`} × {values.depthInches || 42}" DEEP
@@ -1149,44 +1176,85 @@ export default function CalculatorWidget({
                   </svg>
                 )}
 
-                {diagramType === 'roof-pitch' && (
-                  <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Roof pitch right triangle diagram">
-                    <polygon points="24,88 214,88 214,24" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="2" />
-                    <rect x="206" y="80" width="8" height="8" fill="none" stroke="#6FA3D2" stroke-width="1" />
-                    <text x="119" y="103" font-size="10" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
-                      RUN: {values.runInches || 12} in
-                    </text>
-                    <text x="220" y="60" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A">
-                      {pitchRiseVal}"
-                    </text>
-                    <text x="92" y="47" font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#F8F8F5">
-                      ×{output.primaryResult.exactValue}
-                    </text>
-                  </svg>
-                )}
+                {diagramType === 'roof-pitch' && (() => {
+                  const peakY = Math.round(Math.max(14, Math.min(80, 88 - Math.min(18, Math.max(1, Number(pitchRiseVal))) * 3.8)));
+                  return (
+                    <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Roof pitch right triangle diagram">
+                      <polygon
+                        points={`24,88 214,88 214,${peakY}`}
+                        fill="rgba(71,121,168,0.18)"
+                        stroke="#6FA3D2"
+                        stroke-width="2"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <rect x="206" y="80" width="8" height="8" fill="none" stroke="#6FA3D2" stroke-width="1" />
+                      <text x="119" y="103" font-size="10" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
+                        RUN: {values.runInches || 12} in
+                      </text>
+                      <text x="220" y={Math.round((88 + peakY) / 2)} font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A">
+                        {pitchRiseVal}"
+                      </text>
+                      <text x="92" y={Math.max(30, Math.round((88 + peakY) / 2) - 4)} font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#F8F8F5">
+                        ×{output.primaryResult.exactValue}
+                      </text>
+                    </svg>
+                  );
+                })()}
 
-                {diagramType === 'stair-stringer' && (
-                  <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Stair stringer rise and run diagram">
-                    <polyline
-                      points="22,92 22,73 66,73 66,54 110,54 110,35 154,35 154,16 198,16 198,92 22,92"
-                      fill="rgba(71,121,168,0.18)"
-                      stroke="#6FA3D2"
-                      stroke-width="2"
-                    />
-                    <text x="115" y="106" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      {output.primaryResult.value} RISERS // {values.totalRiseInches || 108}" RISE
-                    </text>
-                  </svg>
-                )}
+                {diagramType === 'stair-stringer' && (() => {
+                  const steps = Math.min(14, Math.max(2, Number(output.primaryResult.value) || 8));
+                  const startX = 22;
+                  const endX = 212;
+                  const botY = 90;
+                  const topY = 14;
+                  const dx = (endX - startX) / steps;
+                  const dy = (botY - topY) / steps;
+                  const pts: string[] = [`${startX},${botY}`];
+                  for (let i = 0; i < steps; i++) {
+                    const y = Math.round(botY - (i + 1) * dy);
+                    const xStart = Math.round(startX + i * dx);
+                    const xEnd = Math.round(startX + (i + 1) * dx);
+                    pts.push(`${xStart},${y}`, `${xEnd},${y}`);
+                  }
+                  pts.push(`${endX},${botY}`, `${startX},${botY}`);
+                  return (
+                    <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Stair stringer rise and run diagram">
+                      <polyline
+                        points={pts.join(' ')}
+                        fill="rgba(71,121,168,0.18)"
+                        stroke="#6FA3D2"
+                        stroke-width="1.8"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <text x="115" y="105" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        {output.primaryResult.value} RISERS // {values.totalRiseInches || 108}" RISE
+                      </text>
+                    </svg>
+                  );
+                })()}
 
-                {diagramType === 'room-walls' && (
-                  <svg viewBox="0 0 260 100" class="w-full h-20" role="img" aria-label="Room perimeter and walls diagram">
-                    <rect x="36" y="16" width="188" height="62" rx="3" fill="rgba(71,121,168,0.16)" stroke="#6FA3D2" stroke-width="2" />
-                    <text x="130" y="51" font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      {blueprintLen}' × {blueprintWid}' ({blueprintHt}' H)
-                    </text>
-                  </svg>
-                )}
+                {diagramType === 'room-walls' && (() => {
+                  const rw = Math.round(Math.min(204, Math.max(108, 168 + (Number(blueprintLen) - Number(blueprintWid)) * 4.5)));
+                  const rx = Math.round((260 - rw) / 2);
+                  return (
+                    <svg viewBox="0 0 260 100" class="w-full h-20" role="img" aria-label="Room perimeter and walls diagram">
+                      <rect
+                        x={rx}
+                        y="16"
+                        width={rw}
+                        height="62"
+                        rx="3"
+                        fill="rgba(71,121,168,0.16)"
+                        stroke="#6FA3D2"
+                        stroke-width="2"
+                        class="transition-all duration-300 ease-out"
+                      />
+                      <text x="130" y="51" font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        {blueprintLen}' × {blueprintWid}' ({blueprintHt}' H)
+                      </text>
+                    </svg>
+                  );
+                })()}
 
                 {diagramType === 'fence-layout' && (
                   <svg viewBox="0 0 260 92" class="w-full h-20" role="img" aria-label="Fence post and rail section diagram">

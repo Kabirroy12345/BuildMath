@@ -100,6 +100,11 @@ const navLinks = [
     <!-- Reading Scroll Progress Indicator (epic.net precision hairline) -->
     <div id="bm-scroll-progress" aria-hidden="true"></div>
 
+    <!-- Fine-Pointer Magnetic Reticle Follower (eszterbial.com / bdsn.club) -->
+    <div id="bm-cursor-reticle" aria-hidden="true">
+      <span id="bm-cursor-label"></span>
+    </div>
+
     <!-- Subtle Fixed 4-Column Structural Column Guides (eszterbial.com blueprint alignment) -->
     <div class="bm-datum-lines" aria-hidden="true">
       <div class="bm-datum-inner">
@@ -507,25 +512,6 @@ const navLinks = [
         window.addEventListener('buildmath:project-updated', updateProjectBadge);
         window.addEventListener('storage', updateProjectBadge);
 
-        // 2px reading scroll progress bar + Back to Top trigger
-        var progressBar = document.getElementById('bm-scroll-progress');
-        var rafPending = false;
-        function syncScrollProgress() {
-          rafPending = false;
-          if (!progressBar) return;
-          var doc = document.documentElement;
-          var scrollable = doc.scrollHeight - window.innerHeight;
-          var ratio = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
-          progressBar.style.transform = 'scaleX(' + ratio.toFixed(4) + ')';
-        }
-        window.addEventListener('scroll', function () {
-          if (!rafPending) {
-            rafPending = true;
-            window.requestAnimationFrame(syncScrollProgress);
-          }
-        }, { passive: true });
-        syncScrollProgress();
-
         var backToTopBtn = document.getElementById('bm-back-to-top');
         if (backToTopBtn) {
           backToTopBtn.addEventListener('click', function () {
@@ -674,6 +660,11 @@ const navLinks = [
           }
         });
       })();
+    </script>
+
+    <script>
+      import { initBuildMathMotion } from '../lib/motion';
+      initBuildMathMotion();
     </script>
   </body>
 </html>

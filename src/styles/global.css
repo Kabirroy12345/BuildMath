@@ -475,6 +475,242 @@
   transition: transform 60ms linear;
 }
 
+/* Precision Fine-Pointer Reticle Cursor (eszterbial.com + bdsn.club magnetic lens) */
+#bm-cursor-reticle {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 180ms ease;
+}
+
+@media (pointer: fine) and (hover: hover) {
+  #bm-cursor-reticle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border-radius: 9999px;
+    border: 1.5px solid rgba(71, 121, 168, 0.72);
+    background-color: transparent;
+    transition: width 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      height 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      margin 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 200ms ease,
+      border-color 200ms ease,
+      opacity 180ms ease;
+  }
+}
+
+html.dark #bm-cursor-reticle {
+  border-color: rgba(198, 243, 106, 0.75);
+}
+
+#bm-cursor-reticle::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background-color: #c6f36a;
+  box-shadow: 0 0 0 1px rgba(23, 25, 28, 0.5);
+  transition: transform 180ms ease, opacity 160ms ease;
+}
+
+#bm-cursor-reticle[data-state='action'] {
+  width: 34px;
+  height: 34px;
+  margin-left: -17px;
+  margin-top: -17px;
+  border-color: #c6f36a;
+  background-color: rgba(198, 243, 106, 0.12);
+}
+
+#bm-cursor-reticle[data-state='calc'] {
+  width: 68px;
+  height: 26px;
+  margin-left: -34px;
+  margin-top: -13px;
+  border-radius: 9999px;
+  background-color: #171b20;
+  border-color: #c6f36a;
+  box-shadow: 0 8px 20px -6px rgba(13, 16, 19, 0.55);
+}
+
+#bm-cursor-reticle[data-state='calc']::before {
+  opacity: 0;
+  transform: scale(0);
+}
+
+#bm-cursor-reticle[data-state='input'] {
+  opacity: 0 !important;
+}
+
+#bm-cursor-label {
+  display: none;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #c6f36a;
+  white-space: nowrap;
+}
+
+#bm-cursor-reticle[data-state='calc'] #bm-cursor-label {
+  display: inline;
+}
+
+/* Magnetic Pointer-Origin Radial Ink Flood (bdsn.club circular inversion) */
+.bm-magnetic {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  will-change: transform;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.bm-magnetic::before {
+  content: '';
+  position: absolute;
+  left: var(--mx, 50%);
+  top: var(--my, 50%);
+  width: 240%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background-color: #171b20;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.bm-magnetic.bm-btn-lime::before {
+  background-color: #171b20;
+}
+
+.bm-magnetic.bm-btn-lime:hover {
+  color: #c6f36a;
+  border-color: #171b20;
+}
+
+.bm-magnetic.bm-btn-secondary:hover,
+.bm-magnetic.bm-pill-cta:hover {
+  color: #f8f8f5;
+  border-color: #171b20;
+}
+
+html.dark .bm-magnetic::before {
+  background-color: #c6f36a;
+}
+
+html.dark .bm-magnetic:hover {
+  color: #17191c !important;
+  border-color: #c6f36a;
+}
+
+html.dark .bm-magnetic.bm-btn-lime::before {
+  background-color: #171b20;
+}
+
+html.dark .bm-magnetic.bm-btn-lime:hover {
+  color: #c6f36a !important;
+  border-color: rgba(198, 243, 106, 0.65);
+}
+
+.bm-magnetic:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Masked Split-Word Kinetic Entrance (eszterbial.com + epic.net) */
+.bm-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.bm-word-inner {
+  display: inline-block;
+  transform: translateY(108%);
+  opacity: 0.15;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.is-revealed .bm-word-inner {
+  transform: translateY(0%);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bm-word-inner {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  #bm-cursor-reticle {
+    display: none !important;
+  }
+}
+
+/* Scroll-Scrubbed Calibration Beam (epic.net pinned/scrubbed storytelling) */
+.bm-pipe-track {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  background-color: rgb(var(--border-subtle));
+  overflow: hidden;
+}
+
+.bm-pipe-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--pipe-progress, 0.35));
+  background: linear-gradient(90deg, #4779a8 0%, #c6f36a 100%);
+  transition: transform 60ms linear;
+}
+
+[data-pipe-step] {
+  transition: background-color 280ms ease, border-color 280ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-pipe-step][data-active='true'] {
+  background-color: rgb(var(--bg-surface-subtle) / 0.55);
+}
+
+[data-pipe-step][data-active='true'] .bm-step-dot {
+  background-color: #c6f36a;
+  box-shadow: 0 0 0 4px rgba(198, 243, 106, 0.22);
+}
+
+/* Mechanical Odometer Result Digit Roll */
+@keyframes numSlotRoll {
+  0% {
+    opacity: 0.4;
+    transform: translateY(24%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-digit-roll {
+  display: inline-block;
+  animation: numSlotRoll 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 details[open] .faq-body {
   animation: fadeSlideDown 160ms ease-out;
 }
@@ -500,7 +736,8 @@ details[open] .faq-body {
   .consent-banner,
   .sticky-mobile-calc-bar,
   .bm-datum-lines,
-  #bm-scroll-progress {
+  #bm-scroll-progress,
+  #bm-cursor-reticle {
     display: none !important;
   }
 
