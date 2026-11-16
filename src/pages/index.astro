@@ -4,6 +4,7 @@ import SearchBox, { type SearchableItem } from '../components/SearchBox';
 import RecentCalculators from '../components/RecentCalculators';
 import WorkspaceShowcase from '../components/WorkspaceShowcase';
 import HeroSpecimenConsole, { type HeroSpecimenItem } from '../components/HeroSpecimenConsole';
+import ArchitecturalHouse3D from '../components/ArchitecturalHouse3D';
 import Icon from '../components/Icon.astro';
 import { getCategoryIconName } from '../lib/lucide-icons';
 import { CALCULATOR_CATALOG_META } from '../lib/calculator-catalog';
@@ -260,6 +261,9 @@ const heroSpecimens: HeroSpecimenItem[] = [
       <HeroSpecimenConsole client:load specimens={heroSpecimens} />
     </div>
   </section>
+
+  <!-- 1.5 FULL-HOUSE INTERACTIVE 3D HOLOGRAPHIC CAD EXPLORER -->
+  <ArchitecturalHouse3D client:load />
 
   <!-- 2. QUICK-ACCESS WORKBENCH & RECENTLY USED -->
   <RecentCalculators client:idle />

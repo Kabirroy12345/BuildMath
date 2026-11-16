@@ -31,9 +31,12 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
 
     // Interactive 4-Discipline Progressive Blueprint Hero Console + Live Slider check
     await expect(page.locator('main')).toContainText('1.63 yd³');
-    const canvasBox = await page.locator('main canvas').boundingBox();
+    const canvasBox = await page.locator('main canvas').first().boundingBox();
     expect(canvasBox?.width).toBeGreaterThan(150);
     expect(canvasBox?.height).toBeGreaterThan(80);
+    await expect(page.locator('[data-house-blueprint-canvas]')).toBeVisible();
+    await page.getByRole('tab', { name: '02 · Roof & Rafters' }).click();
+    await expect(page.locator('main')).toContainText('ARMA · 6/12 PITCH & RAFTERS');
     await page.locator('#hero-specimen-slider').fill('6');
     await page.locator('#hero-specimen-slider').dispatchEvent('input');
     await expect(page.locator('main')).toContainText('2.44 yd³');
