@@ -136,7 +136,7 @@ const navLinks = [
           </a>
 
           <!-- Primary Navigation -->
-          <nav aria-label="Main navigation" class="hidden md:flex items-center gap-1 text-sm font-medium">
+          <nav aria-label="Main navigation" class="hidden lg:flex items-center gap-1 text-sm font-medium">
             {navLinks.map((link) => (
               <a
                 href={link.href}
@@ -218,7 +218,7 @@ const navLinks = [
             aria-expanded="false"
             aria-controls="mobile-nav-drawer"
             aria-label="Open navigation menu"
-            class="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink hover:bg-surface-subtle transition-colors"
+            class="lg:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink hover:bg-surface-subtle transition-colors"
           >
             <span id="menu-icon-open" class="flex items-center justify-center">
               <Icon name="menu" size={17} />
@@ -230,10 +230,10 @@ const navLinks = [
         </div>
       </div>
 
-      <!-- Mobile Quick Sub-Nav + Collapsible Drawer -->
+      <!-- Mobile & Tablet Quick Sub-Nav + Collapsible Drawer -->
       <nav
         aria-label="Mobile quick navigation"
-        class="md:hidden border-t border-hairline bg-surface/95 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-ink-muted overflow-x-auto gap-3"
+        class="lg:hidden border-t border-hairline bg-surface/95 px-4 sm:px-6 py-1.5 flex items-center justify-between text-xs font-medium text-ink-muted overflow-x-auto gap-3"
       >
         <a href="/calculators/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/calculators') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
           Calculators
@@ -251,7 +251,7 @@ const navLinks = [
 
       <div
         id="mobile-nav-drawer"
-        class="hidden md:hidden border-t border-hairline bg-surface px-4 py-4 space-y-2 shadow-lg"
+        class="hidden lg:hidden border-t border-hairline bg-surface px-4 py-4 space-y-2 shadow-lg"
       >
         <div class="grid grid-cols-2 gap-2">
           {navLinks.map((link) => (
@@ -295,10 +295,11 @@ const navLinks = [
     </main>
 
     <!-- Architectural Dark Graphite Footer -->
-    <footer class="mt-16 bg-graphite-900 text-[#D2D6DC] border-t border-graphite-700">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
-          <div class="lg:col-span-4 space-y-4">
+    <footer class="mt-20 bg-graphite-900 text-[#D2D6DC] border-t border-graphite-700">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <!-- Footer Top Utility Band -->
+        <div class="pb-10 mb-10 border-b border-graphite-700 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="max-w-lg space-y-2.5">
             <a href="/" class="inline-flex items-center gap-2.5 font-display font-bold text-lg text-[#F8F8F5]">
               <svg viewBox="0 0 36 36" width="28" height="28" aria-hidden="true">
                 <rect width="36" height="36" rx="7" fill="#1F252C" stroke="#2E3642" stroke-width="1" />
@@ -307,19 +308,44 @@ const navLinks = [
                 <rect x="22.5" y="8" width="5.5" height="5.5" rx="1.2" fill="#C6F36A" />
               </svg>
               <span>{siteConfig.name}</span>
+              <span class="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-graphite-800 border border-graphite-700 text-[#9BA1AA]">
+                US Building Specs
+              </span>
             </a>
-            <p class="text-xs sm:text-sm text-[#9BA1AA] leading-relaxed max-w-sm">
-              {siteConfig.description}
+            <p class="text-xs sm:text-sm text-[#9BA1AA] leading-relaxed">
+              Deterministic residential construction calculators and bottom-up cost modeling compiled by {siteConfig.author.name}. Zero sign-up required; calculations run privately in your browser.
             </p>
-            <div class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-graphite-800 border border-graphite-700 font-mono text-[11px] text-[#9BA1AA]">
-              <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
-              <span>Maintained by {siteConfig.author.name}</span>
-            </div>
           </div>
 
-          <div class="lg:col-span-3">
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <a
+              href="/calculators/"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold bg-lime-500 hover:bg-lime-600 text-graphite-900 transition-colors"
+            >
+              <span>Explore All 32 Calculators</span>
+              <Icon name="arrow-right" size={14} />
+            </a>
+            <a
+              href="/my-project/"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors"
+            >
+              <Icon name="clipboard-list" size={14} class="text-[#6FA3D2]" />
+              <span>Project Workspace</span>
+            </a>
+            <a
+              href="/methodology/"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-graphite-950 hover:bg-graphite-800 text-[#D2D6DC] border border-graphite-700 transition-colors"
+            >
+              <span>Methodology</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Structured 4-Column Navigation Matrix -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div>
             <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
-              Trade Categories
+              8 Trade Categories
             </h2>
             <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
               {categories.map((cat) => (
@@ -332,32 +358,45 @@ const navLinks = [
             </ul>
           </div>
 
-          <div class="lg:col-span-3">
+          <div>
             <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
-              Popular Calculators &amp; Costs
+              Flagship Tools
             </h2>
             <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
-              <li><a href="/calculators/paint-calculator/" class="hover:text-lime-500 transition-colors">Interior Paint Calculator</a></li>
               <li><a href="/calculators/concrete-slab-calculator/" class="hover:text-lime-500 transition-colors">Concrete Slab Calculator</a></li>
+              <li><a href="/calculators/paint-calculator/" class="hover:text-lime-500 transition-colors">Interior Paint Calculator</a></li>
+              <li><a href="/calculators/drywall-calculator/" class="hover:text-lime-500 transition-colors">Drywall Sheet &amp; Mud Calc</a></li>
               <li><a href="/calculators/roofing-calculator/" class="hover:text-lime-500 transition-colors">Roofing Shingle Calculator</a></li>
               <li><a href="/calculators/mulch-calculator/" class="hover:text-lime-500 transition-colors">Mulch &amp; Bed Calculator</a></li>
               <li><a href="/calculators/stair-calculator/" class="hover:text-lime-500 transition-colors">Stair Stringer Calculator</a></li>
-              <li><a href="/cost/" class="hover:text-lime-500 transition-colors">All 25 Project Cost Guides</a></li>
-              <li><a href="/guides/" class="hover:text-lime-500 transition-colors">Measurement Field Guides</a></li>
+              <li><a href="/calculators/square-footage-calculator/" class="hover:text-lime-500 transition-colors">Square Footage Calculator</a></li>
             </ul>
           </div>
 
-          <div class="lg:col-span-2">
+          <div>
             <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
-              Trust &amp; Legal
+              Cost Guides &amp; Field Docs
+            </h2>
+            <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
+              <li><a href="/cost/" class="hover:text-lime-500 transition-colors">All 25 Project Cost Guides</a></li>
+              <li><a href="/cost/roof-replacement/" class="hover:text-lime-500 transition-colors">Roof Replacement Cost (Verified)</a></li>
+              <li><a href="/cost/interior-painting/" class="hover:text-lime-500 transition-colors">Interior Painting Cost (Verified)</a></li>
+              <li><a href="/cost/concrete-patio/" class="hover:text-lime-500 transition-colors">Concrete Patio Cost (Verified)</a></li>
+              <li><a href="/guides/" class="hover:text-lime-500 transition-colors">Measurement Field Guides</a></li>
+              <li><a href="/my-project/" class="hover:text-lime-500 transition-colors">My Project Workspace</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#F8F8F5] mb-3.5">
+              Governance &amp; Legal
             </h2>
             <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
               <li><a href="/about/" class="hover:text-lime-500 transition-colors">About {siteConfig.name}</a></li>
-              <li><a href="/methodology/" class="hover:text-lime-500 transition-colors">Methodology</a></li>
-              <li><a href="/my-project/" class="hover:text-lime-500 transition-colors">Project Workspace</a></li>
-              <li><a href="/contact/" class="hover:text-lime-500 transition-colors">Contact Us</a></li>
+              <li><a href="/methodology/" class="hover:text-lime-500 transition-colors">Formula &amp; Cost Methodology</a></li>
+              <li><a href="/contact/" class="hover:text-lime-500 transition-colors">Contact &amp; Feedback</a></li>
               <li><a href="/affiliate-disclosure/" class="hover:text-lime-500 transition-colors">Affiliate Disclosure</a></li>
-              <li><a href="/disclaimer/" class="hover:text-lime-500 transition-colors">Disclaimer</a></li>
+              <li><a href="/disclaimer/" class="hover:text-lime-500 transition-colors">Construction Disclaimer</a></li>
               <li><a href="/privacy-policy/" class="hover:text-lime-500 transition-colors">Privacy Policy</a></li>
               <li><a href="/cookie-policy/" class="hover:text-lime-500 transition-colors">Cookie Policy</a></li>
               <li><a href="/terms/" class="hover:text-lime-500 transition-colors">Terms of Use</a></li>
@@ -365,9 +404,9 @@ const navLinks = [
           </div>
         </div>
 
-        <div class="mt-10 pt-6 border-t border-graphite-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#8E949D]">
+        <div class="mt-12 pt-6 border-t border-graphite-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#8E949D]">
           <p>
-            © {new Date().getFullYear()} {siteConfig.legalName}. Estimates are for planning purposes; always confirm local codes and manufacturer data sheets before construction.
+            © {new Date().getFullYear()} {siteConfig.legalName}. All estimates are planning references; verify local IRC/IBC building codes and product TDS before ordering or building.
           </p>
           <p class="font-mono flex items-center gap-3 shrink-0">
             <a href="/sitemap-index.xml" class="hover:text-[#F8F8F5] transition-colors">sitemap-index.xml</a>

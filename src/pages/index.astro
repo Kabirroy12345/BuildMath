@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBox, { type SearchableItem } from '../components/SearchBox';
 import RecentCalculators from '../components/RecentCalculators';
+import WorkspaceShowcase from '../components/WorkspaceShowcase';
 import Icon from '../components/Icon.astro';
 import { getCategoryIconName } from '../lib/lucide-icons';
 import { CALCULATOR_CATALOG_META } from '../lib/calculator-catalog';
@@ -14,6 +15,17 @@ import states from '../data/costs/states.json';
 import guides from '../data/guides.json';
 
 const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
+
+const tradeStandards: Record<string, string> = {
+  painting: 'MPI & ASTM Coverage Specs',
+  flooring: 'NWFA / TCNA Mortar Specs',
+  'concrete-masonry': 'ACI 318 / Quikrete / BIA',
+  roofing: 'ARMA / NRCA Pitch Geometry',
+  landscaping: 'Bulk Volume & Stone Density',
+  'fencing-decking': 'AWC DCA6 & 811 Clearances',
+  'drywall-walls': 'USG Handbook & 2024 IRC',
+  'general-conversions': 'Multi-Shape Planimetric Math',
+};
 
 const searchItems: SearchableItem[] = [
   ...calculators.map((calc) => {
@@ -44,6 +56,18 @@ const searchItems: SearchableItem[] = [
   })),
 ];
 
+const quickLaunchSlugs = [
+  'concrete-slab-calculator',
+  'paint-calculator',
+  'drywall-calculator',
+  'roofing-calculator',
+  'mulch-calculator',
+  'stair-calculator',
+];
+const quickLaunchCalcs = quickLaunchSlugs
+  .map((s) => calculators.find((c) => c.slug === s))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
 const popularSlugs = [
   'paint-calculator',
   'concrete-slab-calculator',
@@ -63,7 +87,8 @@ const popularCalculators = popularSlugs
   .map((s) => calculators.find((c) => c.slug === s))
   .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
-const featuredJobs = jobs.slice(0, 8);
+const verifiedJobs = jobs.filter((j) => j.verified);
+const preliminaryJobs = jobs.filter((j) => !j.verified).slice(0, 4);
 const topStates = states.slice(0, 12);
 ---
 
@@ -72,120 +97,212 @@ const topStates = states.slice(0, 12);
   description="Get accurate DIY material quantities and local project cost estimates in under 10 seconds. 32 source-cited home improvement calculators for US homeowners."
   pathname="/"
 >
-  <!-- Architectural Engineering Hero Section -->
-  <section class="relative overflow-hidden rounded-2xl border border-hairline bg-surface bm-cad-grid px-5 sm:px-10 py-10 sm:py-14 mb-12">
-    <div class="max-w-4xl mx-auto text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-graphite-900 text-[#F8F8F5] font-mono text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase mb-5">
-        <span class="h-1.5 w-1.5 rounded-full bg-lime-500 shrink-0"></span>
-        <span>32 Calculators // 50 States + DC</span>
-      </div>
+  <!-- 1. HERO SECTION: Asymmetric Architectural Workbench + Live CAD Specimen -->
+  <section class="relative overflow-hidden rounded-2xl border border-hairline bg-surface bm-cad-grid p-6 sm:p-10 lg:p-12 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+      <!-- Hero Left: Value Prop + Command Search + Primary CTAs -->
+      <div class="lg:col-span-7 space-y-5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-graphite-900 text-[#F8F8F5] font-mono text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase">
+          <span class="h-1.5 w-1.5 rounded-full bg-lime-500 shrink-0"></span>
+          <span>Construction Material &amp; Cost Engine // US Specs</span>
+        </div>
 
-      <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-ink leading-[1.08]">
-        Accurate Home-Improvement Math in Under 10 Seconds
-      </h1>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink leading-[1.06]">
+          Accurate Home-Improvement Math Built for Real Store Orders
+        </h1>
 
-      <p class="mt-4 text-sm sm:text-lg text-ink-body max-w-2xl mx-auto leading-relaxed">
-        Compute exact purchasable bags, gallons, bundles, sheets, and cubic yards alongside localized US labor and material cost models.
-      </p>
+        <p class="text-sm sm:text-base text-ink-body max-w-2xl leading-relaxed">
+          Convert raw room or slab measurements into exact purchasable bags, gallons, bundles, sheets, and cubic yards in seconds—backed by editable trade defaults and US state labor indices.
+        </p>
 
-      <div class="mt-8">
-        <SearchBox client:load items={searchItems} />
-      </div>
+        <!-- Functional SearchBar -->
+        <div class="pt-1">
+          <SearchBox client:load items={searchItems} />
+        </div>
 
-      <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
-        <span class="font-mono text-[11px] uppercase tracking-wider text-ink-muted mr-1">Quick Open:</span>
-        <a href="/calculators/paint-calculator/" class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink font-medium transition-colors">
-          Paint
-        </a>
-        <a href="/calculators/concrete-slab-calculator/" class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink font-medium transition-colors">
-          Concrete Slab
-        </a>
-        <a href="/calculators/mulch-calculator/" class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink font-medium transition-colors">
-          Mulch
-        </a>
-        <a href="/calculators/roofing-calculator/" class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink font-medium transition-colors">
-          Roofing Shingles
-        </a>
-        <a href="/calculators/stair-calculator/" class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink font-medium transition-colors">
-          Stair Stringers
-        </a>
-      </div>
-    </div>
+        <div class="flex flex-wrap items-center gap-2.5 pt-1">
+          <a href="/calculators/" class="bm-btn-lime text-xs sm:text-sm font-bold">
+            <span>Explore All 32 Calculators</span>
+            <Icon name="arrow-right" size={15} />
+          </a>
+          <a href="/my-project/" class="bm-btn-secondary text-xs sm:text-sm">
+            <Icon name="clipboard-list" size={15} class="text-blueprint" />
+            <span>Open Project Workspace</span>
+          </a>
+        </div>
 
-    <!-- Compact Instrument Telemetry Spec Strip -->
-    <div class="mt-10 max-w-5xl mx-auto rounded-xl bg-graphite-700 p-px grid grid-cols-2 lg:grid-cols-4 gap-px overflow-hidden border border-graphite-700">
-      <div class="bg-graphite-900 text-[#F8F8F5] p-4 flex flex-col justify-between">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-[#8E949D]">Rounding Behavior</span>
-        <div class="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span class="font-mono text-sm sm:text-base font-bold text-lime-500">Store Units</span>
-          <span class="text-[11px] sm:text-xs text-[#9BA1AA]">+ exact math</span>
+        <div class="pt-2 flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted mr-1">Popular:</span>
+          <a href="/calculators/paint-calculator/" class="px-2.5 py-1 rounded bg-canvas border border-hairline hover:border-blueprint text-ink transition-colors">
+            Paint
+          </a>
+          <a href="/calculators/concrete-slab-calculator/" class="px-2.5 py-1 rounded bg-canvas border border-hairline hover:border-blueprint text-ink transition-colors">
+            Concrete Slab
+          </a>
+          <a href="/calculators/drywall-calculator/" class="px-2.5 py-1 rounded bg-canvas border border-hairline hover:border-blueprint text-ink transition-colors">
+            Drywall
+          </a>
+          <a href="/calculators/roofing-calculator/" class="px-2.5 py-1 rounded bg-canvas border border-hairline hover:border-blueprint text-ink transition-colors">
+            Roofing Shingles
+          </a>
+          <a href="/calculators/stair-calculator/" class="px-2.5 py-1 rounded bg-canvas border border-hairline hover:border-blueprint text-ink transition-colors">
+            Stair Stringers
+          </a>
         </div>
       </div>
-      <div class="bg-graphite-900 text-[#F8F8F5] p-4 flex flex-col justify-between">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-[#8E949D]">Codes &amp; Specs</span>
-        <div class="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span class="font-mono text-sm sm:text-base font-bold text-[#F8F8F5]">ACI · ARMA</span>
-          <span class="text-[11px] sm:text-xs text-[#6FA3D2]">2024 IRC</span>
+
+      <!-- Hero Right: Authentic CAD Calculation Specimen Panel -->
+      <div class="lg:col-span-5 bm-instrument overflow-hidden">
+        <div class="px-4 py-3 border-b border-graphite-700 bg-graphite-950/70 flex items-center justify-between gap-2">
+          <span class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#D2D6DC]">
+            <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+            Worked Specimen // Concrete Slab
+          </span>
+          <span class="font-mono text-[10px] text-[#6FA3D2]">ACI 302 · QUIKRETE</span>
         </div>
-      </div>
-      <div class="bg-graphite-900 text-[#F8F8F5] p-4 flex flex-col justify-between">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-[#8E949D]">Unit Support</span>
-        <div class="mt-1 flex items-baseline gap-2">
-          <span class="font-mono text-sm sm:text-base font-bold text-[#F8F8F5]">ft/in ⇄ m/cm</span>
-        </div>
-      </div>
-      <div class="bg-graphite-900 text-[#F8F8F5] p-4 flex flex-col justify-between">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-[#8E949D]">Verification</span>
-        <div class="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span class="font-mono text-sm sm:text-base font-bold text-lime-500 tabular-nums">100 / 100</span>
-          <span class="text-[11px] sm:text-xs text-[#9BA1AA]">unit tests</span>
+
+        <div class="p-5 space-y-4">
+          <!-- Scaled Isometric CAD Blueprint Illustration -->
+          <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700 bm-cad-grid">
+            <svg viewBox="0 0 280 105" class="w-full h-24" role="img" aria-label="Technical concrete slab dimension diagram">
+              <polygon points="38,38 194,20 242,46 86,64" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
+              <polygon points="38,38 86,64 86,80 38,54" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" />
+              <polygon points="86,64 242,46 242,62 86,80" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.5" />
+              <text x="140" y="97" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                12 FT (L) × 10 FT (W) × 4 IN (THICK) + 10% WASTE
+              </text>
+            </svg>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
+              <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block">Ready-Mix Output</span>
+              <strong class="text-xl font-extrabold text-lime-500 tabular-nums mt-0.5 block">
+                1.63 yd³
+              </strong>
+              <span class="font-mono text-[10px] text-[#9BA1AA]">Net: 1.48 yd³ · Est. $269</span>
+            </div>
+            <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
+              <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block">Store Bag Equivalent</span>
+              <strong class="text-xl font-extrabold text-[#F8F8F5] tabular-nums mt-0.5 block">
+                74 × 80-lb
+              </strong>
+              <span class="font-mono text-[10px] text-[#6FA3D2]">Or 98 × 60-lb · Est. $507</span>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-graphite-700 flex items-center justify-between text-xs">
+            <span class="font-mono text-[11px] text-[#9BA1AA]">Inputs, waste &amp; prices editable live</span>
+            <a
+              href="/calculators/concrete-slab-calculator/"
+              class="inline-flex items-center gap-1 font-semibold text-lime-500 hover:underline"
+            >
+              <span>Launch Tool</span>
+              <Icon name="arrow-right" size={13} />
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Recently Used Calculators (Progressive Enhancement via localStorage) -->
+  <!-- 2. QUICK-ACCESS WORKBENCH & RECENTLY USED -->
   <RecentCalculators client:idle />
 
-  <!-- Featured Calculator Categories (8 Trades) -->
-  <section class="mb-14" aria-labelledby="categories-heading">
+  <section class="mb-16" aria-labelledby="quick-access-heading">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
+      <div>
+        <span class="bm-eyebrow mb-2">Fast Takeoff // Direct Launch</span>
+        <h2 id="quick-access-heading" class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+          Quick-Access Calculators
+        </h2>
+      </div>
+      <a href="/calculators/" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blueprint hover:underline shrink-0">
+        <span>Filter &amp; Sort All 32</span>
+        <Icon name="arrow-right" size={14} />
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+      {quickLaunchCalcs.map((calc) => {
+        const meta = CALCULATOR_CATALOG_META[calc.slug];
+        const sch = meta?.schematic ? SCHEMATIC_PATHS[meta.schematic] : null;
+        return (
+          <a
+            href={`/calculators/${calc.slug}/`}
+            class="bm-panel bm-panel-hover p-3.5 flex flex-col justify-between group hover:border-blueprint/75"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <Icon name={getCategoryIconName(calc.category)} size={15} class="text-blueprint" />
+                {sch && (
+                  <svg viewBox="0 0 32 22" width="28" height="19" aria-hidden="true" class="text-ink-muted group-hover:text-blueprint transition-colors" set:html={sch} />
+                )}
+              </div>
+              <h3 class="text-sm font-bold text-ink group-hover:text-blueprint transition-colors leading-snug">
+                {calc.shortName}
+              </h3>
+              <p class="font-mono text-[10px] text-ink-muted truncate mt-1">
+                {meta?.outputsLabel}
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-hairline flex items-center justify-between font-mono text-[10px] font-semibold text-blueprint">
+              <span>Calculate</span>
+              <Icon name="arrow-up-right" size={12} />
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- 3. ALL 8 TRADE CATEGORIES: Engineering Matrix -->
+  <section class="mb-16" aria-labelledby="categories-heading">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow-blue mb-2">Trade Directory // 08 Categories</span>
+        <span class="bm-eyebrow-blue mb-2">Trade Matrix // 08 Disciplines</span>
         <h2 id="categories-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
-          Browse Calculators by Trade
+          Residential Construction Trades
         </h2>
         <p class="text-sm text-ink-muted mt-1">
-          32 specialized engineering instruments organized across 8 residential trades.
+          Every trade module includes source-cited defaults, store packaging math, and direct cost guide links.
         </p>
       </div>
       <a href="/calculators/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
-        <span>View all 32 calculators</span>
+        <span>Browse Directory</span>
         <Icon name="arrow-right" size={15} />
       </a>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {categories.map((cat) => {
+      {categories.map((cat, idx) => {
         const catCalcs = calculators.filter((c) => c.category === cat.slug);
         return (
-          <div class="bm-panel bm-panel-hover p-5 flex flex-col justify-between hover:border-blueprint/70">
+          <div class="bm-panel bm-panel-hover p-5 flex flex-col justify-between hover:border-blueprint/75">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
-                  <Icon name={getCategoryIconName(cat.slug)} size={18} />
-                </span>
-                <span class="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-surface-subtle text-ink-muted border border-hairline tabular-nums">
-                  {String(catCalcs.length).padStart(2, '0')} TOOLS
+                <div class="flex items-center gap-2">
+                  <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
+                    <Icon name={getCategoryIconName(cat.slug)} size={16} />
+                  </span>
+                  <span class="font-mono text-[10px] font-semibold text-ink-muted">
+                    TRADE // {String(idx + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <span class="font-mono text-[10px] font-semibold px-2 py-0.5 rounded bg-surface-subtle text-ink-muted border border-hairline tabular-nums">
+                  {String(catCalcs.length).padStart(2, '0')}
                 </span>
               </div>
 
-              <a href={`/calculators/${cat.slug}/`} class="group">
+              <a href={`/calculators/${cat.slug}/`} class="group block">
                 <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
                   {cat.name}
                 </h3>
               </a>
-              <p class="text-xs text-ink-muted mt-1.5 mb-3.5 leading-relaxed line-clamp-2">
+              <div class="font-mono text-[10px] text-blueprint mt-1">
+                {tradeStandards[cat.slug] || 'US Standard Specs'}
+              </div>
+              <p class="text-xs text-ink-muted mt-2 mb-3.5 leading-relaxed line-clamp-2">
                 {cat.description}
               </p>
 
@@ -194,10 +311,10 @@ const topStates = states.slice(0, 12);
                   <li>
                     <a
                       href={`/calculators/${c.slug}/`}
-                      class="inline-flex items-center gap-1.5 text-ink-body hover:text-blueprint transition-colors"
+                      class="flex items-center justify-between gap-2 text-ink-body hover:text-blueprint transition-colors group/link"
                     >
-                      <span class="h-1 w-1 rounded-full bg-hairline-strong"></span>
-                      <span>{c.shortName}</span>
+                      <span class="truncate">{c.shortName}</span>
+                      <Icon name="chevron-right" size={12} class="opacity-40 group-hover/link:opacity-100 shrink-0" />
                     </a>
                   </li>
                 ))}
@@ -208,7 +325,7 @@ const topStates = states.slice(0, 12);
               href={`/calculators/${cat.slug}/`}
               class="mt-4 pt-3 border-t border-hairline inline-flex items-center justify-between text-xs font-semibold text-blueprint hover:underline"
             >
-              <span>Explore {cat.shortName}</span>
+              <span>Open {cat.shortName} Hub</span>
               <Icon name="arrow-right" size={14} />
             </a>
           </div>
@@ -217,16 +334,16 @@ const topStates = states.slice(0, 12);
     </div>
   </section>
 
-  <!-- 12 Popular Calculators -->
-  <section class="mb-14" aria-labelledby="popular-calcs-heading">
+  <!-- 4. 12 POPULAR CALCULATORS: Structured 3-Part Discovery Cards -->
+  <section class="mb-16" aria-labelledby="popular-calcs-heading">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow mb-2">Most Used // Quick Access</span>
+        <span class="bm-eyebrow mb-2">Most Launched // Structured Preview</span>
         <h2 id="popular-calcs-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
-          12 Essential Construction Calculators
+          12 Essential Estimation Calculators
         </h2>
         <p class="text-sm text-ink-muted mt-1">
-          Live material takeoffs, waste sliders, and store-unit shopping lists.
+          Required inputs, calculated store units, and CAD diagrams visible upfront on every tool.
         </p>
       </div>
     </div>
@@ -272,7 +389,7 @@ const topStates = states.slice(0, 12);
               )}
             </div>
             <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold text-ink">
-              <span>Open Calculator</span>
+              <span class="group-hover:text-blueprint transition-colors">Open Calculator</span>
               <Icon name="arrow-right" size={14} class="text-blueprint group-hover:translate-x-0.5 transition-transform" />
             </div>
           </a>
@@ -281,59 +398,126 @@ const topStates = states.slice(0, 12);
     </div>
   </section>
 
-  <!-- How BuildMath Works & Engineering Rigor -->
-  <section class="mb-14 bm-panel overflow-hidden" aria-labelledby="how-buildmath-works">
-    <div class="px-6 py-5 border-b border-hairline bg-surface-subtle/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <div>
-        <span class="bm-eyebrow-blue mb-1.5">System Architecture</span>
-        <h2 id="how-buildmath-works" class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
-          How BuildMath Computes Store-Ready Takeoffs
-        </h2>
+  <!-- 5. TECHNICAL CREDIBILITY LEDGER & 6. SYSTEM METHODOLOGY -->
+  <section class="mb-16 space-y-6" aria-labelledby="credibility-heading">
+    <!-- Audited Verification Ledger -->
+    <div class="bm-instrument overflow-hidden">
+      <div class="px-6 py-4 border-b border-graphite-700 bg-graphite-950/70 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lime-500">
+          <Icon name="shield-check" size={14} />
+          <span>Technical Verification &amp; Data Integrity Ledger</span>
+        </div>
+        <span class="font-mono text-[11px] text-[#9BA1AA]">Audited CI Status</span>
       </div>
-      <a href="/methodology/" class="bm-btn-secondary text-xs shrink-0">
-        Read Full Methodology
-        <Icon name="arrow-right" size={14} />
-      </a>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-graphite-700">
+        <div class="p-5 sm:p-6">
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums">100 Tests</div>
+          <h3 id="credibility-heading" class="text-sm font-bold text-[#F8F8F5] mt-1">
+            Automated Formula Suite
+          </h3>
+          <p class="text-xs text-[#9BA1AA] mt-1.5 leading-relaxed">
+            Every formula module in TypeScript runs deterministic assertions for geometry, edge cases, and ceiling rounding in Vitest.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6">
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">32 / 32</div>
+          <h3 class="text-sm font-bold text-[#F8F8F5] mt-1">
+            Visible, Editable Defaults
+          </h3>
+          <p class="text-xs text-[#9BA1AA] mt-1.5 leading-relaxed">
+            Slab thickness, depth, pitch, waste factors, coverage yields, and unit prices can all be verified and overridden inline.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6">
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#6FA3D2] tabular-nums">3 Verified</div>
+          <h3 class="text-sm font-bold text-[#F8F8F5] mt-1">
+            vs. 22 Preliminary Cost Drafts
+          </h3>
+          <p class="text-xs text-[#9BA1AA] mt-1.5 leading-relaxed">
+            Flagship roofing, interior painting, and concrete patio guides are verified bottom-up; remaining 22 drafts carry a Draft tag and noindex guard.
+          </p>
+        </div>
+
+        <div class="p-5 sm:p-6">
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">0 / 0</div>
+          <h3 class="text-sm font-bold text-[#F8F8F5] mt-1">
+            Zero-Account Local Storage
+          </h3>
+          <p class="text-xs text-[#9BA1AA] mt-1.5 leading-relaxed">
+            All calculations execute inside your browser with CI crawling every static route to verify zero broken links or orphan pages.
+          </p>
+        </div>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">
-      <div class="p-6 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="font-mono text-xs font-bold text-blueprint">01 // CALIBRATED INPUTS</span>
-          <Icon name="sliders-horizontal" size={17} class="text-ink-muted" />
+    <!-- System Methodology Pipeline -->
+    <div class="bm-panel overflow-hidden">
+      <div class="px-6 py-5 border-b border-hairline bg-surface-subtle/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="bm-eyebrow-blue mb-1.5">Deterministic Estimation Pipeline</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+            How BuildMath Translates Dimensions Into Purchasing Lists
+          </h2>
         </div>
-        <h3 class="text-base font-bold text-ink">Published Manufacturer Specs</h3>
-        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
-          Every coverage rate, bag yield, and slope factor cites standards (ACI 318, ARMA, NWFA, USG Handbook, 2024 IRC) and can be edited to match your product label.
-        </p>
+        <a href="/methodology/" class="bm-btn-secondary text-xs shrink-0">
+          <span>Full Formula Documentation</span>
+          <Icon name="arrow-right" size={14} />
+        </a>
       </div>
 
-      <div class="p-6 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="font-mono text-xs font-bold text-blueprint">02 // UNIT ROUNDING</span>
-          <Icon name="calculator" size={17} class="text-ink-muted" />
+      <div class="grid grid-cols-1 lg:grid-cols-12">
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-hairline">
+          <div class="p-5 space-y-2">
+            <span class="font-mono text-[11px] font-bold text-blueprint">01 // MEASURE</span>
+            <h3 class="text-sm font-bold text-ink">Dimensions &amp; Units</h3>
+            <p class="text-xs text-ink-muted leading-relaxed">
+              Enter ft/in or metric measurements, deduct openings, and adjust thickness or slope geometry directly.
+            </p>
+          </div>
+          <div class="p-5 space-y-2">
+            <span class="font-mono text-[11px] font-bold text-blueprint">02 // ROUND UP</span>
+            <h3 class="text-sm font-bold text-ink">Store Packaging</h3>
+            <p class="text-xs text-ink-muted leading-relaxed">
+              See both net unrounded engineering volume and retail store counts (<code class="font-mono text-ink">Math.ceil</code>) across bag or carton sizes.
+            </p>
+          </div>
+          <div class="p-5 space-y-2">
+            <span class="font-mono text-[11px] font-bold text-blueprint">03 // LOCALIZE</span>
+            <h3 class="text-sm font-bold text-ink">State Labor &amp; BOM</h3>
+            <p class="text-xs text-ink-muted leading-relaxed">
+              Adjust contractor quotes using BLS occupational wages and BEA Regional Price Parities across 50 states.
+            </p>
+          </div>
         </div>
-        <h3 class="text-base font-bold text-ink">Exact Math + Purchasable Quantities</h3>
-        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
-          Hardware stores don't sell 2.37 bags of concrete or 1.4 bundles of shingles. Readout displays both the unrounded calculation and the store-ready unit count.
-        </p>
-      </div>
 
-      <div class="p-6 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="font-mono text-xs font-bold text-blueprint">03 // LOCALIZED BOM</span>
-          <Icon name="clipboard-list" size={17} class="text-ink-muted" />
+        <div class="lg:col-span-5 p-5 bg-surface-subtle/50 border-t lg:border-t-0 lg:border-l border-hairline flex flex-col justify-between gap-3">
+          <div>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted block mb-1.5">
+              State Cost Scaling Formula
+            </span>
+            <div class="p-3 rounded-lg bg-graphite-900 text-[#F8F8F5] font-mono text-[11px] leading-relaxed overflow-x-auto border border-graphite-700">
+              Cost<sub>state</sub> = National × [LaborShare × (BLS<sub>state</sub>/BLS<sub>US</sub>) + MatShare × (RPP<sub>state</sub>/100)]
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 font-mono text-[10px] text-ink-muted">
+            <span class="px-2 py-0.5 rounded bg-surface border border-hairline">ACI 318</span>
+            <span class="px-2 py-0.5 rounded bg-surface border border-hairline">ARMA / NRCA</span>
+            <span class="px-2 py-0.5 rounded bg-surface border border-hairline">USG Handbook</span>
+            <span class="px-2 py-0.5 rounded bg-surface border border-hairline">2024 IRC R311</span>
+          </div>
         </div>
-        <h3 class="text-base font-bold text-ink">Private Browser Project List</h3>
-        <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
-          Combine multiple room calculations into your <a href="/my-project/" class="text-blueprint font-semibold underline">My Project Shopping List</a>, print clean worksheets, or share permalink parameters without creating an account.
-        </p>
       </div>
     </div>
   </section>
 
-  <!-- Home Improvement Cost Guides by State -->
-  <section class="mb-14" aria-labelledby="cost-guides-heading">
+  <!-- 7. PROMINENT PROJECT WORKSPACE PROMOTIONAL + LIVE PREVIEW -->
+  <WorkspaceShowcase client:idle />
+
+  <!-- 8. COST-GUIDE DISCOVERY & VERIFICATION CLARITY -->
+  <section class="mb-16" aria-labelledby="cost-guides-heading">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
         <span class="bm-eyebrow mb-2">Labor &amp; Material Benchmarks</span>
@@ -341,7 +525,7 @@ const topStates = states.slice(0, 12);
           Home Improvement Cost Guides by State
         </h2>
         <p class="text-sm text-ink-muted mt-1">
-          Localized installation models built on BLS occupational wages and BEA Regional Price Parities across all 50 US states and DC.
+          Bottom-up verified flagship models are explicitly separated from preliminary trade drafts.
         </p>
       </div>
       <a href="/cost/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
@@ -350,46 +534,98 @@ const topStates = states.slice(0, 12);
       </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {featuredJobs.map((job) => (
-        <a
-          href={`/cost/${job.slug}/`}
-          class="bm-panel bm-panel-hover p-4 flex flex-col justify-between group hover:border-blueprint/70"
-        >
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="font-mono text-[10px] text-ink-muted uppercase">
-                {job.typicalProjectSize.toLocaleString()} {job.unit}
-              </span>
-              {job.verified && (
-                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-lime-500/20 text-ink dark:text-lime-500 border border-lime-500/40 font-mono text-[10px] font-semibold">
+    <!-- Bottom-Up Verified Cost Models -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="h-2 w-2 rounded-full bg-lime-500"></span>
+        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-ink">
+          Bottom-Up Verified Cost Models ({verifiedJobs.length})
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {verifiedJobs.map((job) => (
+          <a
+            href={`/cost/${job.slug}/`}
+            class="bm-panel bm-panel-hover p-5 border-t-4 border-t-[#C6F36A] flex flex-col justify-between group hover:border-blueprint/75"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-lime-500/20 text-ink dark:text-lime-500 border border-lime-500/40 font-mono text-[10px] font-semibold">
                   <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
-                  Verified
+                  Verified Model
                 </span>
-              )}
+                <span class="font-mono text-[10px] text-ink-muted uppercase tabular-nums">
+                  {job.typicalProjectSize.toLocaleString()} {job.unit}
+                </span>
+              </div>
+              <h4 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
+                Cost of {job.name}
+              </h4>
+              <p class="text-xs text-ink-muted mt-1.5 leading-relaxed line-clamp-2">
+                {job.diySavingsNote}
+              </p>
+              <div class="mt-3 pt-3 border-t border-hairline flex items-center justify-between text-xs tabular-nums">
+                <span class="text-ink-muted">US National Typical</span>
+                <strong class="font-mono text-sm font-bold text-ink">
+                  ${Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize).toLocaleString()}
+                </strong>
+              </div>
             </div>
-            <h3 class="text-sm font-bold text-ink group-hover:text-blueprint transition-colors">
-              Cost of {job.name}
-            </h3>
-            <p class="text-xs text-ink-muted mt-1 tabular-nums">
-              US Typical:{' '}
-              <strong class="text-ink font-semibold">
-                ${Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize).toLocaleString()}
-              </strong>
-            </p>
-          </div>
-          <div class="mt-3 pt-2.5 border-t border-hairline flex items-center justify-between text-xs font-semibold text-blueprint">
-            <span>State Breakdown</span>
-            <Icon name="arrow-right" size={13} />
-          </div>
-        </a>
-      ))}
+            <div class="mt-3 pt-2.5 border-t border-hairline flex items-center justify-between text-xs font-semibold text-blueprint">
+              <span>50-State Breakdown</span>
+              <Icon name="arrow-right" size={13} />
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
 
+    <!-- Preliminary Draft Cost Models (Explicitly Labelled) -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-ink-muted">
+          Preliminary Trade Drafts (Calc Baseline · Unverified)
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {preliminaryJobs.map((job) => (
+          <a
+            href={`/cost/${job.slug}/`}
+            class="bm-panel bm-panel-hover p-4 flex flex-col justify-between group hover:border-hairline-strong"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-subtle text-ink-muted border border-hairline font-mono text-[10px] font-medium">
+                  Preliminary Draft
+                </span>
+                <span class="font-mono text-[10px] text-ink-muted uppercase tabular-nums">
+                  {job.typicalProjectSize.toLocaleString()} {job.unit}
+                </span>
+              </div>
+              <h4 class="text-sm font-bold text-ink group-hover:text-blueprint transition-colors">
+                Cost of {job.name}
+              </h4>
+              <p class="text-xs text-ink-muted mt-1 tabular-nums">
+                Baseline Estimate:{' '}
+                <strong class="text-ink font-semibold">
+                  ${Math.round(job.nationalTypicalPerUnit * job.typicalProjectSize).toLocaleString()}
+                </strong>
+              </p>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-hairline flex items-center justify-between text-xs font-medium text-ink-muted group-hover:text-blueprint">
+              <span>Inspect Draft</span>
+              <Icon name="arrow-right" size={13} />
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- 50-State Quick Jump Grid -->
     <div class="bm-panel p-5 bg-surface-subtle/50">
       <div class="flex items-center justify-between gap-2 mb-3">
         <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-ink">
-          Quick Jump // Verified Roof Replacement Cost by State
+          Regional Lookup // Verified Roof Replacement Cost by State
         </h3>
         <Icon name="map-pin" size={15} class="text-blueprint" />
       </div>
@@ -413,32 +649,35 @@ const topStates = states.slice(0, 12);
     </div>
   </section>
 
-  <!-- Step-by-Step Measurement Field Guides -->
+  <!-- 9. FIELD GUIDES SECTION -->
   <section aria-labelledby="guides-heading">
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow mb-2">Field Procedures</span>
+        <span class="bm-eyebrow mb-2">Field Documentation</span>
         <h2 id="guides-heading" class="text-2xl font-extrabold text-ink tracking-tight">
           Measurement &amp; Estimation Guides
         </h2>
         <p class="text-sm text-ink-muted mt-1">
-          Practical field procedures compiled by {siteConfig.author.name}.
+          Practical field procedures for measuring rooms, roof slope geometry, and waste allowances compiled by {siteConfig.author.name}.
         </p>
       </div>
       <a href="/guides/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
-        <span>All Guides</span>
+        <span>All {guides.length} Field Guides</span>
         <Icon name="arrow-right" size={15} />
       </a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {guides.slice(0, 3).map((g) => (
-        <a href={`/guides/${g.slug}/`} class="bm-panel bm-panel-hover p-5 flex flex-col justify-between group hover:border-blueprint/70">
+      {guides.slice(0, 3).map((g, idx) => (
+        <a href={`/guides/${g.slug}/`} class="bm-panel bm-panel-hover p-5 flex flex-col justify-between group hover:border-blueprint/75">
           <div>
-            <span class="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-muted mb-2">
-              <Icon name="clock" size={12} />
-              {g.readingTime}
-            </span>
+            <div class="flex items-center justify-between gap-2 mb-3 font-mono text-[11px] text-ink-muted">
+              <span class="text-blueprint font-semibold">GUIDE // {String(idx + 1).padStart(2, '0')}</span>
+              <span class="inline-flex items-center gap-1">
+                <Icon name="clock" size={12} />
+                {g.readingTime}
+              </span>
+            </div>
             <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
               {g.title}
             </h3>

@@ -1,11 +1,22 @@
 import { useState, useEffect, useMemo } from 'preact/hooks';
 import type { MaterialLineItem } from '../lib/formulas/types';
 import LucideIcon from './LucideIcon';
+import { getCategoryIconName } from '../lib/lucide-icons';
+
+export function fmtUsd(n: number): string {
+  const hasCents = Math.abs(n % 1) > 0.005;
+  return `$${n.toLocaleString('en-US', {
+    minimumFractionDigits: hasCents ? 2 : 0,
+    maximumFractionDigits: 2,
+  })}`;
+}
 
 export interface SavedProjectEntry {
   id: string;
   slug: string;
   title: string;
+  category?: string;
+  categoryName?: string;
   timestamp: string;
   primaryLabel: string;
   primaryValue: number | string;
@@ -49,6 +60,18 @@ export interface HistoryEntry {
 }
 
 type WorkspaceTab = 'bom' | 'compare' | 'history';
+
+function inferCategoryMeta(slug: string, cat?: string, catName?: string): { slug: string; name: string } {
+  if (cat && catName) return { slug: cat, name: catName };
+  if (/paint|stain|wallpaper/.test(slug)) return { slug: 'painting', name: 'Painting & Wallpapering' };
+  if (/flooring|tile|grout|carpet|baseboard/.test(slug)) return { slug: 'flooring', name: 'Flooring, Tile & Trim' };
+  if (/concrete|brick|paver|retaining|rebar/.test(slug)) return { slug: 'concrete-masonry', name: 'Concrete & Masonry' };
+  if (/roof|gutter|siding/.test(slug)) return { slug: 'roofing', name: 'Roofing, Siding & Gutters' };
+  if (/mulch|gravel|topsoil|sod|grass-seed/.test(slug)) return { slug: 'landscaping', name: 'Landscaping & Yard' };
+  if (/fence|deck/.test(slug)) return { slug: 'fencing-decking', name: 'Fencing & Decking' };
+  if (/drywall|stair/.test(slug)) return { slug: 'drywall-walls', name: 'Drywall, Framing & Stairs' };
+  return { slug: 'general-conversions', name: 'General & Volume' };
+}
 
 export default function ProjectListManager() {
   const [tab, setTab] = useState<WorkspaceTab>('bom');
@@ -110,7 +133,7 @@ export default function ProjectListManager() {
   const totalTypical = entries.reduce((sum, e) => sum + (e.costTypical || 0), 0);
   const totalHigh = entries.reduce((sum, e) => sum + (e.costHigh || 0), 0);
 
-  // Consolidate identical materials across multiple saved calculations
+  // Consolidated BOM across all calculations
   const consolidatedMaterials = useMemo(() => {
     const map = new Map<string, { name: string; unit: string; quantity: number; totalTypical: number }>();
     for (const entry of entries) {
@@ -133,21 +156,48 @@ export default function ProjectListManager() {
     return Array.from(map.values());
   }, [entries]);
 
+  // Group calculations by residential trade category
+  const groupedByTrade = useMemo(() => {
+    const groups = new Map<
+      string,
+      { tradeSlug: string; tradeName: string; items: SavedProjectEntry[]; subtotal: number }
+    >();
+    for (const entry of entries) {
+      const meta = inferCategoryMeta(entry.slug, entry.category, entry.categoryName);
+      const existing = groups.get(meta.slug);
+      if (existing) {
+        existing.items.push(entry);
+        existing.subtotal += entry.costTypical || 0;
+      } else {
+        groups.set(meta.slug, {
+          tradeSlug: meta.slug,
+          tradeName: meta.name,
+          items: [entry],
+          subtotal: entry.costTypical || 0,
+        });
+      }
+    }
+    return Array.from(groups.values());
+  }, [entries]);
+
   const handleCopyText = () => {
     const lines: string[] = [
-      'BuildMath Project Workspace — Material Shopping List',
-      '===================================================',
+      'BuildMath Project Workspace — Combined Bill of Materials',
+      '========================================================',
       '',
     ];
-    for (const entry of entries) {
-      lines.push(`${entry.title}: ${entry.primaryValue} ${entry.primaryUnit} (Est. $${entry.costTypical})`);
-      for (const m of entry.materials) {
-        lines.push(`  - ${m.quantity} ${m.unit} ${m.name} ($${m.totalTypical})`);
+    for (const group of groupedByTrade) {
+      lines.push(`[${group.tradeName}] — Trade Subtotal: $${group.subtotal.toLocaleString()}`);
+      for (const entry of group.items) {
+        lines.push(`  • ${entry.title}: ${entry.primaryValue} ${entry.primaryUnit} (Est. $${entry.costTypical})`);
+        for (const m of entry.materials) {
+          lines.push(`    - ${m.quantity} ${m.unit} ${m.name} ($${m.totalTypical})`);
+        }
       }
       lines.push('');
     }
     if (consolidatedMaterials.length > 0) {
-      lines.push('Consolidated Purchase Summary:');
+      lines.push('Consolidated Hardware Store Quantities:');
       for (const cm of consolidatedMaterials) {
         lines.push(`  * ${cm.quantity.toLocaleString()} ${cm.unit} — ${cm.name} ($${cm.totalTypical.toLocaleString()})`);
       }
@@ -165,7 +215,7 @@ export default function ProjectListManager() {
 
   return (
     <div class="my-6 space-y-6">
-      {/* Workspace Navigation Tabs */}
+      {/* Workspace Navigation Tabs & PDF Export */}
       <div class="no-print flex flex-wrap items-center justify-between gap-3 border-b border-hairline pb-3">
         <div role="tablist" aria-label="Workspace sections" class="flex flex-wrap gap-1.5">
           {[
@@ -200,115 +250,163 @@ export default function ProjectListManager() {
             );
           })}
         </div>
-
-        {entries.length > 0 && (
-          <div class="flex items-center gap-2">
-            <button type="button" onClick={handleCopyText} class="bm-btn-secondary text-xs min-h-[36px] px-3 py-1.5">
-              <LucideIcon name={copied ? 'check' : 'copy'} size={13} />
-              <span>{copied ? 'Copied BOM' : 'Copy List'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => window.print()}
-              class="bm-btn-graphite text-xs min-h-[36px] px-3 py-1.5"
-            >
-              <LucideIcon name="download" size={13} />
-              <span>Export PDF</span>
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* TAB 1: SHOPPING LIST & CONSOLIDATED BOM */}
+      {/* TAB 1: PROJECT SUMMARY, GROUPED CALCULATIONS & COMBINED BOM */}
       {tab === 'bom' && (
         <>
           {entries.length === 0 ? (
-            <div class="bm-panel p-10 text-center">
-              <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface-subtle border border-hairline text-blueprint">
-                <LucideIcon name="clipboard-list" size={22} />
+            <div class="bm-panel p-8 sm:p-10">
+              <div class="max-w-2xl mx-auto text-center">
+                <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface-subtle border border-hairline text-blueprint">
+                  <LucideIcon name="clipboard-list" size={22} />
+                </div>
+                <span class="bm-eyebrow mb-2">Browser Storage // Private Takeoff Sheet</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-ink mb-2">
+                  Start Building Your Combined Project BOM
+                </h2>
+                <p class="text-sm text-ink-muted leading-relaxed mb-6">
+                  Calculate quantities across rooms or trades and click <strong>+ Add to My Project List</strong>. Everything groups cleanly by trade here with consolidated hardware-store quantities and instant PDF export.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-7">
+                  {[
+                    { name: 'Concrete Slab Calculator', sub: 'Yards, 80/60/40-lb bags & ready-mix cost', href: '/calculators/concrete-slab-calculator/' },
+                    { name: 'Interior Paint Calculator', sub: 'Wall/ceiling gallons, primer & quarts', href: '/calculators/paint-calculator/' },
+                    { name: 'Drywall Sheet Calculator', sub: '4×8/4×12 panels, mud buckets, tape & screws', href: '/calculators/drywall-calculator/' },
+                    { name: 'Mulch & Bed Calculator', sub: 'Cubic yards, bags & bulk delivery cost', href: '/calculators/mulch-calculator/' },
+                  ].map((starter) => (
+                    <a
+                      key={starter.href}
+                      href={starter.href}
+                      class="p-3.5 rounded-lg bg-canvas border border-hairline hover:border-blueprint transition-colors flex items-center justify-between gap-3 group"
+                    >
+                      <div class="min-w-0">
+                        <div class="text-xs sm:text-sm font-semibold text-ink group-hover:text-blueprint truncate">
+                          {starter.name}
+                        </div>
+                        <div class="text-[11px] text-ink-muted truncate">{starter.sub}</div>
+                      </div>
+                      <LucideIcon name="arrow-right" size={14} class="text-blueprint shrink-0" />
+                    </a>
+                  ))}
+                </div>
+
+                <a href="/calculators/" class="bm-btn-lime text-sm font-bold">
+                  <span>Browse All 32 Calculators</span>
+                  <LucideIcon name="arrow-right" size={16} />
+                </a>
               </div>
-              <h2 class="text-xl font-bold text-ink mb-2">
-                Your Project Workspace is Empty
-              </h2>
-              <p class="text-sm text-ink-muted max-w-md mx-auto mb-6 leading-relaxed">
-                Open any of our 32 calculators and click <strong>+ Add to My Project List</strong> to combine room takeoffs, consolidate hardware store quantities, and export a printable PDF worksheet.
-              </p>
-              <a href="/calculators/" class="bm-btn-lime text-sm">
-                <span>Browse All Calculators</span>
-                <LucideIcon name="arrow-right" size={16} />
-              </a>
             </div>
           ) : (
             <div class="space-y-6">
-              {/* Total Budget Telemetry Header */}
-              <div class="bm-instrument p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
-                <div>
-                  <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#9BA1AA]">
-                    <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
-                    <span>
-                      Combined Project Total // {entries.length} {entries.length === 1 ? 'Calculation' : 'Calculations'} · {consolidatedMaterials.length} Material SKUs
-                    </span>
+              {/* Project Summary KPI Dashboard */}
+              <div class="bm-instrument overflow-hidden">
+                <div class="px-6 py-4 border-b border-graphite-700 bg-graphite-950/60 flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#D2D6DC]">
+                    <span class="h-2 w-2 rounded-full bg-lime-500"></span>
+                    <span>Project Workspace Summary // Client-Side BOM</span>
                   </div>
-                  <div class="mt-2 flex flex-wrap items-baseline gap-3">
-                    <span class="text-3xl sm:text-4xl font-extrabold text-lime-500 tabular-nums tracking-tight">
-                      ${totalTypical.toLocaleString()}
-                    </span>
-                    <span class="font-mono text-xs text-[#9BA1AA] tabular-nums">
-                      Est. Range: ${totalLow.toLocaleString()} – ${totalHigh.toLocaleString()}
-                    </span>
+                  <div class="no-print flex flex-wrap gap-2">
+                    <button type="button" onClick={handleCopyText} class="bm-btn-lime text-xs min-h-[36px] px-3 py-1.5 font-bold">
+                      <LucideIcon name={copied ? 'check' : 'copy'} size={13} />
+                      <span>{copied ? 'Copied BOM' : 'Copy Shopping List'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors min-h-[36px]"
+                    >
+                      <LucideIcon name="printer" size={13} />
+                      <span>Export PDF / Print</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={clearAllBom}
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-300 hover:bg-red-950/60 transition-colors min-h-[36px]"
+                    >
+                      <LucideIcon name="trash-2" size={13} />
+                      <span>Clear</span>
+                    </button>
                   </div>
                 </div>
-                <div class="no-print flex flex-wrap gap-2">
-                  <button type="button" onClick={handleCopyText} class="bm-btn-lime text-xs min-h-[38px]">
-                    <LucideIcon name={copied ? 'check' : 'copy'} size={14} />
-                    <span>{copied ? 'Copied BOM' : 'Copy Shopping List'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors min-h-[38px]"
-                  >
-                    <LucideIcon name="printer" size={14} />
-                    <span>Export PDF / Print</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={clearAllBom}
-                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-red-300 hover:bg-red-950/60 transition-colors min-h-[38px]"
-                  >
-                    <LucideIcon name="trash-2" size={14} />
-                    <span>Clear All</span>
-                  </button>
+
+                <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                      Total Estimated Cost
+                    </span>
+                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums">
+                      {fmtUsd(totalTypical)}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
+                      {fmtUsd(totalLow)} – {fmtUsd(totalHigh)} range
+                    </span>
+                  </div>
+                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                      Saved Takeoffs
+                    </span>
+                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
+                      {entries.length}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#6FA3D2]">Individual calculations</span>
+                  </div>
+                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                      Active Trades
+                    </span>
+                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
+                      {groupedByTrade.length}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#9BA1AA]">Trade groups</span>
+                  </div>
+                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                      Combined Material SKUs
+                    </span>
+                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
+                      {consolidatedMaterials.length}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#9BA1AA]">Consolidated line items</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Consolidated Purchase Table (if >= 1 material item) */}
+              {/* Consolidated Hardware Store Bill of Materials */}
               {consolidatedMaterials.length > 0 && (
                 <section class="bm-panel overflow-hidden" aria-label="Consolidated hardware store summary">
-                  <div class="px-5 py-3.5 border-b border-hairline bg-surface-subtle/50 flex items-center justify-between">
-                    <h2 class="text-sm font-bold text-ink">
-                      Consolidated Hardware Store Shopping List
-                    </h2>
-                    <span class="font-mono text-[11px] text-ink-muted">Grouped across all saved rooms</span>
+                  <div class="px-5 py-3.5 border-b border-hairline bg-surface-subtle/50 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <h2 class="text-base font-bold text-ink">
+                        Consolidated Hardware Store Shopping List
+                      </h2>
+                      <p class="text-xs text-ink-muted">
+                        Duplicate material line items automatically merged into store purchase totals.
+                      </p>
+                    </div>
+                    <span class="bm-eyebrow font-mono tabular-nums">
+                      {consolidatedMaterials.length} SKUs
+                    </span>
                   </div>
                   <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
                       <thead>
                         <tr class="border-b border-hairline bg-surface-subtle/40 font-mono text-[10px] uppercase text-ink-muted">
-                          <th class="py-2.5 px-4 font-semibold">Material Item</th>
-                          <th class="py-2.5 px-4 font-semibold">Total Quantity</th>
-                          <th class="py-2.5 px-4 font-semibold text-right">Est. Subtotal</th>
+                          <th class="py-2.5 px-4 font-semibold">Material Description</th>
+                          <th class="py-2.5 px-4 font-semibold">Combined Quantity</th>
+                          <th class="py-2.5 px-4 font-semibold text-right">Est. Cost</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-hairline">
                         {consolidatedMaterials.map((cm) => (
-                          <tr key={`${cm.name}-${cm.unit}`}>
+                          <tr key={`${cm.name}-${cm.unit}`} class="hover:bg-surface-subtle/30">
                             <td class="py-2.5 px-4 font-medium text-ink">{cm.name}</td>
                             <td class="py-2.5 px-4 font-mono font-bold text-blueprint">
                               {cm.quantity.toLocaleString()} {cm.unit}
                             </td>
                             <td class="py-2.5 px-4 text-right font-mono font-semibold text-ink">
-                              ${cm.totalTypical.toLocaleString()}
+                              {fmtUsd(cm.totalTypical)}
                             </td>
                           </tr>
                         ))}
@@ -318,64 +416,83 @@ export default function ProjectListManager() {
                 </section>
               )}
 
-              {/* Individual Saved Takeoffs */}
-              <div class="space-y-4">
-                {entries.map((entry, idx) => (
-                  <div key={entry.id} class="bm-panel overflow-hidden">
-                    <div class="px-5 py-4 bg-surface-subtle/40 border-b border-hairline flex flex-wrap items-center justify-between gap-3">
-                      <div class="flex items-start gap-3">
-                        <span class="font-mono text-xs font-semibold text-ink-muted bg-surface border border-hairline px-2 py-1 rounded tabular-nums">
-                          #{String(idx + 1).padStart(2, '0')}
+              {/* Grouped Calculations by Trade */}
+              <div class="space-y-5">
+                <div class="flex items-center justify-between">
+                  <h2 class="text-lg font-bold text-ink">
+                    Grouped Calculations by Trade ({groupedByTrade.length})
+                  </h2>
+                </div>
+
+                {groupedByTrade.map((group) => (
+                  <section key={group.tradeSlug} class="bm-panel overflow-hidden">
+                    <div class="px-5 py-3.5 bg-surface-subtle/60 border-b border-hairline flex flex-wrap items-center justify-between gap-3">
+                      <div class="flex items-center gap-2.5">
+                        <span class="flex h-7 w-7 items-center justify-center rounded bg-surface border border-hairline text-blueprint">
+                          <LucideIcon name={getCategoryIconName(group.tradeSlug)} size={14} />
                         </span>
-                        <div>
-                          <a
-                            href={entry.shareUrl || `/calculators/${entry.slug}/`}
-                            class="text-base sm:text-lg font-bold text-ink hover:text-blueprint transition-colors"
-                          >
-                            {entry.title}
-                          </a>
-                          <div class="mt-0.5 font-mono text-xs text-blueprint font-semibold tabular-nums">
-                            {entry.primaryLabel}: {entry.primaryValue} {entry.primaryUnit} • Est. $
-                            {entry.costTypical.toLocaleString()}
-                          </div>
-                        </div>
+                        <h3 class="text-sm sm:text-base font-bold text-ink">{group.tradeName}</h3>
+                        <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface border border-hairline text-ink-muted tabular-nums">
+                          {group.items.length} {group.items.length === 1 ? 'takeoff' : 'takeoffs'}
+                        </span>
                       </div>
-                      <div class="no-print flex items-center gap-3">
-                        <a
-                          href={entry.shareUrl || `/calculators/${entry.slug}/`}
-                          class="text-xs font-mono text-blueprint hover:underline"
-                        >
-                          Edit Inputs →
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => removeEntry(entry.id)}
-                          class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
-                        >
-                          <LucideIcon name="trash-2" size={13} />
-                          <span>Remove</span>
-                        </button>
-                      </div>
+                      <span class="font-mono text-xs font-bold text-ink tabular-nums">
+                        Trade Subtotal: {fmtUsd(group.subtotal)}
+                      </span>
                     </div>
 
-                    <div class="p-4 sm:p-5">
-                      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        {entry.materials.map((m) => (
-                          <li
-                            key={m.name}
-                            class="flex items-center justify-between gap-3 text-xs sm:text-sm px-3.5 py-2.5 rounded-lg bg-canvas border border-hairline"
-                          >
-                            <span class="font-medium text-ink tabular-nums">
-                              <strong class="font-bold">{m.quantity.toLocaleString()} {m.unit}</strong> — {m.name}
-                            </span>
-                            <span class="font-mono font-semibold text-ink tabular-nums shrink-0">
-                              ${m.totalTypical.toLocaleString()}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div class="divide-y divide-hairline">
+                      {group.items.map((entry) => (
+                        <div key={entry.id} class="p-4 sm:p-5 space-y-3">
+                          <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                              <a
+                                href={entry.shareUrl || `/calculators/${entry.slug}/`}
+                                class="text-base font-bold text-ink hover:text-blueprint transition-colors"
+                              >
+                                {entry.title}
+                              </a>
+                              <div class="mt-0.5 font-mono text-xs text-blueprint font-semibold tabular-nums">
+                                {entry.primaryLabel}: {entry.primaryValue} {entry.primaryUnit} · Est. {fmtUsd(entry.costTypical)}
+                              </div>
+                            </div>
+                            <div class="no-print flex items-center gap-3">
+                              <a
+                                href={entry.shareUrl || `/calculators/${entry.slug}/`}
+                                class="text-xs font-mono text-blueprint hover:underline"
+                              >
+                                Edit Inputs →
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => removeEntry(entry.id)}
+                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                              >
+                                <LucideIcon name="trash-2" size={13} />
+                                <span>Remove</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {entry.materials.map((m) => (
+                              <li
+                                key={m.name}
+                                class="flex items-center justify-between gap-3 text-xs px-3 py-2 rounded-md bg-canvas border border-hairline"
+                              >
+                                <span class="font-medium text-ink tabular-nums">
+                                  <strong class="font-bold">{m.quantity.toLocaleString()} {m.unit}</strong> — {m.name}
+                                </span>
+                                <span class="font-mono font-semibold text-ink tabular-nums shrink-0">
+                                  {fmtUsd(m.totalTypical)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
                     </div>
-                  </div>
+                  </section>
                 ))}
               </div>
             </div>
@@ -393,7 +510,7 @@ export default function ProjectListManager() {
               </div>
               <h2 class="text-lg font-bold text-ink mb-1">No Scenarios Saved for Comparison</h2>
               <p class="text-sm text-ink-muted max-w-md mx-auto mb-5">
-                On any calculator page, adjust your dimensions or thickness (for example, a 4-inch vs. 6-inch concrete slab) and click <strong>Compare Scenario</strong> to view estimates side-by-side.
+                On any calculator page, adjust dimensions or thickness (e.g., 4-inch vs. 6-inch slab) and click <strong>Compare Scenario</strong> to inspect differences side-by-side.
               </p>
               <a href="/calculators/concrete-slab-calculator/" class="bm-btn-lime text-xs">
                 Try Concrete Slab Comparison →
@@ -463,14 +580,14 @@ export default function ProjectListManager() {
               </div>
               <h2 class="text-lg font-bold text-ink mb-1">No Calculation History Recorded Yet</h2>
               <p class="text-sm text-ink-muted max-w-md mx-auto">
-                Whenever you click Calculate Estimate, Copy, Share, or Add to Project on any calculator, a snapshot with your inputs is saved here locally.
+                Whenever you calculate, copy, share, or save on any calculator, a snapshot with your input parameters is stored locally here.
               </p>
             </div>
           ) : (
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <span class="font-mono text-xs text-ink-muted">
-                  Last {historyItems.length} saved calculation snapshots
+                  Last {historyItems.length} calculation snapshots
                 </span>
                 <button
                   type="button"

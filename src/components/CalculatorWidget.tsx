@@ -487,6 +487,8 @@ export default function CalculatorWidget({
         id: `${slug}-${Date.now()}`,
         slug,
         title,
+        category,
+        categoryName,
         timestamp: new Date().toISOString(),
         primaryLabel: output.primaryResult.label,
         primaryValue: output.primaryResult.value,

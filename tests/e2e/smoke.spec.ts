@@ -172,6 +172,8 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     await expect(page.locator('h1')).toContainText('My Project Shopping List');
     await expect(page.locator('body')).toContainText('Interior Paint Calculator');
     await expect(page.locator('main')).toContainText('Consolidated Hardware Store Shopping List');
+    await expect(page.locator('main')).toContainText('Grouped Calculations by Trade');
+    await expect(page.locator('main')).toContainText('Trade Subtotal:');
 
     await page.getByRole('tab', { name: /Compare Scenarios/i }).click();
     await expect(page.locator('main')).toContainText('Concrete Slab Calculator');
@@ -183,6 +185,25 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     await page.goto('/');
     await expect(page.locator('main')).toContainText('Recently Used Instruments');
     await expect(page.locator('main')).toContainText('Interior Paint');
+    await expect(page.locator('#workspace-showcase-heading')).toBeVisible();
+    await expect(page.locator('main')).toContainText('LIVE BROWSER WORKSPACE');
+
+    // Tablet viewport layout check (768x1024): zero horizontal overflow on Homepage & Workspace
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.waitForTimeout(150);
+    const homeTabletOk = await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth
+    );
+    expect(homeTabletOk).toBe(true);
+
+    await page.goto('/my-project/');
+    await expect(page.locator('astro-island').first()).not.toHaveAttribute('ssr');
+    const workspaceTabletOk = await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth
+    );
+    expect(workspaceTabletOk).toBe(true);
+    await expect(page.locator('main')).toContainText('Grouped Calculations by Trade');
+    await expect(page.locator('main')).toContainText('Trade Subtotal:');
   });
 
   test('Info, cost, and guide routes load cleanly without overflow and keep SEO noindex rules', async ({
