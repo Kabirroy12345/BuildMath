@@ -44,7 +44,6 @@ const navLinks = [
   { label: 'Cost Guides', href: '/cost/', active: pathname.startsWith('/cost') },
   { label: 'How-To Guides', href: '/guides/', active: pathname.startsWith('/guides') },
   { label: 'Methodology', href: '/methodology/', active: pathname.startsWith('/methodology') },
-  { label: 'About', href: '/about/', active: pathname.startsWith('/about') },
 ];
 ---
 
@@ -59,6 +58,7 @@ const navLinks = [
     <link rel="canonical" href={meta.canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -105,81 +105,110 @@ const navLinks = [
     </a>
 
     <!-- Precision Header -->
-    <header class="sticky top-0 z-40 border-b border-hairline bg-canvas/90 backdrop-blur-md">
+    <header class="sticky top-0 z-40 border-b border-hairline bg-canvas/95 backdrop-blur-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        <a href="/" class="flex items-center gap-3 group shrink-0">
-          <span class="relative flex h-9 w-9 items-center justify-center rounded-lg bg-graphite-900 dark:bg-surface-subtle border border-hairline text-[#F8F8F5] font-mono font-bold text-sm tracking-tight transition-transform duration-150 group-hover:scale-[1.03]">
-            BM
-            <span aria-hidden="true" class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-sm bg-lime-500 border-2 border-canvas"></span>
-          </span>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <span class="text-base sm:text-lg font-extrabold tracking-tight text-ink">
+        <div class="flex items-center gap-7 min-w-0">
+          <!-- Distinctive Architectural Framing-Square Mark + Geist Wordmark -->
+          <a href="/" class="inline-flex items-center gap-2.5 group shrink-0">
+            <svg
+              viewBox="0 0 36 36"
+              width="34"
+              height="34"
+              aria-hidden="true"
+              class="shrink-0 transition-transform duration-150 group-hover:scale-[1.03]"
+            >
+              <rect width="36" height="36" rx="8" fill="#171B20" />
+              <rect x="2" y="2" width="32" height="32" rx="6" fill="none" stroke="#282E37" stroke-width="1" />
+              <path d="M9 8v19h18v-4.5H13.5V8H9z" fill="#F8F8F5" />
+              <line x1="9" y1="13" x2="11.5" y2="13" stroke="#171B20" stroke-width="1.2" />
+              <line x1="9" y1="17.5" x2="11.5" y2="17.5" stroke="#171B20" stroke-width="1.2" />
+              <line x1="14.5" y1="10.5" x2="25.5" y2="21.5" stroke="#6FA3D2" stroke-width="2" stroke-linecap="square" />
+              <rect x="22.5" y="8" width="5.5" height="5.5" rx="1.2" fill="#C6F36A" />
+            </svg>
+            <div class="flex items-baseline gap-1.5">
+              <span class="font-display text-lg sm:text-[19px] font-bold tracking-[-0.03em] text-ink">
                 {siteConfig.name}
               </span>
-              <span class="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-surface-subtle text-ink-muted border border-hairline">
-                US Specs
+              <span class="hidden sm:inline font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+                US
               </span>
             </div>
-            <span class="hidden sm:block text-[11px] font-mono text-ink-muted leading-none mt-0.5">
-              Source-Cited Material &amp; Cost Engine
-            </span>
-          </div>
-        </a>
-
-        <nav aria-label="Main navigation" class="hidden md:flex items-center gap-1 text-sm font-medium">
-          {navLinks.map((link) => (
-            <a
-              href={link.href}
-              aria-current={link.active ? 'page' : undefined}
-              class={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
-                link.active
-                  ? 'bg-surface text-ink border border-hairline font-semibold'
-                  : 'text-ink-muted hover:text-ink hover:bg-surface-subtle/70'
-              }`}
-            >
-              {link.active && (
-                <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
-              )}
-              <span>{link.label}</span>
-            </a>
-          ))}
-        </nav>
-
-        <div class="flex items-center gap-2 shrink-0">
-          <a
-            href="/calculators/"
-            aria-label="Search calculators"
-            class="hidden sm:inline-flex md:hidden items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
-          >
-            <Icon name="search" size={16} />
           </a>
+
+          <!-- Primary Navigation -->
+          <nav aria-label="Main navigation" class="hidden md:flex items-center gap-1 text-sm font-medium">
+            {navLinks.map((link) => (
+              <a
+                href={link.href}
+                aria-current={link.active ? 'page' : undefined}
+                class={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
+                  link.active
+                    ? 'bg-surface text-ink border border-hairline font-semibold'
+                    : 'text-ink-muted hover:text-ink hover:bg-surface-subtle/70'
+                }`}
+              >
+                {link.active && (
+                  <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
+                )}
+                <span>{link.label}</span>
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        <!-- Right Controls: Global Search + My Project Workspace + Theme + Explore CTA -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="global-search-open-btn"
+            type="button"
+            aria-label="Open global calculator search"
+            class="inline-flex items-center gap-2 h-9 px-2.5 sm:px-3 rounded-lg border border-hairline bg-surface text-xs text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
+          >
+            <Icon name="search" size={14} class="text-ink-muted" />
+            <span class="hidden lg:inline font-medium">Search</span>
+            <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono bg-surface-subtle border border-hairline rounded">
+              Ctrl K
+            </kbd>
+          </button>
 
           <a
             href="/my-project/"
-            class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-surface border border-hairline hover:border-hairline-strong text-ink transition-colors min-h-[40px]"
+            aria-current={pathname.startsWith('/my-project') ? 'page' : undefined}
+            class={`inline-flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors h-9 ${
+              pathname.startsWith('/my-project')
+                ? 'border-blueprint bg-blueprint-soft text-ink'
+                : 'border-hairline bg-surface hover:border-hairline-strong text-ink'
+            }`}
           >
-            <Icon name="clipboard-list" size={16} class="text-blueprint" />
-            <span class="hidden xs:inline sm:inline">My Project</span>
+            <Icon name="clipboard-list" size={15} class="text-blueprint" />
+            <span class="hidden sm:inline">My Project</span>
             <span
               id="project-count-badge"
-              class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-mono font-bold rounded bg-surface-subtle text-ink border border-hairline tabular-nums transition-colors"
+              class="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-mono font-bold rounded bg-surface-subtle text-ink border border-hairline tabular-nums transition-colors"
             >
               0
             </span>
+          </a>
+
+          <a
+            href="/calculators/"
+            class="hidden xl:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-xs font-semibold bg-lime-500 hover:bg-lime-600 text-graphite-900 border border-[#17191C]/10 transition-colors"
+          >
+            <span>Explore Calculators</span>
+            <Icon name="arrow-right" size={13} />
           </a>
 
           <button
             id="theme-toggle-btn"
             type="button"
             aria-label="Toggle color theme"
-            class="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-hairline bg-surface text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
+            class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink-muted hover:text-ink hover:border-hairline-strong transition-colors"
           >
             <span aria-hidden="true" class="dark:hidden flex items-center justify-center">
-              <Icon name="moon" size={17} />
+              <Icon name="moon" size={16} />
             </span>
             <span aria-hidden="true" class="hidden dark:flex items-center justify-center text-lime-500">
-              <Icon name="sun" size={17} />
+              <Icon name="sun" size={16} />
             </span>
           </button>
 
@@ -189,13 +218,13 @@ const navLinks = [
             aria-expanded="false"
             aria-controls="mobile-nav-drawer"
             aria-label="Open navigation menu"
-            class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-hairline bg-surface text-ink hover:bg-surface-subtle transition-colors"
+            class="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg border border-hairline bg-surface text-ink hover:bg-surface-subtle transition-colors"
           >
             <span id="menu-icon-open" class="flex items-center justify-center">
-              <Icon name="menu" size={18} />
+              <Icon name="menu" size={17} />
             </span>
             <span id="menu-icon-close" class="hidden items-center justify-center">
-              <Icon name="x" size={18} />
+              <Icon name="x" size={17} />
             </span>
           </button>
         </div>
@@ -204,7 +233,7 @@ const navLinks = [
       <!-- Mobile Quick Sub-Nav + Collapsible Drawer -->
       <nav
         aria-label="Mobile quick navigation"
-        class="md:hidden border-t border-hairline bg-surface/90 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-ink-muted overflow-x-auto gap-3"
+        class="md:hidden border-t border-hairline bg-surface/95 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-ink-muted overflow-x-auto gap-3"
       >
         <a href="/calculators/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/calculators') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
           Calculators
@@ -215,8 +244,8 @@ const navLinks = [
         <a href="/guides/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/guides') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
           How-To Guides
         </a>
-        <a href="/methodology/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/methodology') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
-          Methodology
+        <a href="/my-project/" class={`py-1.5 whitespace-nowrap ${pathname.startsWith('/my-project') ? 'text-ink font-semibold' : 'hover:text-ink'}`}>
+          Workspace
         </a>
       </nav>
 
@@ -239,6 +268,13 @@ const navLinks = [
             </a>
           ))}
           <a
+            href="/about/"
+            class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium border border-hairline bg-canvas text-ink"
+          >
+            <span>About</span>
+            <Icon name="chevron-right" size={15} class="opacity-60" />
+          </a>
+          <a
             href="/contact/"
             class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium border border-hairline bg-canvas text-ink"
           >
@@ -246,6 +282,10 @@ const navLinks = [
             <Icon name="chevron-right" size={15} class="opacity-60" />
           </a>
         </div>
+        <a href="/calculators/" class="bm-btn-lime w-full text-xs font-bold mt-2">
+          <span>Explore All 32 Calculators</span>
+          <Icon name="arrow-right" size={14} />
+        </a>
       </div>
     </header>
 
@@ -259,11 +299,13 @@ const navLinks = [
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
           <div class="lg:col-span-4 space-y-4">
-            <a href="/" class="inline-flex items-center gap-2.5 font-extrabold text-lg text-[#F8F8F5]">
-              <span class="relative flex h-8 w-8 items-center justify-center rounded-md bg-graphite-800 border border-graphite-700 font-mono text-xs font-bold text-[#F8F8F5]">
-                BM
-                <span aria-hidden="true" class="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-sm bg-lime-500"></span>
-              </span>
+            <a href="/" class="inline-flex items-center gap-2.5 font-display font-bold text-lg text-[#F8F8F5]">
+              <svg viewBox="0 0 36 36" width="28" height="28" aria-hidden="true">
+                <rect width="36" height="36" rx="7" fill="#1F252C" stroke="#2E3642" stroke-width="1" />
+                <path d="M9 8v19h18v-4.5H13.5V8H9z" fill="#F8F8F5" />
+                <line x1="14.5" y1="10.5" x2="25.5" y2="21.5" stroke="#6FA3D2" stroke-width="2" />
+                <rect x="22.5" y="8" width="5.5" height="5.5" rx="1.2" fill="#C6F36A" />
+              </svg>
               <span>{siteConfig.name}</span>
             </a>
             <p class="text-xs sm:text-sm text-[#9BA1AA] leading-relaxed max-w-sm">
@@ -312,6 +354,7 @@ const navLinks = [
             <ul class="space-y-2 text-xs sm:text-sm text-[#9BA1AA]">
               <li><a href="/about/" class="hover:text-lime-500 transition-colors">About {siteConfig.name}</a></li>
               <li><a href="/methodology/" class="hover:text-lime-500 transition-colors">Methodology</a></li>
+              <li><a href="/my-project/" class="hover:text-lime-500 transition-colors">Project Workspace</a></li>
               <li><a href="/contact/" class="hover:text-lime-500 transition-colors">Contact Us</a></li>
               <li><a href="/affiliate-disclosure/" class="hover:text-lime-500 transition-colors">Affiliate Disclosure</a></li>
               <li><a href="/disclaimer/" class="hover:text-lime-500 transition-colors">Disclaimer</a></li>
@@ -334,6 +377,47 @@ const navLinks = [
         </div>
       </div>
     </footer>
+
+    <!-- Functional Global Search Command Modal (Lazy loads /search-index.json) -->
+    <div
+      id="global-search-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search BuildMath tools and cost guides"
+      class="hidden fixed inset-0 z-50 bg-[#0D1013]/70 backdrop-blur-sm px-4 pt-16 sm:pt-24 flex items-start justify-center"
+    >
+      <div class="w-full max-w-2xl rounded-xl bg-surface border border-hairline-strong shadow-2xl overflow-hidden">
+        <div class="flex items-center gap-3 px-4 py-3 border-b border-hairline">
+          <Icon name="search" size={18} class="text-blueprint" />
+          <input
+            id="global-search-input"
+            type="search"
+            autocomplete="off"
+            placeholder="Search all 32 calculators and 25 cost guides..."
+            class="flex-1 bg-transparent text-ink text-sm sm:text-base placeholder:text-ink-muted focus:outline-none"
+          />
+          <button
+            id="global-search-close-btn"
+            type="button"
+            aria-label="Close global search"
+            class="px-2 py-1 rounded text-[11px] font-mono bg-surface-subtle border border-hairline text-ink-muted hover:text-ink"
+          >
+            ESC
+          </button>
+        </div>
+
+        <div id="global-search-results" class="max-h-[60vh] overflow-y-auto divide-y divide-hairline">
+          <div class="p-6 text-center text-xs text-ink-muted font-mono">
+            Loading 57 tools &amp; guides index...
+          </div>
+        </div>
+
+        <div class="px-4 py-2.5 border-t border-hairline bg-surface-subtle/50 flex items-center justify-between text-[11px] font-mono text-ink-muted">
+          <span>↑↓ Navigate · Enter to open</span>
+          <a href="/calculators/" class="text-blueprint font-semibold hover:underline">Open Full Directory →</a>
+        </div>
+      </div>
+    </div>
 
     <ConsentBanner />
 
@@ -385,6 +469,120 @@ const navLinks = [
             }
           });
         }
+
+        // Global Command Search Modal
+        var modal = document.getElementById('global-search-modal');
+        var openBtn = document.getElementById('global-search-open-btn');
+        var closeBtn = document.getElementById('global-search-close-btn');
+        var searchInput = document.getElementById('global-search-input');
+        var resultsEl = document.getElementById('global-search-results');
+        var cachedIndex = null;
+        var activeIdx = -1;
+
+        function escapeHtml(str) {
+          return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        }
+
+        function renderGlobalResults(query) {
+          if (!cachedIndex || !resultsEl) return;
+          var q = (query || '').trim().toLowerCase();
+          var matches = q
+            ? cachedIndex.filter(function (item) {
+                var hay = (item.title + ' ' + item.categoryName + ' ' + item.description + ' ' + (item.inputsLabel || '') + ' ' + (item.outputsLabel || '')).toLowerCase();
+                return q.split(/\s+/).every(function (t) { return hay.indexOf(t) !== -1; });
+              }).slice(0, 10)
+            : cachedIndex.slice(0, 8);
+
+          if (matches.length === 0) {
+            resultsEl.innerHTML = '<div class="p-6 text-center text-sm text-ink-muted">No tools or guides matched "' + escapeHtml(query) + '".</div>';
+            activeIdx = -1;
+            return;
+          }
+
+          activeIdx = 0;
+          resultsEl.innerHTML = matches.map(function (item, idx) {
+            return (
+              '<a href="' + item.href + '" data-gs-idx="' + idx + '" class="gs-item flex items-center justify-between gap-3 px-4 py-3 hover:bg-surface-subtle transition-colors ' + (idx === 0 ? 'bg-surface-subtle/70' : '') + '">' +
+                '<div class="min-w-0">' +
+                  '<div class="text-sm font-semibold text-ink truncate">' + escapeHtml(item.title) + '</div>' +
+                  '<div class="text-xs text-ink-muted truncate">' + escapeHtml(item.description) + '</div>' +
+                '</div>' +
+                '<span class="shrink-0 font-mono text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-blueprint-soft text-blueprint">' +
+                  escapeHtml(item.type === 'calculator' ? item.categoryName : 'Cost Guide') +
+                '</span>' +
+              '</a>'
+            );
+          }).join('');
+        }
+
+        function openGlobalSearch() {
+          if (!modal || !searchInput) return;
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          searchInput.focus();
+          if (!cachedIndex) {
+            fetch('/search-index.json')
+              .then(function (r) { return r.json(); })
+              .then(function (data) {
+                cachedIndex = data;
+                renderGlobalResults(searchInput.value);
+              })
+              .catch(function () {
+                if (resultsEl) resultsEl.innerHTML = '<div class="p-6 text-center text-xs text-ink-muted">Unable to load search index. <a href="/calculators/" class="underline text-blueprint">Open directory</a>.</div>';
+              });
+          } else {
+            renderGlobalResults(searchInput.value);
+          }
+        }
+
+        function closeGlobalSearch() {
+          if (!modal) return;
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openGlobalSearch);
+        if (closeBtn) closeBtn.addEventListener('click', closeGlobalSearch);
+        if (modal) {
+          modal.addEventListener('click', function (e) {
+            if (e.target === modal) closeGlobalSearch();
+          });
+        }
+        if (searchInput) {
+          searchInput.addEventListener('input', function () {
+            renderGlobalResults(searchInput.value);
+          });
+          searchInput.addEventListener('keydown', function (e) {
+            var links = resultsEl ? resultsEl.querySelectorAll('.gs-item') : [];
+            if (e.key === 'Escape') {
+              closeGlobalSearch();
+            } else if (e.key === 'ArrowDown' && links.length) {
+              e.preventDefault();
+              activeIdx = (activeIdx + 1) % links.length;
+              for (var i = 0; i < links.length; i++) links[i].classList.toggle('bg-surface-subtle/70', i === activeIdx);
+            } else if (e.key === 'ArrowUp' && links.length) {
+              e.preventDefault();
+              activeIdx = activeIdx <= 0 ? links.length - 1 : activeIdx - 1;
+              for (var j = 0; j < links.length; j++) links[j].classList.toggle('bg-surface-subtle/70', j === activeIdx);
+            } else if (e.key === 'Enter' && links.length && activeIdx >= 0 && links[activeIdx]) {
+              e.preventDefault();
+              window.location.href = links[activeIdx].getAttribute('href');
+            }
+          });
+        }
+
+        window.addEventListener('keydown', function (e) {
+          if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            if (modal && modal.classList.contains('hidden')) openGlobalSearch();
+            else closeGlobalSearch();
+          } else if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+            closeGlobalSearch();
+          }
+        });
       })();
     </script>
   </body>

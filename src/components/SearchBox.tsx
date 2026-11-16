@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
 import LucideIcon from './LucideIcon';
 import { getCategoryIconName } from '../lib/lucide-icons';
+import { SCHEMATIC_PATHS, type SchematicKind } from '../lib/schematics';
 
 export interface SearchableItem {
   slug: string;
@@ -9,6 +10,11 @@ export interface SearchableItem {
   category: string;
   categoryName: string;
   description: string;
+  inputsLabel?: string;
+  outputsLabel?: string;
+  popularityRank?: number;
+  recentOrder?: number;
+  schematic?: SchematicKind;
   href: string;
   type: 'calculator' | 'cost';
 }
@@ -20,14 +26,34 @@ export interface SearchBoxProps {
   showGridFilter?: boolean;
 }
 
+interface RecentEntry {
+  slug: string;
+  shortName: string;
+  categoryName: string;
+  href: string;
+}
+
+type SortMode = 'popular' | 'az' | 'recent';
+
+const SUGGESTIONS = [
+  'Concrete Slab',
+  'Paint',
+  'Drywall',
+  'Stair Stringers',
+  'Mulch',
+  'Roofing Shingles',
+];
+
 export default function SearchBox({
   items,
   categories = [],
-  placeholder = 'Search 32 calculators & cost guides (paint, concrete, roof, mulch)...',
+  placeholder = 'Search calculators & cost guides (paint, slab, roof, mulch)...',
   showGridFilter = false,
 }: SearchBoxProps) {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState<SortMode>('popular');
+  const [recentItems, setRecentItems] = useState<RecentEntry[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +71,17 @@ export default function SearchBox({
       setIsOpen(true);
     }
     if (cat) setSelectedCategory(cat);
-  }, []);
+
+    if (showGridFilter) {
+      try {
+        const raw = localStorage.getItem('buildmath_recent_calculators');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) setRecentItems(parsed.slice(0, 4));
+        }
+      } catch {}
+    }
+  }, [showGridFilter]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || showGridFilter) return;
@@ -82,34 +118,55 @@ export default function SearchBox({
     return counts;
   }, [items]);
 
-  const filtered = useMemo(() => {
+  const filteredAndSorted = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((item) => {
+    const matched = items.filter((item) => {
       if (selectedCategory !== 'all' && item.category !== selectedCategory) {
         return false;
       }
       if (!q) return true;
-      const haystack = `${item.title} ${item.shortTitle || ''} ${item.categoryName} ${item.description}`.toLowerCase();
+      const haystack = `${item.title} ${item.shortTitle || ''} ${item.categoryName} ${item.description} ${item.inputsLabel || ''} ${item.outputsLabel || ''}`.toLowerCase();
       const tokens = q.split(/\s+/);
       return tokens.every((tok) => haystack.includes(tok));
     });
-  }, [items, query, selectedCategory]);
+
+    if (!showGridFilter) return matched;
+
+    return [...matched].sort((a, b) => {
+      if (sortBy === 'az') {
+        return a.title.localeCompare(b.title);
+      }
+      if (sortBy === 'recent') {
+        return (b.recentOrder ?? 0) - (a.recentOrder ?? 0);
+      }
+      return (a.popularityRank ?? 99) - (b.popularityRank ?? 99);
+    });
+  }, [items, query, selectedCategory, sortBy, showGridFilter]);
+
+  const popularShortcuts = useMemo(
+    () =>
+      [...items]
+        .filter((i) => i.type === 'calculator')
+        .sort((a, b) => (a.popularityRank ?? 99) - (b.popularityRank ?? 99))
+        .slice(0, 4),
+    [items]
+  );
 
   if (showGridFilter) {
     return (
       <div>
-        {/* Search + Status Bar */}
-        <div class="bm-panel p-4 sm:p-5 mb-6">
-          <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        {/* Product-Grade Search & Sort Control Panel */}
+        <div class="bm-panel p-5 sm:p-6 mb-6">
+          <div class="flex flex-col lg:flex-row lg:items-center gap-3.5">
             <div class="relative flex-1">
               <label htmlFor="hub-search-input" class="sr-only">
                 Search calculators
               </label>
               <span
                 aria-hidden="true"
-                class="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-ink-muted"
+                class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-ink-muted"
               >
-                <LucideIcon name="search" size={17} />
+                <LucideIcon name="search" size={19} />
               </span>
               <input
                 ref={inputRef}
@@ -118,39 +175,95 @@ export default function SearchBox({
                 value={query}
                 onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
                 placeholder={placeholder}
-                class="bm-input pl-10 pr-10"
+                class="bm-input !min-h-[52px] pl-11 pr-11 text-sm sm:text-base"
               />
               {query && (
                 <button
                   type="button"
                   aria-label="Clear search"
                   onClick={() => setQuery('')}
-                  class="absolute inset-y-0 right-2.5 flex items-center px-1.5 text-ink-muted hover:text-ink"
+                  class="absolute inset-y-0 right-3 flex items-center px-1.5 text-ink-muted hover:text-ink"
                 >
-                  <LucideIcon name="x" size={15} />
+                  <LucideIcon name="x" size={16} />
                 </button>
               )}
             </div>
-            <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-              <span class="font-mono text-xs text-ink-muted tabular-nums">
-                {filtered.length} / {items.length} TOOLS
+
+            {/* Sort Controls */}
+            <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2.5 shrink-0">
+              <div
+                role="group"
+                aria-label="Sort calculators"
+                class="inline-flex items-center rounded-lg bg-canvas border border-hairline p-1 text-xs"
+              >
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 font-mono text-[10px] uppercase text-ink-muted">
+                  <LucideIcon name="arrow-up-down" size={12} />
+                  Sort
+                </span>
+                {[
+                  { id: 'popular', label: 'Popular' },
+                  { id: 'az', label: 'A–Z' },
+                  { id: 'recent', label: 'Recently Added' },
+                ].map((opt) => {
+                  const active = sortBy === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setSortBy(opt.id as SortMode)}
+                      class={`px-2.5 py-1.5 rounded-md font-medium transition-colors min-h-[32px] ${
+                        active
+                          ? 'bg-graphite-900 text-[#F8F8F5] dark:bg-lime-500 dark:text-graphite-900 font-semibold'
+                          : 'text-ink-muted hover:text-ink'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <span class="font-mono text-xs text-ink-muted tabular-nums px-2">
+                {filteredAndSorted.length} / {items.length}
               </span>
-              {(query || selectedCategory !== 'all') && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery('');
-                    setSelectedCategory('all');
-                  }}
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-mono font-medium bg-surface-subtle text-ink hover:bg-hairline transition-colors"
-                >
-                  <LucideIcon name="rotate-ccw" size={13} />
-                  Reset
-                </button>
-              )}
             </div>
           </div>
 
+          {/* Search Suggestions Row */}
+          <div class="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted mr-1">
+              Suggestions:
+            </span>
+            {SUGGESTIONS.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setQuery(term);
+                }}
+                class="px-2.5 py-1 rounded-md bg-canvas border border-hairline hover:border-blueprint text-ink-body hover:text-ink transition-colors text-[11px]"
+              >
+                {term}
+              </button>
+            ))}
+            {(query || selectedCategory !== 'all') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  setSelectedCategory('all');
+                }}
+                class="ml-auto inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold text-blueprint hover:underline"
+              >
+                <LucideIcon name="rotate-ccw" size={12} />
+                Clear Filters
+              </button>
+            )}
+          </div>
+
+          {/* Category Filters with Counts */}
           {categories.length > 0 && (
             <div
               class="mt-4 pt-4 border-t border-hairline flex flex-wrap gap-1.5"
@@ -200,40 +313,126 @@ export default function SearchBox({
           )}
         </div>
 
-        {/* Filtered Grid */}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/70"
-            >
-              <div>
-                <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-1 rounded">
-                    <LucideIcon name={getCategoryIconName(item.category)} size={12} />
-                    {item.categoryName}
-                  </span>
-                  <span class="text-ink-muted group-hover:text-ink group-hover:translate-x-0.5 transition-all">
-                    <LucideIcon name="arrow-up-right" size={15} />
+        {/* Quick Discovery Strip: Recently Used (if any) + Popular Tools */}
+        {!query && selectedCategory === 'all' && (
+          <div class="mb-7 grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class={`${recentItems.length > 0 ? 'lg:col-span-7' : 'lg:col-span-12'} bm-panel p-4`}>
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint">
+                  Popular Construction Calculators
+                </span>
+                <span class="font-mono text-[10px] text-ink-muted">Most frequently launched</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {popularShortcuts.map((pop) => (
+                  <a
+                    key={pop.slug}
+                    href={pop.href}
+                    class="px-3 py-2 rounded-lg bg-canvas border border-hairline hover:border-blueprint text-xs font-semibold text-ink hover:text-blueprint transition-colors flex items-center justify-between gap-1.5"
+                  >
+                    <span class="truncate">{pop.shortTitle || pop.title}</span>
+                    <LucideIcon name="arrow-up-right" size={12} class="shrink-0 opacity-70" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {recentItems.length > 0 && (
+              <div class="lg:col-span-5 bm-panel p-4">
+                <div class="flex items-center gap-1.5 mb-2.5">
+                  <LucideIcon name="clock" size={13} class="text-blueprint" />
+                  <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+                    Recently Used
                   </span>
                 </div>
-                <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
-                  {item.title}
-                </h3>
-                <p class="mt-1.5 text-xs sm:text-sm text-ink-muted line-clamp-2 leading-relaxed">
-                  {item.description}
-                </p>
+                <div class="grid grid-cols-2 gap-2">
+                  {recentItems.slice(0, 4).map((rec) => (
+                    <a
+                      key={rec.slug}
+                      href={rec.href}
+                      class="px-3 py-2 rounded-lg bg-surface-subtle/60 border border-hairline hover:border-blueprint text-xs font-medium text-ink hover:text-blueprint transition-colors flex items-center justify-between gap-1"
+                    >
+                      <span class="truncate">{rec.shortName}</span>
+                      <LucideIcon name="arrow-right" size={12} class="shrink-0 opacity-60" />
+                    </a>
+                  ))}
+                </div>
               </div>
-              <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-medium text-ink">
-                <span>Open Instrument</span>
-                <LucideIcon name="arrow-right" size={14} class="text-blueprint group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </a>
-          ))}
+            )}
+          </div>
+        )}
+
+        {/* Structured 3-Part Calculator Cards */}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredAndSorted.map((item) => {
+            const sch = item.schematic && SCHEMATIC_PATHS[item.schematic] ? SCHEMATIC_PATHS[item.schematic] : null;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/75"
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-1 rounded">
+                      <LucideIcon name={getCategoryIconName(item.category)} size={12} />
+                      {item.categoryName}
+                    </span>
+                    {sch && (
+                      <svg
+                        viewBox="0 0 32 22"
+                        width="32"
+                        height="22"
+                        aria-hidden="true"
+                        class="text-blueprint opacity-75 group-hover:opacity-100 transition-opacity shrink-0"
+                        dangerouslySetInnerHTML={{ __html: sch }}
+                      />
+                    )}
+                  </div>
+
+                  <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
+                    {item.title}
+                  </h3>
+                  <p class="mt-1 text-xs sm:text-[13px] text-ink-muted leading-snug line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  {(item.inputsLabel || item.outputsLabel) && (
+                    <dl class="mt-3.5 pt-3 border-t border-hairline space-y-1.5 text-[11px]">
+                      {item.inputsLabel && (
+                        <div class="flex items-baseline gap-2">
+                          <dt class="font-mono font-semibold uppercase text-ink-muted w-14 shrink-0">
+                            Inputs:
+                          </dt>
+                          <dd class="text-ink-body truncate">{item.inputsLabel}</dd>
+                        </div>
+                      )}
+                      {item.outputsLabel && (
+                        <div class="flex items-baseline gap-2">
+                          <dt class="font-mono font-semibold uppercase text-ink-muted w-14 shrink-0">
+                            Outputs:
+                          </dt>
+                          <dd class="text-ink font-medium truncate">{item.outputsLabel}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold text-ink">
+                  <span class="group-hover:text-blueprint transition-colors">Open Calculator</span>
+                  <LucideIcon
+                    name="arrow-right"
+                    size={14}
+                    class="text-blueprint group-hover:translate-x-0.5 transition-transform"
+                  />
+                </div>
+              </a>
+            );
+          })}
         </div>
 
-        {filtered.length === 0 && (
+        {filteredAndSorted.length === 0 && (
           <div class="bm-panel p-10 text-center my-4">
             <div class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-ink-muted">
               <LucideIcon name="search" size={20} />
@@ -276,7 +475,7 @@ export default function SearchBox({
   }
 
   // Command-Bar Instant Search for Hero / 404
-  const dropdownMatches = query.trim() ? filtered.slice(0, 8) : [];
+  const dropdownMatches = query.trim() ? filteredAndSorted.slice(0, 8) : [];
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!dropdownMatches.length) return;
@@ -369,7 +568,7 @@ export default function SearchBox({
                       {item.title}
                     </div>
                     <div class="text-xs text-ink-muted line-clamp-1">
-                      {item.description}
+                      {item.inputsLabel ? `Inputs: ${item.inputsLabel}` : item.description}
                     </div>
                   </div>
                 </div>

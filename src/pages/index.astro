@@ -4,6 +4,8 @@ import SearchBox, { type SearchableItem } from '../components/SearchBox';
 import RecentCalculators from '../components/RecentCalculators';
 import Icon from '../components/Icon.astro';
 import { getCategoryIconName } from '../lib/lucide-icons';
+import { CALCULATOR_CATALOG_META } from '../lib/calculator-catalog';
+import { SCHEMATIC_PATHS } from '../lib/schematics';
 import { siteConfig } from '../config/site';
 import categories from '../data/categories.json';
 import calculators from '../data/calculators.json';
@@ -14,16 +16,22 @@ import guides from '../data/guides.json';
 const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
 
 const searchItems: SearchableItem[] = [
-  ...calculators.map((calc) => ({
-    slug: calc.slug,
-    title: calc.name,
-    shortTitle: calc.shortName,
-    category: calc.category,
-    categoryName: categoryMap[calc.category] || calc.category,
-    description: calc.intro,
-    href: `/calculators/${calc.slug}/`,
-    type: 'calculator' as const,
-  })),
+  ...calculators.map((calc) => {
+    const meta = CALCULATOR_CATALOG_META[calc.slug];
+    return {
+      slug: calc.slug,
+      title: calc.name,
+      shortTitle: calc.shortName,
+      category: calc.category,
+      categoryName: categoryMap[calc.category] || calc.category,
+      description: meta?.summaryDesc || calc.intro,
+      inputsLabel: meta?.inputsLabel,
+      outputsLabel: meta?.outputsLabel,
+      popularityRank: meta?.popularityRank ?? 99,
+      href: `/calculators/${calc.slug}/`,
+      type: 'calculator' as const,
+    };
+  }),
   ...jobs.map((job) => ({
     slug: job.slug,
     title: `${job.name} Cost Guide`,
@@ -224,32 +232,52 @@ const topStates = states.slice(0, 12);
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {popularCalculators.map((calc) => (
-        <a
-          href={`/calculators/${calc.slug}/`}
-          class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/70"
-        >
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-2.5">
-              <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
-                <Icon name={getCategoryIconName(calc.category)} size={12} />
-                {categoryMap[calc.category]}
-              </span>
-              <Icon name="arrow-up-right" size={15} class="text-ink-muted group-hover:text-ink transition-colors" />
+      {popularCalculators.map((calc) => {
+        const meta = CALCULATOR_CATALOG_META[calc.slug];
+        const sch = meta?.schematic ? SCHEMATIC_PATHS[meta.schematic] : null;
+        return (
+          <a
+            href={`/calculators/${calc.slug}/`}
+            class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/75"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
+                  <Icon name={getCategoryIconName(calc.category)} size={12} />
+                  {categoryMap[calc.category]}
+                </span>
+                {sch ? (
+                  <svg viewBox="0 0 32 22" width="32" height="22" aria-hidden="true" class="text-blueprint opacity-75 group-hover:opacity-100 shrink-0" set:html={sch} />
+                ) : (
+                  <Icon name="arrow-up-right" size={15} class="text-ink-muted group-hover:text-ink transition-colors" />
+                )}
+              </div>
+              <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
+                {calc.name}
+              </h3>
+              <p class="mt-1 text-xs sm:text-[13px] text-ink-muted line-clamp-2 leading-snug">
+                {meta?.summaryDesc || calc.intro}
+              </p>
+              {meta && (
+                <dl class="mt-3 pt-2.5 border-t border-hairline space-y-1 text-[11px]">
+                  <div class="flex items-baseline gap-2">
+                    <dt class="font-mono font-semibold uppercase text-ink-muted w-14 shrink-0">Inputs:</dt>
+                    <dd class="text-ink-body truncate">{meta.inputsLabel}</dd>
+                  </div>
+                  <div class="flex items-baseline gap-2">
+                    <dt class="font-mono font-semibold uppercase text-ink-muted w-14 shrink-0">Outputs:</dt>
+                    <dd class="text-ink font-medium truncate">{meta.outputsLabel}</dd>
+                  </div>
+                </dl>
+              )}
             </div>
-            <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
-              {calc.name}
-            </h3>
-            <p class="mt-1.5 text-xs sm:text-sm text-ink-muted line-clamp-2 leading-relaxed">
-              {calc.intro}
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold text-ink">
-            <span>Open Calculator</span>
-            <Icon name="arrow-right" size={14} class="text-blueprint group-hover:translate-x-0.5 transition-transform" />
-          </div>
-        </a>
-      ))}
+            <div class="mt-4 pt-3 border-t border-hairline flex items-center justify-between text-xs font-semibold text-ink">
+              <span>Open Calculator</span>
+              <Icon name="arrow-right" size={14} class="text-blueprint group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </a>
+        );
+      })}
     </div>
   </section>
 

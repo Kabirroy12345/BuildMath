@@ -51,8 +51,74 @@ export interface CalculatorWidgetProps {
   affiliateEnabled: boolean;
 }
 
+// Keep unit prices & technical coverage/yield constants tucked inside collapsible calibration drawer;
+// expose all project geometry (thickness, depth, pitch, sheet/bag/board size) upfront.
+const CALIBRATION_ONLY_FIELDS = new Set([
+  'pricePerGallon',
+  'primerPricePerGallon',
+  'pricePerDoubleRoll',
+  'pricePerSqFt',
+  'underlaymentPricePerRoll',
+  'pricePerTile',
+  'thinsetBagPrice',
+  'pricePerBag',
+  'padPricePerSqYd',
+  'pricePerSqYd',
+  'pricePerLinearFoot',
+  'readyMixPricePerCuYd',
+  'pricePerBag80Lb',
+  'pricePerBrick',
+  'pricePerMortarBag',
+  'pricePerPaver',
+  'gravelPricePerTon',
+  'sandPricePerTon',
+  'pricePerBlock',
+  'pricePerCapBlock',
+  'pricePerBar',
+  'pricePerBundle',
+  'pricePerTenFootGutter',
+  'pricePerSquare',
+  'bulkPricePerCuYd',
+  'pricePerTon',
+  'pricePerLb',
+  'pricePerPicket',
+  'pricePerPost',
+  'pricePerRail',
+  'pricePerDeckBoard',
+  'pricePerJoist',
+  'pricePerSheet',
+  'stringerBoardPrice',
+  'treadBoardPrice',
+  'pricePerCuYd',
+  'pricePerBoardFoot',
+  'coveragePerGallon',
+  'primerCoveragePerGallon',
+  'firstCoatCoverage',
+  'secondCoatCoverage',
+  'usableSingleRollCoverage',
+  'underlaymentRollSqFt',
+  'thinsetCoverageSqFt',
+  'groutDensityLbPerCuFt',
+  'doorWidthFeet',
+  'bricksPerMortarBag',
+  'sandDepthInches',
+  'edgeClearanceInches',
+  'bundlesPerSquare',
+  'feetPerDownspout',
+  'hangerSpacingInches',
+  'densityTonsPerCuYd',
+  'holeDiameterInches',
+  'holeDepthInches',
+  'fastenersPerSqFt',
+  'compoundGallonsPer100SqFt',
+  'screwsPerSheet',
+  'maxRiserInches',
+  'treadDepthInches',
+  'stairWidthInches',
+]);
+
 const DIMENSION_NAME_PATTERN =
-  /^(length|width|height|perimeter|depth|diameter|span|rise|area|stepCount|shape|bedShape|roomLength|roomWidth|wallHeight|housePerimeter|wallPerimeter|footprint|ridgeLength|eaveLength|slabLength|slabWidth|lawnLength|lawnWidth|fenceLength|deckLength|deckWidth|patioLength|patioWidth|wallLength|totalRise|stairWidth|landingDepth|tileWidth|tileLength|paverLength|paverWidth|secondArea|secondLength|secondWidth|rectLength|rectWidth|thicknessInches)/i;
+  /^(length|width|height|perimeter|depth|diameter|span|rise|area|stepCount|shape|bedShape|roomLength|roomWidth|wallHeight|housePerimeter|wallPerimeter|footprint|ridgeLength|eaveLength|slabLength|slabWidth|lawnLength|lawnWidth|fenceLength|deckLength|deckWidth|patioLength|patioWidth|wallLength|totalRise|stairWidth|landingDepth|tileWidth|tileLength|paverLength|paverWidth|secondArea|secondLength|secondWidth|rectLength|rectWidth|thicknessInches|depthInches|pitchRise|runInches|railingHeight|riserHeightInches)/i;
 
 function isDimensionField(field: CalculatorField): boolean {
   return DIMENSION_NAME_PATTERN.test(field.name);
@@ -107,11 +173,11 @@ export default function CalculatorWidget({
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [copiedResult, setCopiedResult] = useState<boolean>(false);
   const [savedProject, setSavedProject] = useState<boolean>(false);
+  const [savedCompare, setSavedCompare] = useState<boolean>(false);
   const [pulseResult, setPulseResult] = useState<boolean>(false);
   const [calculatedNotice, setCalculatedNotice] = useState<boolean>(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Sync URL params & record recently used calculator
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -211,6 +277,7 @@ export default function CalculatorWidget({
     setErrors(nextErrors);
     setValues((prev) => ({ ...prev, [field.name]: rawVal }));
     setSavedProject(false);
+    setSavedCompare(false);
   };
 
   const handleFeetInchesChange = (field: CalculatorField, part: 'feet' | 'inches', rawInput: string) => {
@@ -245,6 +312,7 @@ export default function CalculatorWidget({
     setInchesSplit(buildInitialSplits(fields, initialValues));
     setErrors({});
     setSavedProject(false);
+    setSavedCompare(false);
     setCopiedLink(false);
     setCopiedResult(false);
     if (typeof window !== 'undefined' && window.location.search) {
@@ -274,17 +342,74 @@ export default function CalculatorWidget({
     return runCalculatorFormula(slug, formulaInputValues);
   }, [slug, formulaInputValues]);
 
-  const primaryFields = fields.filter((f) => !f.isEditableDefault || f.name === 'wastePercent');
-  const advancedFields = fields.filter((f) => f.isEditableDefault && f.name !== 'wastePercent');
+  // Surface dimensional & project option parameters upfront; keep prices & engineering yield rates in calibration drawer
+  const primaryFields = useMemo(
+    () => fields.filter((f) => !CALIBRATION_ONLY_FIELDS.has(f.name)),
+    [fields]
+  );
+  const advancedFields = useMemo(
+    () => fields.filter((f) => CALIBRATION_ONLY_FIELDS.has(f.name)),
+    [fields]
+  );
 
   const dimensionFields = useMemo(
-    () => (primaryFields.length >= 6 ? primaryFields.filter(isDimensionField) : primaryFields),
+    () => (primaryFields.length >= 4 ? primaryFields.filter(isDimensionField) : primaryFields),
     [primaryFields]
   );
   const specFields = useMemo(
-    () => (primaryFields.length >= 6 ? primaryFields.filter((f) => !isDimensionField(f)) : []),
+    () => (primaryFields.length >= 4 ? primaryFields.filter((f) => !isDimensionField(f)) : []),
     [primaryFields]
   );
+
+  const buildShareQuery = () => {
+    const params = new URLSearchParams();
+    for (const f of fields) {
+      const val = values[f.name];
+      if (val !== undefined && val !== f.defaultValue) {
+        params.set(f.name, String(val));
+      }
+    }
+    if (unitSystem === 'metric') {
+      params.set('units', 'metric');
+    }
+    const qs = params.toString();
+    return `${typeof window !== 'undefined' ? window.location.pathname : `/calculators/${slug}/`}${qs ? `?${qs}` : ''}`;
+  };
+
+  const recordHistorySnapshot = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const historyKey = 'buildmath_calc_history';
+      const existingRaw = localStorage.getItem(historyKey);
+      const existing = existingRaw ? JSON.parse(existingRaw) : [];
+      const sharePath = buildShareQuery();
+      const summaryInputs = primaryFields
+        .slice(0, 4)
+        .map((f) => `${f.label}: ${values[f.name]}${f.unit ? ` ${displayUnit(f.unit)}` : ''}`)
+        .join(' · ');
+
+      const entry = {
+        id: `${slug}-${Date.now()}`,
+        slug,
+        title,
+        shortName: shortName || title,
+        timestamp: new Date().toISOString(),
+        primaryLabel: output.primaryResult.label,
+        primaryValue: output.primaryResult.value,
+        primaryUnit: output.primaryResult.unit,
+        costTypical: output.costEstimate.typical,
+        costLow: output.costEstimate.low,
+        costHigh: output.costEstimate.high,
+        inputsSummary: summaryInputs,
+        restoreUrl: sharePath,
+      };
+      const deduped = Array.isArray(existing)
+        ? existing.filter((item) => !(item.slug === slug && item.inputsSummary === summaryInputs))
+        : [];
+      deduped.unshift(entry);
+      localStorage.setItem(historyKey, JSON.stringify(deduped.slice(0, 15)));
+    } catch {}
+  };
 
   const handleCalculateConfirm = () => {
     const nextErrors: Record<string, string> = { ...errors };
@@ -307,6 +432,7 @@ export default function CalculatorWidget({
       return;
     }
 
+    recordHistorySnapshot();
     setPulseResult(false);
     requestAnimationFrame(() => setPulseResult(true));
     setCalculatedNotice(true);
@@ -319,9 +445,10 @@ export default function CalculatorWidget({
 
   const handleCopyResult = () => {
     if (typeof window === 'undefined') return;
+    recordHistorySnapshot();
     const lines = [
       `${title} — BuildMath Estimate`,
-      `Primary Quantity: ${output.primaryResult.value} ${output.primaryResult.unit} (Exact: ${output.primaryResult.exactValue} ${output.primaryResult.unit})`,
+      `Primary Quantity: ${output.primaryResult.value} ${output.primaryResult.unit} (Net unrounded: ${output.primaryResult.exactValue} ${output.primaryResult.unit})`,
       `Material Cost Estimate: $${output.costEstimate.typical.toLocaleString()} ($${output.costEstimate.low.toLocaleString()} - $${output.costEstimate.high.toLocaleString()})`,
       '',
       'Materials Shopping List:',
@@ -338,19 +465,10 @@ export default function CalculatorWidget({
 
   const handleShareUrl = () => {
     if (typeof window === 'undefined') return;
-    const params = new URLSearchParams();
-    for (const f of fields) {
-      const val = values[f.name];
-      if (val !== undefined && val !== f.defaultValue) {
-        params.set(f.name, String(val));
-      }
-    }
-    if (unitSystem === 'metric') {
-      params.set('units', 'metric');
-    }
-    const queryStr = params.toString();
-    const shareUrl = `${window.location.origin}${window.location.pathname}${queryStr ? `?${queryStr}` : ''}`;
+    const sharePath = buildShareQuery();
+    const shareUrl = `${window.location.origin}${sharePath}`;
     window.history.replaceState({}, '', shareUrl);
+    recordHistorySnapshot();
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareUrl).catch(() => {});
     }
@@ -364,6 +482,7 @@ export default function CalculatorWidget({
       const key = 'buildmath_project_list';
       const existingRaw = localStorage.getItem(key);
       const existing = existingRaw ? JSON.parse(existingRaw) : [];
+      const sharePath = buildShareQuery();
       const entry = {
         id: `${slug}-${Date.now()}`,
         slug,
@@ -376,15 +495,47 @@ export default function CalculatorWidget({
         costTypical: output.costEstimate.typical,
         costHigh: output.costEstimate.high,
         materials: output.materials,
-        shareUrl: window.location.pathname,
+        shareUrl: sharePath,
       };
       existing.push(entry);
       localStorage.setItem(key, JSON.stringify(existing));
+      recordHistorySnapshot();
       window.dispatchEvent(new CustomEvent('buildmath:project-updated'));
       setSavedProject(true);
     } catch (e) {
       console.error('Could not save to localStorage', e);
     }
+  };
+
+  const handleSaveToCompare = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const compareKey = 'buildmath_compare_list';
+      const existingRaw = localStorage.getItem(compareKey);
+      const existing = existingRaw ? JSON.parse(existingRaw) : [];
+      const list = Array.isArray(existing) ? existing : [];
+      const scenarioLabel = primaryFields
+        .slice(0, 3)
+        .map((f) => `${values[f.name]}${f.unit ? ` ${displayUnit(f.unit)}` : ''}`)
+        .join(' × ');
+      list.unshift({
+        id: `${slug}-${Date.now()}`,
+        slug,
+        title,
+        scenarioLabel: scenarioLabel || 'Default Scenario',
+        primaryLabel: output.primaryResult.label,
+        primaryValue: output.primaryResult.value,
+        primaryUnit: output.primaryResult.unit,
+        costLow: output.costEstimate.low,
+        costTypical: output.costEstimate.typical,
+        costHigh: output.costEstimate.high,
+        secondaryResults: output.secondaryResults.slice(0, 4),
+        restoreUrl: buildShareQuery(),
+      });
+      localStorage.setItem(compareKey, JSON.stringify(list.slice(0, 3)));
+      recordHistorySnapshot();
+      setSavedCompare(true);
+    } catch {}
   };
 
   const scrollToResults = () => {
@@ -402,7 +553,7 @@ export default function CalculatorWidget({
 
   const renderField = (field: CalculatorField) => {
     const err = errors[field.name];
-    const isSlider = field.type === 'slider' || field.name === 'wastePercent';
+    const isSlider = field.type === 'slider' || field.name === 'wastePercent' || field.name === 'overlapWastePercent';
     const isSegmented =
       field.type === 'select' &&
       field.options &&
@@ -471,9 +622,10 @@ export default function CalculatorWidget({
             </div>
           </div>
         ) : isSlider ? (
-          <div class="p-3 rounded-lg bg-surface-subtle/70 border border-hairline flex items-center gap-4">
+          <div class="p-3 rounded-lg bg-surface-subtle/70 border border-hairline flex items-center gap-3.5">
             <input
-              id={`field-${field.name}`}
+              id={`field-${field.name}-slider`}
+              aria-label={`${field.label} slider`}
               type="range"
               min={field.min ?? 0}
               max={field.max ?? 30}
@@ -482,9 +634,27 @@ export default function CalculatorWidget({
               onInput={(e) => validateAndSet(field, parseFloat((e.target as HTMLInputElement).value))}
               class="bm-range flex-1"
             />
-            <span class="min-w-[3.75rem] text-center font-mono font-bold text-xs px-2.5 py-1.5 rounded-md bg-graphite-900 text-lime-500 tabular-nums shrink-0">
-              {values[field.name]}%
-            </span>
+            <div class="relative w-20 shrink-0">
+              <input
+                id={`field-${field.name}`}
+                type="number"
+                inputMode="decimal"
+                min={field.min ?? 0}
+                max={field.max ?? 50}
+                step={field.step ?? 1}
+                value={currentNumberVal}
+                onInput={(e) => {
+                  const str = (e.target as HTMLInputElement).value;
+                  const parsed = parseFloat(str);
+                  validateAndSet(field, isNaN(parsed) ? str : parsed, str);
+                }}
+                aria-invalid={!!err}
+                class="bm-input !min-h-[34px] !py-1 pr-6 text-right font-mono text-xs font-bold"
+              />
+              <span class="pointer-events-none absolute inset-y-0 right-2 flex items-center font-mono text-[11px] text-ink-muted">
+                %
+              </span>
+            </div>
           </div>
         ) : field.type === 'number' ? (
           <div class="relative">
@@ -526,7 +696,7 @@ export default function CalculatorWidget({
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => validateAndSet(field, opt.value)}
-                  class={`flex-1 min-w-[90px] px-3 py-2 rounded-md text-xs font-medium transition-all min-h-[36px] ${
+                  class={`flex-1 min-w-[84px] px-3 py-2 rounded-md text-xs font-medium transition-all min-h-[36px] ${
                     isSelected
                       ? 'bg-graphite-900 text-[#F8F8F5] dark:bg-lime-500 dark:text-graphite-900 font-semibold shadow-sm'
                       : 'text-ink-muted hover:text-ink hover:bg-surface/60'
@@ -609,7 +779,7 @@ export default function CalculatorWidget({
     );
   };
 
-  // Resolve values safely across calculator slugs for CAD blueprint preview
+  // Dynamic CAD blueprint label extraction across calculator schemas
   const blueprintLen =
     values.roomLengthFeet ??
     values.roomLength ??
@@ -630,12 +800,25 @@ export default function CalculatorWidget({
   const pitchRiseVal = values.riseInches ?? values.pitchRise ?? values.rise ?? 6;
   const postSpaceVal = values.postSpacingFeet ?? values.postSpacing ?? 8;
 
+  // Detect waste % & alternative delivery / bulk comparison rows for enhanced Results Dashboard
+  const wasteFieldValue =
+    values.wastePercent !== undefined
+      ? Number(values.wastePercent)
+      : values.overlapWastePercent !== undefined
+        ? Number(values.overlapWastePercent)
+        : null;
+
+  const highlightedStats = output.secondaryResults.filter((s) => s.highlight || /bags needed/i.test(s.label));
+  const deliveryEstimate = output.secondaryResults.find((s) => /truck|bulk delivery/i.test(s.label));
+  const detailMetrics = output.secondaryResults.filter(
+    (s) => !highlightedStats.includes(s) && s !== deliveryEstimate
+  );
+
   return (
     <div class="my-6 pb-20 lg:pb-0">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT DECK: Engineering Input Workbench */}
         <div class="lg:col-span-7 bm-panel overflow-hidden">
-          {/* Instrument Header */}
           <div class="px-5 py-4 border-b border-hairline bg-surface-subtle/50 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
               <span class="flex h-8 w-8 items-center justify-center rounded-md bg-surface border border-hairline text-blueprint">
@@ -646,7 +829,7 @@ export default function CalculatorWidget({
                   Input Parameters
                 </h2>
                 <span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
-                  Real-time deterministic takeoff
+                  Real-time unit conversion &amp; takeoff
                 </span>
               </div>
             </div>
@@ -696,12 +879,11 @@ export default function CalculatorWidget({
           </div>
 
           <div class="p-5 sm:p-6 space-y-6">
-            {/* Group 1 */}
             <div>
               {specFields.length > 0 && (
                 <div class="flex items-center gap-2 mb-3.5">
                   <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-blueprint">
-                    01 // Geometry &amp; Dimensions
+                    01 // Project Dimensions &amp; Geometry
                   </span>
                   <div class="h-px flex-1 bg-hairline"></div>
                 </div>
@@ -711,12 +893,11 @@ export default function CalculatorWidget({
               </div>
             </div>
 
-            {/* Group 2 (shown when dense calculator has specs/deductions) */}
             {specFields.length > 0 && (
               <div>
                 <div class="flex items-center gap-2 mb-3.5">
                   <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-blueprint">
-                    02 // Specifications, Openings &amp; Waste
+                    02 // Options, Packaging &amp; Waste Allowance
                   </span>
                   <div class="h-px flex-1 bg-hairline"></div>
                 </div>
@@ -726,7 +907,6 @@ export default function CalculatorWidget({
               </div>
             )}
 
-            {/* Collapsible Calibration Parameters */}
             {advancedFields.length > 0 && (
               <div class="pt-4 border-t border-hairline">
                 <button
@@ -737,9 +917,7 @@ export default function CalculatorWidget({
                 >
                   <span class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-ink">
                     <LucideIcon name="sliders-horizontal" size={15} class="text-blueprint" />
-                    <span>
-                      Customize Coverage Rates &amp; Unit Prices
-                    </span>
+                    <span>Customize Unit Prices &amp; Coverage Rates</span>
                     <span class="font-mono text-[10px] text-ink-muted bg-surface px-1.5 py-0.5 rounded border border-hairline">
                       {advancedFields.length} defaults
                     </span>
@@ -759,7 +937,7 @@ export default function CalculatorWidget({
               </div>
             )}
 
-            {/* Prominent Calculate + Reset Action Bar */}
+            {/* Primary Calculate & Reset Bar */}
             <div class="no-print pt-4 border-t border-hairline flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
               <button
                 type="button"
@@ -783,7 +961,7 @@ export default function CalculatorWidget({
           </div>
         </div>
 
-        {/* RIGHT DECK: Deep Graphite Precision Readout Instrument */}
+        {/* RIGHT DECK: Project Estimate & Material Purchasing Dashboard */}
         <div
           ref={resultsRef}
           aria-live="polite"
@@ -792,40 +970,48 @@ export default function CalculatorWidget({
             pulseResult ? 'animate-result-pulse' : ''
           }`}
         >
-          {/* Instrument Status Bar */}
+          {/* Dashboard Header Bar */}
           <div class="px-5 py-3.5 border-b border-graphite-700 bg-graphite-950/60 flex items-center justify-between gap-2">
             <span class="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#D2D6DC]">
               <span class="h-2 w-2 rounded-full bg-lime-500"></span>
-              <span>Estimated Quantity</span>
+              <span>Project Estimate · Calculated</span>
             </span>
             <div class="no-print flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={handleCopyResult}
-                aria-label="Copy summary"
+                aria-label="Copy results"
                 class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-mono text-[#9BA1AA] hover:text-[#F8F8F5] hover:bg-graphite-800 transition-colors"
               >
                 <LucideIcon name={copiedResult ? 'check' : 'copy'} size={13} class={copiedResult ? 'text-lime-500' : ''} />
-                <span>{copiedResult ? 'Copied' : 'Copy'}</span>
+                <span>{copiedResult ? 'Copied' : 'Copy Results'}</span>
               </button>
               <button
                 type="button"
                 onClick={() => window.print()}
-                aria-label="Print estimate"
+                aria-label="Export PDF or Print estimate"
                 class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-mono text-[#9BA1AA] hover:text-[#F8F8F5] hover:bg-graphite-800 transition-colors"
               >
                 <LucideIcon name="printer" size={13} />
-                <span>Print</span>
+                <span>Export PDF</span>
               </button>
             </div>
           </div>
 
           <div class="p-5 sm:p-6 space-y-5">
-            {/* Primary Metric Readout Well */}
+            {/* Hero Result Display */}
             <div class="p-4 sm:p-5 rounded-lg bg-graphite-950 border border-graphite-700">
-              <div class="text-xs font-mono uppercase tracking-wider text-[#9BA1AA]">
-                {output.primaryResult.label}
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-mono uppercase tracking-wider text-[#9BA1AA]">
+                  {output.primaryResult.label}
+                </span>
+                {wasteFieldValue !== null && wasteFieldValue > 0 && (
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-lime-500/15 text-lime-500 border border-lime-500/30">
+                    Incl. {wasteFieldValue}% waste
+                  </span>
+                )}
               </div>
+
               <div class="mt-2 flex items-baseline gap-2.5 flex-wrap">
                 <span
                   data-testid="primary-result-value"
@@ -837,9 +1023,10 @@ export default function CalculatorWidget({
                   {output.primaryResult.unit}
                 </span>
               </div>
+
               <div class="mt-3 pt-3 border-t border-graphite-700/80 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-[#9BA1AA]">
                 <span class="tabular-nums">
-                  Exact math:{' '}
+                  {wasteFieldValue !== null && wasteFieldValue > 0 ? 'Net pre-waste base:' : 'Unrounded exact:'}{' '}
                   <strong class="text-[#F8F8F5]">
                     {output.primaryResult.exactValue} {output.primaryResult.unit}
                   </strong>
@@ -863,7 +1050,7 @@ export default function CalculatorWidget({
                       class="w-full bm-btn-lime text-xs sm:text-sm font-bold"
                     >
                       <span>
-                        Check {primaryMat.quantity.toLocaleString()} {primaryMat.unit} ({primaryMat.name}) at {primaryProd.retailer}
+                        Check {primaryMat.quantity.toLocaleString()} {primaryMat.unit} at {primaryProd.retailer}
                       </span>
                       <LucideIcon name="arrow-up-right" size={15} />
                     </a>
@@ -872,7 +1059,7 @@ export default function CalculatorWidget({
               })()}
             </div>
 
-            {/* Code Compliance Check (IRC Stair Stringers, etc.) */}
+            {/* Code Compliance Banner */}
             {output.complianceCheck && (
               <div
                 class={`p-3.5 rounded-lg border text-xs leading-relaxed flex items-start gap-2.5 ${
@@ -890,13 +1077,35 @@ export default function CalculatorWidget({
               </div>
             )}
 
-            {/* Secondary Metrics Breakdown */}
-            {output.secondaryResults.length > 0 && (
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {output.secondaryResults.map((sec) => (
+            {/* Highlighted Package Equivalents (e.g. 80-lb, 60-lb, 40-lb Bags) */}
+            {highlightedStats.length > 0 && (
+              <div class={`grid gap-2.5 ${highlightedStats.length >= 2 ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-1'}`}>
+                {highlightedStats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    class="p-3 rounded-lg bg-graphite-800 border border-graphite-700"
+                  >
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block truncate">
+                      {stat.label.replace(/\s*\(.*?\)/g, '')}
+                    </span>
+                    <div class="mt-1 flex items-baseline gap-1.5">
+                      <strong class="text-xl font-extrabold text-lime-500 tabular-nums">
+                        {stat.value}
+                      </strong>
+                      <span class="font-mono text-[11px] text-[#D2D6DC]">{stat.unit}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Additional Technical Metrics */}
+            {detailMetrics.length > 0 && (
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {detailMetrics.map((sec) => (
                   <div
                     key={sec.label}
-                    class="px-3.5 py-2.5 rounded-lg bg-graphite-800/70 border border-graphite-700 flex flex-col justify-between"
+                    class="px-3.5 py-2.5 rounded-lg bg-graphite-800/60 border border-graphite-700 flex flex-col justify-between"
                   >
                     <span class="text-[11px] text-[#9BA1AA] truncate">{sec.label}</span>
                     <span class="mt-0.5 text-sm font-bold text-[#F8F8F5] font-mono tabular-nums">
@@ -907,24 +1116,40 @@ export default function CalculatorWidget({
               </div>
             )}
 
-            {/* Architectural CAD Blueprint Schematic */}
+            {/* CAD Dimension Schematic Preview */}
             {diagramType && (
               <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700 bm-cad-grid">
                 <div class="flex items-center justify-between mb-2">
                   <span class="font-mono text-[10px] uppercase tracking-wider text-[#6FA3D2]">
-                    CAD Geometry Schematic
+                    Scaled Blueprint Schematic
                   </span>
                   <span class="font-mono text-[10px] text-[#9BA1AA]">LIVE</span>
                 </div>
 
+                {diagramType === 'concrete-slab' && (
+                  <svg viewBox="0 0 260 100" class="w-full h-24" role="img" aria-label="Concrete slab length width thickness diagram">
+                    <polygon points="34,36 184,20 226,46 76,62" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
+                    <polygon points="34,36 76,62 76,78 34,52" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" />
+                    <polygon points="76,62 226,46 226,62 76,78" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.5" />
+                    <text x="130" y="94" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                      L {blueprintLen}' × W {blueprintWid}' × {values.thicknessInches || 4}" THICK
+                    </text>
+                  </svg>
+                )}
+
+                {diagramType === 'concrete-footing' && (
+                  <svg viewBox="0 0 260 100" class="w-full h-24" role="img" aria-label="Concrete footing sonotube depth diagram">
+                    <ellipse cx="130" cy="24" rx="34" ry="10" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
+                    <path d="M96 24v46c0 5.5 15.2 10 34 10s34-4.5 34-10V24" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.75" />
+                    <text x="130" y="95" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                      {values.shape === 'rectangular' ? `${values.rectLengthInches || 16}"×${values.rectWidthInches || 16}" PAD` : `${values.diameterInches || 12}" DIA`} × {values.depthInches || 42}" DEEP
+                    </text>
+                  </svg>
+                )}
+
                 {diagramType === 'roof-pitch' && (
                   <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Roof pitch right triangle diagram">
-                    <polygon
-                      points="24,88 214,88 214,24"
-                      fill="rgba(71,121,168,0.18)"
-                      stroke="#6FA3D2"
-                      stroke-width="2"
-                    />
+                    <polygon points="24,88 214,88 214,24" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="2" />
                     <rect x="206" y="80" width="8" height="8" fill="none" stroke="#6FA3D2" stroke-width="1" />
                     <text x="119" y="103" font-size="10" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
                       RUN: {values.runInches || 12} in
@@ -947,24 +1172,14 @@ export default function CalculatorWidget({
                       stroke-width="2"
                     />
                     <text x="115" y="106" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      {output.primaryResult.value} RISERS // IRC CHECKED
+                      {output.primaryResult.value} RISERS // {values.totalRiseInches || 108}" RISE
                     </text>
                   </svg>
                 )}
 
                 {diagramType === 'room-walls' && (
                   <svg viewBox="0 0 260 100" class="w-full h-20" role="img" aria-label="Room perimeter and walls diagram">
-                    <rect
-                      x="36"
-                      y="16"
-                      width="188"
-                      height="62"
-                      rx="3"
-                      fill="rgba(71,121,168,0.16)"
-                      stroke="#6FA3D2"
-                      stroke-width="2"
-                    />
-                    <line x1="36" y1="86" x2="224" y2="86" stroke="#37404C" stroke-width="1" />
+                    <rect x="36" y="16" width="188" height="62" rx="3" fill="rgba(71,121,168,0.16)" stroke="#6FA3D2" stroke-width="2" />
                     <text x="130" y="51" font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
                       {blueprintLen}' × {blueprintWid}' ({blueprintHt}' H)
                     </text>
@@ -984,38 +1199,70 @@ export default function CalculatorWidget({
                   </svg>
                 )}
 
-                {diagramType === 'concrete-slab' && (
-                  <svg viewBox="0 0 260 96" class="w-full h-20" role="img" aria-label="Concrete slab isometric thickness preview">
-                    <polygon points="36,36 184,22 226,48 78,62" fill="rgba(71,121,168,0.2)" stroke="#6FA3D2" stroke-width="1.75" />
-                    <polygon points="36,36 78,62 78,76 36,50" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" />
-                    <polygon points="78,62 226,48 226,62 78,76" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.5" />
-                    <text x="130" y="91" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      SLAB {blueprintLen}' × {blueprintWid}' // {values.thicknessInches || 4}" THICK
+                {(diagramType === 'deck-layout' || diagramType === 'paver-grid') && (
+                  <svg viewBox="0 0 260 94" class="w-full h-20" role="img" aria-label="Layout grid framing preview">
+                    <rect x="34" y="14" width="192" height="56" fill="rgba(71,121,168,0.14)" stroke="#6FA3D2" stroke-width="1.75" />
+                    <line x1="34" y1="32" x2="226" y2="32" stroke="#37404C" stroke-width="1" />
+                    <line x1="34" y1="50" x2="226" y2="50" stroke="#37404C" stroke-width="1" />
+                    <line x1="82" y1="14" x2="82" y2="70" stroke="#37404C" stroke-width="1" />
+                    <line x1="130" y1="14" x2="130" y2="70" stroke="#37404C" stroke-width="1" />
+                    <line x1="178" y1="14" x2="178" y2="70" stroke="#37404C" stroke-width="1" />
+                    <text x="130" y="86" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                      LAYOUT {blueprintLen}' × {blueprintWid}'
                     </text>
                   </svg>
                 )}
               </div>
             )}
 
-            {/* Estimated Material Cost Band */}
-            <div class="p-4 rounded-lg bg-graphite-800/80 border border-graphite-700">
-              <div class="flex items-center justify-between text-xs text-[#9BA1AA] mb-1">
-                <span>Est. Material Budget (US Avg)</span>
-                <span class="font-mono text-[#F8F8F5] tabular-nums">
-                  Typical: ${output.costEstimate.typical.toLocaleString()}
-                </span>
+            {/* Material Purchasing Options (Separate Bagged vs Ready-Mix / Bulk Comparison!) */}
+            {deliveryEstimate ? (
+              <div class="space-y-2.5">
+                <div class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA]">
+                  Material Purchasing Options
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div class="p-3.5 rounded-lg bg-graphite-800 border border-graphite-700">
+                    <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block">
+                      Bagged Material
+                    </span>
+                    <div class="text-xl font-extrabold text-lime-500 mt-1 tabular-nums">
+                      ${output.costEstimate.typical.toLocaleString()}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#D2D6DC] tabular-nums">
+                      Range: ${output.costEstimate.low.toLocaleString()}–${output.costEstimate.high.toLocaleString()}
+                    </span>
+                  </div>
+                  <div class="p-3.5 rounded-lg bg-graphite-800 border border-blueprint/50">
+                    <span class="font-mono text-[10px] uppercase text-[#6FA3D2] block">
+                      {deliveryEstimate.label.replace(/\s*Estimate/i, '')}
+                    </span>
+                    <div class="text-xl font-extrabold text-[#F8F8F5] mt-1 tabular-nums">
+                      {deliveryEstimate.value}
+                    </div>
+                    <span class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
+                      {deliveryEstimate.unit}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div class="text-xl sm:text-2xl font-extrabold text-lime-500 tabular-nums">
-                ${output.costEstimate.low.toLocaleString()} – ${output.costEstimate.high.toLocaleString()}
+            ) : (
+              <div class="p-4 rounded-lg bg-graphite-800/80 border border-graphite-700">
+                <div class="flex items-center justify-between text-xs text-[#9BA1AA] mb-1">
+                  <span>Est. Material Cost (US Avg)</span>
+                  <span class="font-mono text-[#F8F8F5] tabular-nums">
+                    Typical: ${output.costEstimate.typical.toLocaleString()}
+                  </span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-lime-500 tabular-nums">
+                  ${output.costEstimate.low.toLocaleString()} – ${output.costEstimate.high.toLocaleString()}
+                </div>
               </div>
-              <p class="text-[11px] text-[#9BA1AA] mt-1 leading-relaxed">
-                Editable unit rates inside Customize Coverage Rates &amp; Unit Prices above.
-              </p>
-            </div>
+            )}
 
-            {/* Materials Shopping List */}
+            {/* Itemized Materials Shopping List */}
             <div>
-              <div class="flex items-center justify-between mb-2.5">
+              <div class="flex items-center justify-between mb-2">
                 <h3 class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#9BA1AA]">
                   Materials Shopping List
                 </h3>
@@ -1062,43 +1309,61 @@ export default function CalculatorWidget({
             </div>
 
             {/* Action Dock */}
-            <div class="no-print pt-4 border-t border-graphite-700 space-y-2.5">
-              <button
-                type="button"
-                onClick={handleAddToProject}
-                data-testid="add-to-project-btn"
-                class="bm-btn-lime w-full text-sm font-bold"
-              >
-                <LucideIcon name={savedProject ? 'check' : 'bookmark-plus'} size={16} />
-                <span>{savedProject ? '✓ Saved to My Project List' : '+ Add to My Project List'}</span>
-              </button>
+            <div class="no-print pt-4 border-t border-graphite-700 space-y-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={handleAddToProject}
+                  data-testid="add-to-project-btn"
+                  class="bm-btn-lime text-xs font-bold"
+                >
+                  <LucideIcon name={savedProject ? 'check' : 'bookmark-plus'} size={15} />
+                  <span>{savedProject ? '✓ Saved to My Project List' : '+ Add to My Project List'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveToCompare}
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[42px] px-3 py-2 rounded-lg text-xs font-semibold bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors"
+                >
+                  <LucideIcon name={savedCompare ? 'check' : 'git-compare'} size={14} class={savedCompare ? 'text-lime-500' : 'text-[#6FA3D2]'} />
+                  <span>{savedCompare ? 'Added to Compare' : 'Compare Scenario'}</span>
+                </button>
+              </div>
 
-              <div class="grid grid-cols-2 gap-2">
+              <div class="grid grid-cols-3 gap-2">
                 <button
                   type="button"
                   onClick={handleCopyResult}
-                  class="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3 py-2 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors"
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-2.5 py-1.5 rounded-lg text-xs font-medium bg-graphite-950 hover:bg-graphite-800 text-[#D2D6DC] border border-graphite-700 transition-colors"
                 >
-                  <LucideIcon name={copiedResult ? 'check' : 'copy'} size={14} class={copiedResult ? 'text-lime-500' : ''} />
-                  <span>{copiedResult ? 'Copied BOM' : 'Copy Results'}</span>
+                  <LucideIcon name={copiedResult ? 'check' : 'copy'} size={13} class={copiedResult ? 'text-lime-500' : ''} />
+                  <span>{copiedResult ? 'Copied' : 'Copy'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-2.5 py-1.5 rounded-lg text-xs font-medium bg-graphite-950 hover:bg-graphite-800 text-[#D2D6DC] border border-graphite-700 transition-colors"
+                >
+                  <LucideIcon name="printer" size={13} />
+                  <span>PDF / Print</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleShareUrl}
                   data-testid="share-url-btn"
-                  class="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3 py-2 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors"
+                  class="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-2.5 py-1.5 rounded-lg text-xs font-medium bg-graphite-950 hover:bg-graphite-800 text-[#D2D6DC] border border-graphite-700 transition-colors"
                 >
-                  <LucideIcon name={copiedLink ? 'check' : 'share-2'} size={14} class={copiedLink ? 'text-lime-500' : ''} />
-                  <span>{copiedLink ? 'Link Copied' : 'Share URL'}</span>
+                  <LucideIcon name={copiedLink ? 'check' : 'share-2'} size={13} class={copiedLink ? 'text-lime-500' : ''} />
+                  <span>{copiedLink ? 'Copied' : 'Share'}</span>
                 </button>
               </div>
             </div>
 
-            {savedProject && (
+            {(savedProject || savedCompare) && (
               <p class="no-print text-xs text-center text-[#9BA1AA]">
-                Saved!{' '}
+                Updated workspace!{' '}
                 <a href="/my-project/" class="text-lime-500 hover:underline font-semibold">
-                  Open Combined Project Shopping List →
+                  Open My Project Workspace →
                 </a>
               </p>
             )}
@@ -1106,7 +1371,7 @@ export default function CalculatorWidget({
         </div>
       </div>
 
-      {/* Mobile Compact Summary Pill Bar */}
+      {/* Mobile Compact Summary Bar */}
       <div class="sticky-mobile-calc-bar lg:hidden fixed bottom-3 inset-x-3 z-30 rounded-xl bg-graphite-900/95 text-[#F8F8F5] px-4 py-2.5 border border-graphite-700 shadow-2xl backdrop-blur-md flex items-center justify-between gap-3">
         <div class="min-w-0">
           <div class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] truncate">

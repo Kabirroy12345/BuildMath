@@ -4,26 +4,35 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SearchBox, { type SearchableItem } from '../../components/SearchBox';
 import Icon from '../../components/Icon.astro';
 import { getCategoryIconName } from '../../lib/lucide-icons';
+import { CALCULATOR_CATALOG_META } from '../../lib/calculator-catalog';
 import categories from '../../data/categories.json';
 import calculators from '../../data/calculators.json';
 
 const categoryMap = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
 
-const searchItems: SearchableItem[] = calculators.map((calc) => ({
-  slug: calc.slug,
-  title: calc.name,
-  shortTitle: calc.shortName,
-  category: calc.category,
-  categoryName: categoryMap[calc.category] || calc.category,
-  description: calc.intro,
-  href: `/calculators/${calc.slug}/`,
-  type: 'calculator',
-}));
+const searchItems: SearchableItem[] = calculators.map((calc) => {
+  const meta = CALCULATOR_CATALOG_META[calc.slug];
+  return {
+    slug: calc.slug,
+    title: calc.name,
+    shortTitle: calc.shortName,
+    category: calc.category,
+    categoryName: categoryMap[calc.category] || calc.category,
+    description: meta?.summaryDesc || calc.intro,
+    inputsLabel: meta?.inputsLabel,
+    outputsLabel: meta?.outputsLabel,
+    popularityRank: meta?.popularityRank ?? 99,
+    recentOrder: meta?.recentOrder ?? 0,
+    schematic: meta?.schematic,
+    href: `/calculators/${calc.slug}/`,
+    type: 'calculator',
+  };
+});
 ---
 
 <BaseLayout
   title="All 32 DIY Home Improvement Calculators | BuildMath"
-  description="Browse and search all 32 free DIY home-improvement calculators for painting, flooring, concrete, roofing, landscaping, fencing, decking, and drywall."
+  description="Browse, filter, and sort all 32 free DIY home-improvement calculators for painting, flooring, concrete, roofing, landscaping, fencing, decking, and drywall."
   pathname="/calculators/"
 >
   <Breadcrumbs items={[{ name: 'Calculators', href: '/calculators/' }]} />
@@ -32,52 +41,52 @@ const searchItems: SearchableItem[] = calculators.map((calc) => ({
     <div>
       <span class="bm-eyebrow-blue mb-2.5">
         <Icon name="calculator" size={13} />
-        Instrument Directory // 32 Calculators
+        32 Construction Instruments // 8 Trades
       </span>
       <h1 class="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
-        All DIY &amp; Home-Improvement Calculators
+        Precision Calculators Built for Real Store Orders
       </h1>
-      <p class="mt-2 text-sm sm:text-base text-ink-muted max-w-3xl leading-relaxed">
-        Filter by trade category or keyword. Every instrument computes locally in your browser with editable coverage rates, waste factors, and unit prices.
+      <p class="mt-2.5 text-sm sm:text-base text-ink-muted max-w-3xl leading-relaxed">
+        Stop guessing bags, bundles, sheets, or cubic yards. Find your exact takeoff calculator in seconds—complete with live ft/in to metric conversions and editable coverage rates.
       </p>
     </div>
     <a href="/my-project/" class="bm-btn-secondary text-xs shrink-0 self-start lg:self-auto">
       <Icon name="clipboard-list" size={15} class="text-blueprint" />
-      <span>Open Project Shopping List</span>
+      <span>Open Project Workspace</span>
     </a>
   </header>
 
-  <!-- Interactive Search & Category Filter Grid -->
+  <!-- Interactive Command Search, Suggestions, Sorting & Structured 3-Part Cards -->
   <SearchBox
     client:load
     items={searchItems}
     categories={categories.map((c) => ({ slug: c.slug, name: c.shortName }))}
-    placeholder="Filter calculators by keyword (e.g., paint, concrete, shingle, mulch, stairs)..."
+    placeholder="Search calculators by project, material, or unit (e.g., concrete slab, bags, roof pitch, paint)..."
     showGridFilter={true}
   />
 
-  <!-- Static Pre-Rendered Directory by Category for SEO & Direct Navigation -->
-  <section class="mt-14 pt-10 border-t border-hairline" aria-labelledby="directory-heading">
-    <div class="mb-6">
-      <span class="bm-eyebrow mb-2">Complete Index // 08 Trades</span>
+  <!-- Static Pre-Rendered Directory by Category with Generous Section Spacing -->
+  <section class="mt-16 pt-12 border-t border-hairline" aria-labelledby="directory-heading">
+    <div class="mb-8">
+      <span class="bm-eyebrow mb-2">Complete Trade Index // 08 Categories</span>
       <h2 id="directory-heading" class="text-2xl font-bold text-ink tracking-tight">
-        Complete Calculator Directory by Category
+        Browse Complete Directory by Category
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-7">
       {categories.map((cat) => {
         const catCalcs = calculators.filter((c) => c.category === cat.slug);
         return (
-          <div class="bm-panel p-5 sm:p-6">
+          <div class="bm-panel p-6">
             <div class="flex items-start justify-between gap-3 mb-2">
               <div class="flex items-center gap-2.5">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
-                  <Icon name={getCategoryIconName(cat.slug)} size={16} />
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
+                  <Icon name={getCategoryIconName(cat.slug)} size={17} />
                 </span>
                 <h3 class="text-base sm:text-lg font-bold text-ink">
                   <a href={`/calculators/${cat.slug}/`} class="hover:text-blueprint transition-colors">
-                    {cat.name} Calculators
+                    {cat.name}
                   </a>
                 </h3>
               </div>
@@ -91,23 +100,33 @@ const searchItems: SearchableItem[] = calculators.map((calc) => ({
             </p>
 
             <ul class="divide-y divide-hairline border-t border-hairline text-xs sm:text-sm">
-              {catCalcs.map((calc) => (
-                <li class="py-2.5 flex items-center justify-between gap-3">
-                  <a
-                    href={`/calculators/${calc.slug}/`}
-                    class="font-medium text-ink hover:text-blueprint transition-colors"
-                  >
-                    {calc.name}
-                  </a>
-                  <a
-                    href={`/cost/${calc.relatedCostJobSlug}/`}
-                    class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-muted hover:text-blueprint shrink-0"
-                  >
-                    <span>Cost Guide</span>
-                    <Icon name="arrow-right" size={12} />
-                  </a>
-                </li>
-              ))}
+              {catCalcs.map((calc) => {
+                const cMeta = CALCULATOR_CATALOG_META[calc.slug];
+                return (
+                  <li class="py-3 flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <a
+                        href={`/calculators/${calc.slug}/`}
+                        class="font-semibold text-ink hover:text-blueprint transition-colors block"
+                      >
+                        {calc.name}
+                      </a>
+                      {cMeta && (
+                        <span class="font-mono text-[11px] text-ink-muted block truncate mt-0.5">
+                          Outputs: {cMeta.outputsLabel}
+                        </span>
+                      )}
+                    </div>
+                    <a
+                      href={`/cost/${calc.relatedCostJobSlug}/`}
+                      class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-muted hover:text-blueprint shrink-0 mt-0.5"
+                    >
+                      <span>Cost Guide</span>
+                      <Icon name="arrow-right" size={12} />
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );

@@ -182,7 +182,7 @@ Controlled centrally via [`src/config/monetization.ts`](./src/config/monetizatio
 | :--- | :--- | :--- |
 | **Total Static HTML Pages** | 1,350+ | **1,421 pages** (+ 32 SVG OG images + 5 XML sitemaps) |
 | **Full Static Build Time** | `< 60s` | **8.74 seconds** |
-| **Calculator Route JS (Gzipped)** | `< 70 KB` | **~35.4 KB** (`CalculatorWidget`: `22.29 KB`, `Preact`: `4.48 KB`, `Signals`: `3.09 KB`, `LucideIcon`: `2.79 KB`) |
+| **Calculator Route JS (Gzipped)** | `< 70 KB` | **~36.8 KB** (`CalculatorWidget`: `23.73 KB`, `Preact`: `4.48 KB`, `Signals`: `3.09 KB`, `LucideIcon`: `2.91 KB`) |
 | **Formula Unit Tests** | 90+ | **100 / 100 passed** (`vitest run`) |
 | **Playwright E2E Suite** | Desktop & Mobile | **10 / 10 passed** (all 32 calculators, 8 categories, search, validation, overflow & console checks) |
 | **Broken Links / Orphan Pages** | `0` | **0 broken links / 0 orphan pages** (`npm run orphan:check`) |
@@ -197,7 +197,7 @@ BuildMath/
 │   └── workflows/
 │       └── ci.yml                  # GitHub Actions CI: test, data:check, build, orphan:check
 ├── public/
-│   ├── fonts/                      # Self-hosted Inter & JetBrains Mono variable WOFF2 fonts
+│   ├── fonts/                      # Self-hosted Geist, Inter & JetBrains Mono variable WOFF2 fonts
 │   ├── _headers                    # HSTS, CSP, X-Frame-Options, immutable asset caching
 │   ├── _redirects                  # 301 canonical redirects
 │   ├── ads.txt                     # Google AdSense / authorized digital sellers declaration

@@ -3,6 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import Icon from '../../../components/Icon.astro';
 import { getCategoryIconName } from '../../../lib/lucide-icons';
+import { CALCULATOR_CATALOG_META } from '../../../lib/calculator-catalog';
+import { SCHEMATIC_PATHS } from '../../../lib/schematics';
 import categories from '../../../data/categories.json';
 import calculators from '../../../data/calculators.json';
 
@@ -148,50 +150,68 @@ const recommendedCrossCalcs = spec.crossSlugs
   <!-- Category Calculator Grid -->
   <section class="mb-14" aria-label={`${category.name} calculators`}>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      {categoryCalculators.map((calc, idx) => (
-        <article class="bm-panel bm-panel-hover p-6 flex flex-col justify-between hover:border-blueprint/70">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="font-mono text-[11px] font-semibold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
-                TOOL #{String(idx + 1).padStart(2, '0')}
-              </span>
-              <span class="font-mono text-[11px] text-ink-muted tabular-nums">
-                {calc.inputs.length} parameters
-              </span>
+      {categoryCalculators.map((calc, idx) => {
+        const cMeta = CALCULATOR_CATALOG_META[calc.slug];
+        const sch = cMeta?.schematic ? SCHEMATIC_PATHS[cMeta.schematic] : null;
+        return (
+          <article class="bm-panel bm-panel-hover p-6 flex flex-col justify-between hover:border-blueprint/70">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="font-mono text-[11px] font-semibold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
+                  TOOL #{String(idx + 1).padStart(2, '0')}
+                </span>
+                {sch && (
+                  <svg viewBox="0 0 32 22" width="32" height="22" aria-hidden="true" class="text-blueprint opacity-80" set:html={sch} />
+                )}
+              </div>
+
+              <h2 class="text-xl font-bold text-ink">
+                <a href={`/calculators/${calc.slug}/`} class="hover:text-blueprint transition-colors">
+                  {calc.name}
+                </a>
+              </h2>
+              <p class="mt-2 text-sm text-ink-muted leading-relaxed">
+                {cMeta?.summaryDesc || calc.intro}
+              </p>
+
+              {cMeta && (
+                <dl class="mt-4 pt-3 border-t border-hairline space-y-1.5 text-xs">
+                  <div class="flex items-baseline gap-2">
+                    <dt class="font-mono font-semibold uppercase text-ink-muted w-16 shrink-0">Inputs:</dt>
+                    <dd class="text-ink-body">{cMeta.inputsLabel}</dd>
+                  </div>
+                  <div class="flex items-baseline gap-2">
+                    <dt class="font-mono font-semibold uppercase text-ink-muted w-16 shrink-0">Outputs:</dt>
+                    <dd class="text-ink font-medium">{cMeta.outputsLabel}</dd>
+                  </div>
+                </dl>
+              )}
+
+              <div class="mt-4 p-3 rounded-lg bg-graphite-900 text-[#D2D6DC] font-mono text-xs overflow-x-auto border border-graphite-700">
+                <span class="text-lime-500 font-semibold mr-2">fx:</span>
+                {calc.howToCalculate.formula}
+              </div>
             </div>
 
-            <h2 class="text-xl font-bold text-ink">
-              <a href={`/calculators/${calc.slug}/`} class="hover:text-blueprint transition-colors">
-                {calc.name}
+            <div class="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
+              <a
+                href={`/calculators/${calc.slug}/`}
+                class="bm-btn-lime text-xs min-h-[36px] px-3.5 py-1.5 font-bold"
+              >
+                <span>Open Calculator</span>
+                <Icon name="arrow-right" size={14} />
               </a>
-            </h2>
-            <p class="mt-2 text-sm text-ink-muted leading-relaxed">
-              {calc.intro}
-            </p>
-            <div class="mt-4 p-3 rounded-lg bg-graphite-900 text-[#D2D6DC] font-mono text-xs overflow-x-auto border border-graphite-700">
-              <span class="text-lime-500 font-semibold mr-2">fx:</span>
-              {calc.howToCalculate.formula}
+              <a
+                href={`/cost/${calc.relatedCostJobSlug}/`}
+                class="inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-blueprint transition-colors"
+              >
+                <span>Cost Guide</span>
+                <Icon name="arrow-up-right" size={13} />
+              </a>
             </div>
-          </div>
-
-          <div class="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
-            <a
-              href={`/calculators/${calc.slug}/`}
-              class="bm-btn-lime text-xs min-h-[36px] px-3.5 py-1.5 font-bold"
-            >
-              <span>Open Calculator</span>
-              <Icon name="arrow-right" size={14} />
-            </a>
-            <a
-              href={`/cost/${calc.relatedCostJobSlug}/`}
-              class="inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-blueprint transition-colors"
-            >
-              <span>Cost Guide</span>
-              <Icon name="arrow-up-right" size={13} />
-            </a>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </div>
   </section>
 

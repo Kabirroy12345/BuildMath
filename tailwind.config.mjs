@@ -58,8 +58,19 @@ export default {
         },
       },
       fontFamily: {
+        display: [
+          '"Geist"',
+          '"Inter"',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          'sans-serif',
+        ],
         sans: [
-          'Inter',
+          '"Inter"',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',

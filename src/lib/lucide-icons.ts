@@ -41,7 +41,11 @@ export type LucideIconName =
   | 'mail'
   | 'scale'
   | 'wrench'
-  | 'bar-chart-3';
+  | 'bar-chart-3'
+  | 'git-compare'
+  | 'history'
+  | 'arrow-up-down'
+  | 'download';
 
 export const LUCIDE_ICON_PATHS: Record<LucideIconName, string> = {
   'paint-roller':
@@ -112,6 +116,14 @@ export const LUCIDE_ICON_PATHS: Record<LucideIconName, string> = {
     '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />',
   'bar-chart-3':
     '<path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" />',
+  'git-compare':
+    '<circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M13 6h3a2 2 0 0 1 2 2v7" /><path d="M11 18H8a2 2 0 0 1-2-2V9" />',
+  history:
+    '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" />',
+  'arrow-up-down':
+    '<path d="m21 16-4 4-4-4" /><path d="M17 20V4" /><path d="m3 8 4-4 4 4" /><path d="M7 4v16" />',
+  download:
+    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />',
 };
 
 export function getCategoryIconName(slugOrIcon: string): LucideIconName {

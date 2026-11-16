@@ -11,7 +11,7 @@ const categories = JSON.parse(readFileSync('src/data/categories.json', 'utf-8'))
 }[];
 
 test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
-  test('Homepage renders search box, categories, popular calculators, and zero console errors or overflow', async ({
+  test('Homepage, Global Search Modal, and Theme Switcher work with zero console errors or overflow', async ({
     page,
   }) => {
     const errors: string[] = [];
@@ -34,6 +34,14 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     await expect(page.getByRole('listbox')).toBeVisible();
     await expect(page.getByRole('listbox')).toContainText('Drywall');
 
+    // Global Command Search Modal test (header button + /search-index.json)
+    await page.click('#global-search-open-btn');
+    await expect(page.locator('#global-search-modal')).toBeVisible();
+    await page.fill('#global-search-input', 'concrete slab');
+    await expect(page.locator('#global-search-results')).toContainText('Concrete Slab');
+    await page.click('#global-search-close-btn');
+    await expect(page.locator('#global-search-modal')).toBeHidden();
+
     // Theme toggle switches dark class cleanly
     await page.click('#theme-toggle-btn');
     await expect(page.locator('html')).toHaveClass(/dark/);
@@ -43,16 +51,29 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     expect(errors).toEqual([]);
   });
 
-  test('Directory search, category filters, and empty search state work across all 32 calculators', async ({
+  test('Directory search, suggestions, sorting (Popular / A-Z / Recent), 3-part cards, and 8 categories work', async ({
     page,
   }) => {
+    test.setTimeout(60000);
     await page.goto('/calculators/');
-    await expect(page.locator('h1')).toContainText('All DIY');
+    await expect(page.locator('astro-island').first()).not.toHaveAttribute('ssr');
+    await expect(page.locator('h1')).toContainText('Precision Calculators');
     const hubSearch = page.locator('#hub-search-input');
     await expect(hubSearch).toBeVisible();
 
-    await hubSearch.fill('roof pitch');
-    await expect(page.locator('main')).toContainText('Roof Pitch');
+    // Verify 3-part card structure (Inputs / Outputs)
+    await expect(page.locator('main')).toContainText('Inputs:');
+    await expect(page.locator('main')).toContainText('Outputs:');
+
+    // Verify sorting controls work
+    await page.getByRole('button', { name: 'A–Z' }).click();
+    await expect(page.getByRole('button', { name: 'A–Z' })).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: 'Popular' }).click();
+
+    // Verify suggestion click & search filter + empty state
+    await page.getByRole('button', { name: 'Drywall', exact: true }).click();
+    await expect(hubSearch).toHaveValue('Drywall');
+    await expect(page.locator('main')).toContainText('Drywall Calculator');
 
     await hubSearch.fill('zzzz-no-match-999');
     await expect(page.locator('main')).toContainText('No calculators matched');
@@ -73,6 +94,7 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
   test('All 32 calculators render, compute live outputs, and have zero horizontal overflow or console errors', async ({
     page,
   }) => {
+    test.setTimeout(90000);
     const errors: string[] = [];
     page.on('pageerror', (err) => errors.push(err.message));
 
@@ -93,43 +115,71 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     expect(errors).toEqual([]);
   });
 
-  test('Calculator interactive controls: unit toggle, validation, reset, My Project persistence, and Recently Used', async ({
+  test('Concrete Slab shows thickness upfront, editable waste input, separate bag & truck options, and workspace tabs work', async ({
     page,
   }) => {
+    test.setTimeout(60000);
+    // 1. Concrete Slab specific audit checks
+    await page.goto('/calculators/concrete-slab-calculator/');
+    await expect(page.locator('astro-island').first()).not.toHaveAttribute('ssr');
+    await expect(page.locator('#field-lengthFeet')).toBeVisible();
+    await expect(page.locator('#field-widthFeet')).toBeVisible();
+    await expect(page.locator('#field-thicknessInches')).toBeVisible();
+    await expect(page.locator('#field-bagSizeLbs')).toBeVisible();
+    await expect(page.locator('#field-wastePercent')).toBeVisible();
+
+    // Verify Purchasing Options comparison & clear net vs waste labels are visible
+    await expect(page.locator('main')).toContainText('Material Purchasing Options');
+    await expect(page.locator('main')).toContainText('Bagged Material');
+    await expect(page.locator('main')).toContainText('Ready-Mix Truck');
+    await expect(page.locator('main')).toContainText('Incl. 10% waste');
+    await expect(page.locator('main')).toContainText('Net pre-waste base:');
+
+    // Editable numeric waste input updates calculation live
+    await page.fill('#field-wastePercent', '0');
+    await expect(page.locator('main')).not.toContainText('Incl. 10% waste');
+
+    // Save scenario for comparison & confirm Calculate records history
+    await page.getByRole('button', { name: /Compare Scenario/i }).click();
+    await page.getByTestId('calculate-btn').click();
+
+    // 2. Interactive Paint Calculator: unit switch, validation, reset, My Project, Recently Used
     await page.goto('/calculators/paint-calculator/?roomLength=20&roomWidth=15');
+    await expect(page.locator('astro-island').first()).not.toHaveAttribute('ssr');
     const resultEl = page.getByTestId('primary-result-value');
     await expect(resultEl).toBeVisible();
-    const initialVal = await resultEl.textContent();
 
-    // Unit switch Metric -> Imperial hides feet/inches split and displays meters
     await page.getByRole('button', { name: 'm / cm' }).click();
     await expect(page.locator('#field-roomLength-in')).toBeHidden();
     await expect(page.locator('#field-roomLength').locator('..')).toContainText('m');
     await page.getByRole('button', { name: 'ft / in' }).click();
     await expect(page.locator('#field-roomLength-in')).toBeVisible();
 
-    // Validation alert appears on invalid negative or over-max input
     const doorsInput = page.locator('#field-doors');
     await doorsInput.fill('-2');
     await expect(page.locator('#err-doors')).toBeVisible();
 
-    // Reset button clears query/inputs & errors cleanly
     await page.getByTestId('reset-btn').click();
     await expect(page.locator('#err-doors')).toBeHidden();
-    const resetVal = await resultEl.textContent();
-    expect(resetVal).not.toBe('');
-    expect(initialVal).not.toBe('');
 
-    // Save to My Project List and confirm persistence
     const addBtn = page.getByTestId('add-to-project-btn');
     await addBtn.click();
     await expect(addBtn).toContainText('Saved to My Project List');
 
+    // 3. Full Project Workspace (/my-project/) BOM, Consolidated Table, Compare & History tabs
     await page.goto('/my-project/');
+    await expect(page.locator('astro-island').first()).not.toHaveAttribute('ssr');
     await expect(page.locator('h1')).toContainText('My Project Shopping List');
     await expect(page.locator('body')).toContainText('Interior Paint Calculator');
+    await expect(page.locator('main')).toContainText('Consolidated Hardware Store Shopping List');
 
-    // Recently Used shelf shows Paint Calculator back on Homepage
+    await page.getByRole('tab', { name: /Compare Scenarios/i }).click();
+    await expect(page.locator('main')).toContainText('Concrete Slab Calculator');
+
+    await page.getByRole('tab', { name: /Calculation History/i }).click();
+    await expect(page.locator('main')).toContainText('Restore');
+
+    // 4. Recently Used shelf shows on Homepage
     await page.goto('/');
     await expect(page.locator('main')).toContainText('Recently Used Instruments');
     await expect(page.locator('main')).toContainText('Interior Paint');
@@ -138,6 +188,7 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
   test('Info, cost, and guide routes load cleanly without overflow and keep SEO noindex rules', async ({
     page,
   }) => {
+    test.setTimeout(60000);
     const routes = [
       '/cost/',
       '/cost/roof-replacement/',

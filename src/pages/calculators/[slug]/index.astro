@@ -61,12 +61,21 @@ const sampleStates = states.slice(0, 6);
 
 const diagramMap: Record<string, CalculatorDiagramType> = {
   'paint-calculator': 'room-walls',
+  'exterior-paint-calculator': 'room-walls',
   'drywall-calculator': 'room-walls',
+  'carpet-calculator': 'room-walls',
+  'baseboard-trim-calculator': 'room-walls',
   'roof-pitch-calculator': 'roof-pitch',
   'roofing-calculator': 'roof-pitch',
   'stair-calculator': 'stair-stringer',
+  'concrete-steps-calculator': 'stair-stringer',
   'fence-calculator': 'fence-layout',
   'concrete-slab-calculator': 'concrete-slab',
+  'concrete-footing-calculator': 'concrete-footing',
+  'deck-calculator': 'deck-layout',
+  'paver-patio-calculator': 'paver-grid',
+  'tile-calculator': 'paver-grid',
+  'flooring-calculator': 'paver-grid',
 };
 const diagramType = diagramMap[calc.slug] || null;
 ---
