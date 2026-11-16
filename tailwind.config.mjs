@@ -11,10 +11,10 @@ export default {
           subtle: 'rgb(var(--bg-surface-subtle) / <alpha-value>)',
         },
         graphite: {
-          700: '#282E37',
-          800: '#1F252C',
-          900: '#171B20',
-          950: '#0D1013',
+          700: '#2A3038',
+          800: '#20252B',
+          900: '#17191C',
+          950: '#101215',
         },
         ink: {
           DEFAULT: 'rgb(var(--text-primary) / <alpha-value>)',

@@ -4,6 +4,7 @@ import { feetInchesToDecimalFeet, metersToFeet, sqMetersToSqFeet } from '../lib/
 import type { CalculationResult } from '../lib/formulas/types';
 import LucideIcon from './LucideIcon';
 import { getCategoryIconName } from '../lib/lucide-icons';
+import { fmtUsd } from './ProjectListManager';
 
 export interface CalculatorField {
   name: string;
@@ -29,6 +30,7 @@ export interface ProductItem {
 
 export type CalculatorDiagramType =
   | 'room-walls'
+  | 'paint-elevation'
   | 'roof-pitch'
   | 'stair-stringer'
   | 'fence-layout'
@@ -36,6 +38,8 @@ export type CalculatorDiagramType =
   | 'concrete-footing'
   | 'deck-layout'
   | 'paver-grid'
+  | 'flooring-grid'
+  | 'bed-volume'
   | null;
 
 export interface CalculatorWidgetProps {
@@ -973,10 +977,10 @@ export default function CalculatorWidget({
           }`}
         >
           {/* Dashboard Header Bar */}
-          <div class="px-5 py-3.5 border-b border-graphite-700 bg-graphite-950/60 flex items-center justify-between gap-2">
+          <div class={`bm-scan-sweep px-5 py-3.5 border-b border-graphite-700 bg-graphite-950/60 flex items-center justify-between gap-2 ${pulseResult ? 'is-scanning' : ''}`}>
             <span class="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#D2D6DC]">
               <span class="h-2 w-2 rounded-full bg-lime-500"></span>
-              <span>Project Estimate · Calculated</span>
+              <span>{calculatedNotice ? 'Project Estimate · Verified' : 'Project Estimate · Calculated'}</span>
             </span>
             <div class="no-print flex items-center gap-1.5">
               <button
@@ -1132,12 +1136,23 @@ export default function CalculatorWidget({
                 {diagramType === 'concrete-slab' && (() => {
                   const extrudeY = Math.round(Math.min(24, Math.max(8, Number(values.thicknessInches || 4) * 2.4)));
                   const spanShift = Math.round(Math.min(26, Math.max(-22, (Number(blueprintLen) - Number(blueprintWid)) * 1.8)));
-                  const xA = 44 - Math.round(spanShift * 0.4);
-                  const xB = 182 + Math.round(spanShift * 0.5);
-                  const xC = 224 + Math.round(spanShift * 0.4);
-                  const xD = 86 - Math.round(spanShift * 0.5);
+                  const wasteExpand = Math.round(Math.min(12, Math.max(0, (wasteFieldValue ?? 10) * 0.45)));
+                  const xA = 48 - Math.round(spanShift * 0.4);
+                  const xB = 180 + Math.round(spanShift * 0.5);
+                  const xC = 220 + Math.round(spanShift * 0.4);
+                  const xD = 88 - Math.round(spanShift * 0.5);
                   return (
-                    <svg viewBox="0 0 260 104" class="w-full h-24" role="img" aria-label="Concrete slab length width thickness diagram">
+                    <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Concrete slab length width thickness and waste allowance diagram">
+                      {wasteExpand > 0 && (
+                        <polygon
+                          points={`${xA - wasteExpand},36 ${xB + wasteExpand},14 ${xC + wasteExpand},44 ${xD - wasteExpand},64`}
+                          fill="none"
+                          stroke="rgba(198,243,106,0.42)"
+                          stroke-width="1.1"
+                          stroke-dasharray="4 3"
+                          class="transition-all duration-300 ease-out"
+                        />
+                      )}
                       <polygon
                         points={`${xA},34 ${xB},18 ${xC},42 ${xD},58`}
                         fill="rgba(71,121,168,0.22)"
@@ -1159,8 +1174,8 @@ export default function CalculatorWidget({
                         stroke-width="1.5"
                         class="transition-all duration-300 ease-out"
                       />
-                      <text x="130" y="98" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                        L {blueprintLen}' × W {blueprintWid}' × {values.thicknessInches || 4}" THICK
+                      <text x="130" y="102" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        L {blueprintLen}' × W {blueprintWid}' × {values.thicknessInches || 4}" (+{wasteFieldValue ?? 0}% WASTE)
                       </text>
                     </svg>
                   );
@@ -1177,9 +1192,9 @@ export default function CalculatorWidget({
                 )}
 
                 {diagramType === 'roof-pitch' && (() => {
-                  const peakY = Math.round(Math.max(14, Math.min(80, 88 - Math.min(18, Math.max(1, Number(pitchRiseVal))) * 3.8)));
+                  const peakY = Math.round(Math.max(14, Math.min(78, 88 - Math.min(18, Math.max(1, Number(pitchRiseVal))) * 3.8)));
                   return (
-                    <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Roof pitch right triangle diagram">
+                    <svg viewBox="0 0 260 112" class="w-full h-24" role="img" aria-label="Roof pitch slope triangle and shingle course diagram">
                       <polygon
                         points={`24,88 214,88 214,${peakY}`}
                         fill="rgba(71,121,168,0.18)"
@@ -1187,15 +1202,29 @@ export default function CalculatorWidget({
                         stroke-width="2"
                         class="transition-all duration-300 ease-out"
                       />
+                      {/* Progressive Shingle Course Ribs along Hypotenuse */}
+                      {[0.25, 0.5, 0.75].map((f) => {
+                        const sx = Math.round(24 + (214 - 24) * f);
+                        const sy = Math.round(88 - (88 - peakY) * f);
+                        return (
+                          <line
+                            key={f}
+                            x1={sx}
+                            y1={sy}
+                            x2={sx}
+                            y2="88"
+                            stroke="rgba(198,243,106,0.35)"
+                            stroke-width="1"
+                            stroke-dasharray="3 2"
+                          />
+                        );
+                      })}
                       <rect x="206" y="80" width="8" height="8" fill="none" stroke="#6FA3D2" stroke-width="1" />
-                      <text x="119" y="103" font-size="10" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
-                        RUN: {values.runInches || 12} in
+                      <text x="119" y="104" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
+                        RUN: {values.runInches || 12} in · PITCH ×{output.primaryResult.exactValue} (+{wasteFieldValue ?? 10}% WASTE)
                       </text>
                       <text x="220" y={Math.round((88 + peakY) / 2)} font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A">
                         {pitchRiseVal}"
-                      </text>
-                      <text x="92" y={Math.max(30, Math.round((88 + peakY) / 2) - 4)} font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#F8F8F5">
-                        ×{output.primaryResult.exactValue}
                       </text>
                     </svg>
                   );
@@ -1203,9 +1232,9 @@ export default function CalculatorWidget({
 
                 {diagramType === 'stair-stringer' && (() => {
                   const steps = Math.min(14, Math.max(2, Number(output.primaryResult.value) || 8));
-                  const startX = 22;
+                  const startX = 28;
                   const endX = 212;
-                  const botY = 90;
+                  const botY = 88;
                   const topY = 14;
                   const dx = (endX - startX) / steps;
                   const dy = (botY - topY) / steps;
@@ -1218,7 +1247,7 @@ export default function CalculatorWidget({
                   }
                   pts.push(`${endX},${botY}`, `${startX},${botY}`);
                   return (
-                    <svg viewBox="0 0 260 110" class="w-full h-24" role="img" aria-label="Stair stringer rise and run diagram">
+                    <svg viewBox="0 0 260 112" class="w-full h-24" role="img" aria-label="Stair stringer rise and run diagram">
                       <polyline
                         points={pts.join(' ')}
                         fill="rgba(71,121,168,0.18)"
@@ -1226,31 +1255,84 @@ export default function CalculatorWidget({
                         stroke-width="1.8"
                         class="transition-all duration-300 ease-out"
                       />
-                      <text x="115" y="105" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                        {output.primaryResult.value} RISERS // {values.totalRiseInches || 108}" RISE
+                      {/* Total Rise Dimension Arrow */}
+                      <line x1="224" y1={topY} x2="224" y2={botY} stroke="#C6F36A" stroke-width="1.2" />
+                      <text x="238" y="54" font-size="8.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" transform="rotate(-90 238 54)">
+                        {values.totalRiseInches || 108}"
+                      </text>
+                      <text x="120" y="105" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        {output.primaryResult.value} RISERS // {values.totalRiseInches || 108}" TOTAL RISE
                       </text>
                     </svg>
                   );
                 })()}
 
-                {diagramType === 'room-walls' && (() => {
-                  const rw = Math.round(Math.min(204, Math.max(108, 168 + (Number(blueprintLen) - Number(blueprintWid)) * 4.5)));
+                {(diagramType === 'paint-elevation' || diagramType === 'room-walls') && (() => {
+                  const rw = Math.round(Math.min(204, Math.max(124, 174 + (Number(blueprintLen) - Number(blueprintWid)) * 4)));
                   const rx = Math.round((260 - rw) / 2);
+                  const coatsVal = Math.min(3, Math.max(1, Number(values.coats || 2)));
+                  const fillH = Math.round((coatsVal / 3) * 60);
+                  const doorsCount = Number(values.doors ?? 0);
+                  const winsCount = Number(values.windows ?? 0);
                   return (
-                    <svg viewBox="0 0 260 100" class="w-full h-20" role="img" aria-label="Room perimeter and walls diagram">
-                      <rect
-                        x={rx}
-                        y="16"
-                        width={rw}
-                        height="62"
-                        rx="3"
-                        fill="rgba(71,121,168,0.16)"
-                        stroke="#6FA3D2"
-                        stroke-width="2"
-                        class="transition-all duration-300 ease-out"
-                      />
-                      <text x="130" y="51" font-size="11" font-weight="bold" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                        {blueprintLen}' × {blueprintWid}' ({blueprintHt}' H)
+                    <svg viewBox="0 0 260 106" class="w-full h-24" role="img" aria-label="Wall elevation painted coverage and excluded doors/windows diagram">
+                      <rect x={rx} y="14" width={rw} height="60" fill="rgba(71,121,168,0.14)" stroke="#6FA3D2" stroke-width="1.75" class="transition-all duration-300 ease-out" />
+                      {/* Rising Paint Coat Coverage Fill */}
+                      <rect x={rx} y={74 - fillH} width={rw} height={fillH} fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.2" class="transition-all duration-300 ease-out" />
+                      {/* Excluded Door Opening */}
+                      {doorsCount > 0 && (
+                        <g>
+                          <rect x={rx + 14} y="30" width="22" height="44" fill="#101215" stroke="#C6F36A" stroke-width="1.2" stroke-dasharray="3 2" />
+                          <line x1={rx + 14} y1="30" x2={rx + 36} y2="74" stroke="rgba(198,243,106,0.35)" stroke-width="1" />
+                        </g>
+                      )}
+                      {/* Excluded Window Opening */}
+                      {winsCount > 0 && (
+                        <g>
+                          <rect x={rx + rw - 54} y="24" width="38" height="26" fill="#101215" stroke="#C6F36A" stroke-width="1.2" stroke-dasharray="3 2" />
+                          <line x1={rx + rw - 35} y1="24" x2={rx + rw - 35} y2="50" stroke="#6FA3D2" stroke-width="1" />
+                        </g>
+                      )}
+                      <text x="130" y="96" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        {blueprintLen}' × {blueprintWid}' ({blueprintHt}' H) · {coatsVal} COAT{coatsVal > 1 ? 'S' : ''} · {doorsCount}D/{winsCount}W EXCL
+                      </text>
+                    </svg>
+                  );
+                })()}
+
+                {(diagramType === 'flooring-grid' || diagramType === 'deck-layout' || diagramType === 'paver-grid') && (() => {
+                  const pw = Math.round(Math.min(208, Math.max(132, 176 + (Number(blueprintLen) - Number(blueprintWid)) * 4)));
+                  const px = Math.round((260 - pw) / 2);
+                  const wasteW = Math.round(pw * Math.min(0.22, Math.max(0.06, (wasteFieldValue ?? 10) / 100)));
+                  const netW = pw - wasteW;
+                  return (
+                    <svg viewBox="0 0 260 104" class="w-full h-24" role="img" aria-label="Floor plan tile grid and waste buffer diagram">
+                      <rect x={px} y="14" width={pw} height="58" fill="rgba(71,121,168,0.14)" stroke="#6FA3D2" stroke-width="1.75" class="transition-all duration-300 ease-out" />
+                      {/* Highlighted Waste Cut Buffer Strip */}
+                      <rect x={px + netW} y="14" width={wasteW} height="58" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.2" stroke-dasharray="3 2" class="transition-all duration-300 ease-out" />
+                      {/* Tile / Plank Course Grid Lines */}
+                      {[1, 2].map((r) => (
+                        <line key={`r-${r}`} x1={px} y1={14 + r * 19} x2={px + netW} y2={14 + r * 19} stroke="rgba(111,163,210,0.45)" stroke-width="1" />
+                      ))}
+                      {[1, 2, 3].map((c) => (
+                        <line key={`c-${c}`} x1={px + (netW * c) / 4} y1="14" x2={px + (netW * c) / 4} y2="72" stroke="rgba(111,163,210,0.45)" stroke-width="1" />
+                      ))}
+                      <text x="130" y="92" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        PLAN {blueprintLen}' × {blueprintWid}' (+{wasteFieldValue ?? 10}% CUT BUFFER)
+                      </text>
+                    </svg>
+                  );
+                })()}
+
+                {diagramType === 'bed-volume' && (() => {
+                  const depthIn = Math.min(12, Math.max(1, Number(values.depthInches || 3)));
+                  const layerH = Math.round(10 + depthIn * 3.5);
+                  return (
+                    <svg viewBox="0 0 260 102" class="w-full h-24" role="img" aria-label="Landscaping depth profile cutaway">
+                      <rect x="28" y={54 - layerH} width="204" height={layerH} fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" class="transition-all duration-300 ease-out" />
+                      <rect x="28" y="54" width="204" height="18" fill="rgba(71,121,168,0.16)" stroke="#6FA3D2" stroke-width="1.2" stroke-dasharray="3 2" />
+                      <text x="130" y="92" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
+                        BED {blueprintLen}' × {blueprintWid}' · {depthIn}" COMPACTED DEPTH
                       </text>
                     </svg>
                   );
@@ -1265,20 +1347,6 @@ export default function CalculatorWidget({
                     <line x1="33" y1="54" x2="226" y2="54" stroke="#6FA3D2" stroke-width="2.5" />
                     <text x="130" y="86" font-size="10" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle">
                       POST SPACING: {postSpaceVal} FT OC
-                    </text>
-                  </svg>
-                )}
-
-                {(diagramType === 'deck-layout' || diagramType === 'paver-grid') && (
-                  <svg viewBox="0 0 260 94" class="w-full h-20" role="img" aria-label="Layout grid framing preview">
-                    <rect x="34" y="14" width="192" height="56" fill="rgba(71,121,168,0.14)" stroke="#6FA3D2" stroke-width="1.75" />
-                    <line x1="34" y1="32" x2="226" y2="32" stroke="#37404C" stroke-width="1" />
-                    <line x1="34" y1="50" x2="226" y2="50" stroke="#37404C" stroke-width="1" />
-                    <line x1="82" y1="14" x2="82" y2="70" stroke="#37404C" stroke-width="1" />
-                    <line x1="130" y1="14" x2="130" y2="70" stroke="#37404C" stroke-width="1" />
-                    <line x1="178" y1="14" x2="178" y2="70" stroke="#37404C" stroke-width="1" />
-                    <text x="130" y="86" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                      LAYOUT {blueprintLen}' × {blueprintWid}'
                     </text>
                   </svg>
                 )}
@@ -1297,10 +1365,10 @@ export default function CalculatorWidget({
                       Bagged Material
                     </span>
                     <div class="text-xl font-extrabold text-lime-500 mt-1 tabular-nums">
-                      ${output.costEstimate.typical.toLocaleString()}
+                      {fmtUsd(output.costEstimate.typical)}
                     </div>
                     <span class="font-mono text-[11px] text-[#D2D6DC] tabular-nums">
-                      Range: ${output.costEstimate.low.toLocaleString()}–${output.costEstimate.high.toLocaleString()}
+                      Range: {fmtUsd(output.costEstimate.low)}–{fmtUsd(output.costEstimate.high)}
                     </span>
                   </div>
                   <div class="p-3.5 rounded-lg bg-graphite-800 border border-blueprint/50">
@@ -1321,11 +1389,11 @@ export default function CalculatorWidget({
                 <div class="flex items-center justify-between text-xs text-[#9BA1AA] mb-1">
                   <span>Est. Material Cost (US Avg)</span>
                   <span class="font-mono text-[#F8F8F5] tabular-nums">
-                    Typical: ${output.costEstimate.typical.toLocaleString()}
+                    Typical: {fmtUsd(output.costEstimate.typical)}
                   </span>
                 </div>
                 <div class="text-xl sm:text-2xl font-extrabold text-lime-500 tabular-nums">
-                  ${output.costEstimate.low.toLocaleString()} – ${output.costEstimate.high.toLocaleString()}
+                  {fmtUsd(output.costEstimate.low)} – {fmtUsd(output.costEstimate.high)}
                 </div>
               </div>
             )}
@@ -1343,30 +1411,39 @@ export default function CalculatorWidget({
               <ul class="space-y-2">
                 {output.materials.map((item) => {
                   const product = item.productId ? productsMap[item.productId] : undefined;
+                  const sharePct = Math.min(100, Math.max(8, Math.round((item.totalTypical / Math.max(1, output.costEstimate.typical)) * 100)));
                   return (
                     <li
                       key={item.name}
-                      class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3.5 py-2.5 rounded-lg bg-graphite-950/80 border border-graphite-700"
+                      class="flex flex-col gap-2 px-3.5 py-2.5 rounded bg-graphite-950/80 border border-graphite-700"
                     >
-                      <div class="min-w-0">
-                        <div class="text-xs sm:text-sm font-semibold text-[#F8F8F5] tabular-nums">
-                          {item.quantity.toLocaleString()} {item.unit} — {item.name}
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="text-xs sm:text-sm font-semibold text-[#F8F8F5] tabular-nums">
+                            {item.quantity.toLocaleString()} {item.unit} — {item.name}
+                          </div>
+                          <div class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
+                            Est. {fmtUsd(item.totalTypical)} ({fmtUsd(item.unitPrice)}/{item.unit}) · {sharePct}% of total
+                          </div>
                         </div>
-                        <div class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
-                          Est. ${item.totalTypical.toLocaleString()} (${item.unitPrice}/{item.unit})
-                        </div>
+                        {affiliateEnabled && product && (
+                          <a
+                            href={`/go/${product.id}/`}
+                            target="_blank"
+                            rel="sponsored nofollow noopener"
+                            class="no-print inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded text-xs font-semibold bg-lime-500 hover:bg-lime-600 text-graphite-900 transition-colors shrink-0"
+                          >
+                            <span>{product.retailer}</span>
+                            <LucideIcon name="arrow-up-right" size={12} />
+                          </a>
+                        )}
                       </div>
-                      {affiliateEnabled && product && (
-                        <a
-                          href={`/go/${product.id}/`}
-                          target="_blank"
-                          rel="sponsored nofollow noopener"
-                          class="no-print inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded text-xs font-semibold bg-lime-500 hover:bg-lime-600 text-graphite-900 transition-colors shrink-0"
-                        >
-                          <span>{product.retailer}</span>
-                          <LucideIcon name="arrow-up-right" size={12} />
-                        </a>
-                      )}
+                      <div class="h-1 w-full rounded-full bg-graphite-800 overflow-hidden" aria-hidden="true">
+                        <div
+                          style={{ width: `${sharePct}%` }}
+                          class="h-full bg-[#6FA3D2] transition-all duration-300 ease-out"
+                        />
+                      </div>
                     </li>
                   );
                 })}

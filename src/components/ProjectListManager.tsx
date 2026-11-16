@@ -301,21 +301,21 @@ export default function ProjectListManager() {
           ) : (
             <div class="space-y-6">
               {/* Project Summary KPI Dashboard */}
-              <div class="bm-instrument overflow-hidden">
+              <div class="bm-instrument-rim overflow-hidden">
                 <div class="px-6 py-4 border-b border-graphite-700 bg-graphite-950/60 flex flex-wrap items-center justify-between gap-3">
                   <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#D2D6DC]">
                     <span class="h-2 w-2 rounded-full bg-lime-500"></span>
                     <span>Project Workspace Summary // Client-Side BOM</span>
                   </div>
                   <div class="no-print flex flex-wrap gap-2">
-                    <button type="button" onClick={handleCopyText} class="bm-btn-lime text-xs min-h-[36px] px-3 py-1.5 font-bold">
+                    <button type="button" onClick={handleCopyText} class="bm-btn-lime bm-magnetic text-xs min-h-[36px] px-3 py-1.5 font-bold">
                       <LucideIcon name={copied ? 'check' : 'copy'} size={13} />
                       <span>{copied ? 'Copied BOM' : 'Copy Shopping List'}</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => window.print()}
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors min-h-[36px]"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium bg-graphite-800 hover:bg-graphite-700 text-[#F8F8F5] border border-graphite-700 transition-colors min-h-[36px]"
                     >
                       <LucideIcon name="printer" size={13} />
                       <span>Export PDF / Print</span>
@@ -323,7 +323,7 @@ export default function ProjectListManager() {
                     <button
                       type="button"
                       onClick={clearAllBom}
-                      class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-300 hover:bg-red-950/60 transition-colors min-h-[36px]"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-red-300 hover:bg-red-950/60 transition-colors min-h-[36px]"
                     >
                       <LucideIcon name="trash-2" size={13} />
                       <span>Clear</span>
@@ -331,45 +331,90 @@ export default function ProjectListManager() {
                   </div>
                 </div>
 
-                <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
-                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
-                      Total Estimated Cost
-                    </span>
-                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums">
-                      {fmtUsd(totalTypical)}
+                <div class="p-6 space-y-5">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bm-corner-ticks p-4 rounded bg-graphite-950 border border-graphite-700">
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                        Total Estimated Cost
+                      </span>
+                      <div
+                        key={totalTypical}
+                        class="animate-digit-roll mt-1 text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums"
+                      >
+                        {fmtUsd(totalTypical)}
+                      </div>
+                      <span class="font-mono text-[11px] text-[#9BA1AA] tabular-nums block">
+                        {fmtUsd(totalLow)} – {fmtUsd(totalHigh)} range
+                      </span>
                     </div>
-                    <span class="font-mono text-[11px] text-[#9BA1AA] tabular-nums">
-                      {fmtUsd(totalLow)} – {fmtUsd(totalHigh)} range
-                    </span>
-                  </div>
-                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
-                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
-                      Saved Takeoffs
-                    </span>
-                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
-                      {entries.length}
+                    <div class="p-4 rounded bg-graphite-950 border border-graphite-700">
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                        Saved Takeoffs
+                      </span>
+                      <div
+                        key={entries.length}
+                        class="animate-digit-roll mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums"
+                      >
+                        {entries.length}
+                      </div>
+                      <span class="font-mono text-[11px] text-[#6FA3D2] block">Individual calculations</span>
                     </div>
-                    <span class="font-mono text-[11px] text-[#6FA3D2]">Individual calculations</span>
-                  </div>
-                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
-                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
-                      Active Trades
-                    </span>
-                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
-                      {groupedByTrade.length}
+                    <div class="p-4 rounded bg-graphite-950 border border-graphite-700">
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                        Active Trades
+                      </span>
+                      <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
+                        {groupedByTrade.length}
+                      </div>
+                      <span class="font-mono text-[11px] text-[#9BA1AA] block">Trade groups</span>
                     </div>
-                    <span class="font-mono text-[11px] text-[#9BA1AA]">Trade groups</span>
-                  </div>
-                  <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
-                    <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
-                      Combined Material SKUs
-                    </span>
-                    <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
-                      {consolidatedMaterials.length}
+                    <div class="p-4 rounded bg-graphite-950 border border-graphite-700">
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
+                        Combined Material SKUs
+                      </span>
+                      <div class="mt-1 text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">
+                        {consolidatedMaterials.length}
+                      </div>
+                      <span class="font-mono text-[11px] text-[#9BA1AA] block">Consolidated line items</span>
                     </div>
-                    <span class="font-mono text-[11px] text-[#9BA1AA]">Consolidated line items</span>
                   </div>
+
+                  {/* Animated Trade Cost Allocation Strip */}
+                  {groupedByTrade.length > 0 && totalTypical > 0 && (
+                    <div class="p-4 rounded bg-graphite-950 border border-graphite-700 space-y-2.5">
+                      <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA]">
+                        <span>Budget Allocation by Trade</span>
+                        <span class="text-[#6FA3D2] tabular-nums">{groupedByTrade.length} Active Trades</span>
+                      </div>
+                      <div class="h-2.5 w-full rounded-full bg-graphite-800 overflow-hidden flex gap-0.5">
+                        {groupedByTrade.map((grp, gIdx) => {
+                          const share = Math.max(4, Math.round((grp.subtotal / Math.max(1, totalTypical)) * 100));
+                          const barPalette = gIdx % 3 === 0 ? 'bg-lime-500' : gIdx % 3 === 1 ? 'bg-[#6FA3D2]' : 'bg-[#F8F8F5]/75';
+                          return (
+                            <div
+                              key={grp.tradeSlug}
+                              style={{ width: `${share}%` }}
+                              title={`${grp.tradeName}: ${fmtUsd(grp.subtotal)} (${share}%)`}
+                              class={`h-full ${barPalette} transition-all duration-300 ease-out`}
+                            />
+                          );
+                        })}
+                      </div>
+                      <div class="flex flex-wrap gap-3 text-[11px] font-mono text-[#D2D6DC] tabular-nums">
+                        {groupedByTrade.map((grp, gIdx) => {
+                          const share = Math.round((grp.subtotal / Math.max(1, totalTypical)) * 100);
+                          const dotColor = gIdx % 3 === 0 ? 'bg-lime-500' : gIdx % 3 === 1 ? 'bg-[#6FA3D2]' : 'bg-[#F8F8F5]';
+                          return (
+                            <span key={grp.tradeSlug} class="inline-flex items-center gap-1.5">
+                              <span class={`h-2 w-2 rounded-sm ${dotColor}`}></span>
+                              <span>{grp.tradeName}:</span>
+                              <strong class="text-[#F8F8F5]">{share}%</strong>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -399,17 +444,25 @@ export default function ProjectListManager() {
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-hairline">
-                        {consolidatedMaterials.map((cm) => (
-                          <tr key={`${cm.name}-${cm.unit}`} class="hover:bg-surface-subtle/30">
-                            <td class="py-2.5 px-4 font-medium text-ink">{cm.name}</td>
-                            <td class="py-2.5 px-4 font-mono font-bold text-blueprint">
-                              {cm.quantity.toLocaleString()} {cm.unit}
-                            </td>
-                            <td class="py-2.5 px-4 text-right font-mono font-semibold text-ink">
-                              {fmtUsd(cm.totalTypical)}
-                            </td>
-                          </tr>
-                        ))}
+                        {consolidatedMaterials.map((cm) => {
+                          const skuPct = Math.min(100, Math.max(6, Math.round((cm.totalTypical / Math.max(1, totalTypical)) * 100)));
+                          return (
+                            <tr key={`${cm.name}-${cm.unit}`} class="hover:bg-surface-subtle/30 transition-colors">
+                              <td class="py-2.5 px-4">
+                                <div class="font-medium text-ink">{cm.name}</div>
+                                <div class="mt-1 h-1 w-full max-w-[200px] rounded bg-surface-subtle overflow-hidden" aria-hidden="true">
+                                  <div style={{ width: `${skuPct}%` }} class="h-full bg-blueprint transition-all duration-300 ease-out" />
+                                </div>
+                              </td>
+                              <td class="py-2.5 px-4 font-mono font-bold text-blueprint align-top">
+                                {cm.quantity.toLocaleString()} {cm.unit}
+                              </td>
+                              <td class="py-2.5 px-4 text-right font-mono font-semibold text-ink align-top">
+                                {fmtUsd(cm.totalTypical)}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

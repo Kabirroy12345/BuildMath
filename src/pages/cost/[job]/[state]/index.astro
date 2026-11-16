@@ -167,7 +167,7 @@ const faqs = [
       </p>
     </div>
 
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto" data-bar-group>
       <table class="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
         <thead>
           <tr class="border-b border-hairline bg-surface-subtle/60 font-mono text-[11px] uppercase text-ink-muted">
@@ -180,23 +180,32 @@ const faqs = [
         </thead>
         <tbody class="divide-y divide-hairline">
           <tr>
-            <td class="py-3 px-4 font-semibold text-ink">
-              Contractor Labor ({job.tradeName})
+            <td class="py-3 px-4">
+              <div class="font-semibold text-ink">Contractor Labor ({job.tradeName})</div>
+              <div class="mt-1 h-1.5 w-full max-w-[220px] rounded bg-surface-subtle overflow-hidden" aria-hidden="true">
+                <div style={`width:${Math.round(job.laborShare * 100)}%`} class="bm-bar-fill h-full bg-blueprint"></div>
+              </div>
             </td>
-            <td class="py-3 px-4 font-mono text-ink-muted">{Math.round(job.laborShare * 100)}%</td>
-            <td class="py-3 px-4 font-mono">${Math.round(estimate.low * job.laborShare).toLocaleString()}</td>
-            <td class="py-3 px-4 font-mono font-bold text-ink">${estimate.laborCost.toLocaleString()}</td>
-            <td class="py-3 px-4 font-mono">${Math.round(estimate.high * job.laborShare).toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono text-ink-muted align-top">{Math.round(job.laborShare * 100)}%</td>
+            <td class="py-3 px-4 font-mono align-top">${Math.round(estimate.low * job.laborShare).toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono font-bold text-ink align-top">${estimate.laborCost.toLocaleString()}</td>
+            <td class="py-3 px-4 font-mono align-top">${Math.round(estimate.high * job.laborShare).toLocaleString()}</td>
           </tr>
           {job.materialsBreakdown.map((m) => {
             const matShare = (1 - job.laborShare) * (m.sharePercent / 100);
+            const pctInt = Math.max(2, Math.round(matShare * 100));
             return (
               <tr>
-                <td class="py-3 px-4 text-ink-body">{m.item}</td>
-                <td class="py-3 px-4 font-mono text-ink-muted">{Math.round(matShare * 100)}%</td>
-                <td class="py-3 px-4 font-mono text-ink-muted">${Math.round(estimate.low * matShare).toLocaleString()}</td>
-                <td class="py-3 px-4 font-mono font-semibold text-ink">${Math.round(estimate.materialCost * (m.sharePercent / 100)).toLocaleString()}</td>
-                <td class="py-3 px-4 font-mono text-ink-muted">${Math.round(estimate.high * matShare).toLocaleString()}</td>
+                <td class="py-3 px-4">
+                  <div class="text-ink-body">{m.item}</div>
+                  <div class="mt-1 h-1.5 w-full max-w-[220px] rounded bg-surface-subtle overflow-hidden" aria-hidden="true">
+                    <div style={`width:${pctInt}%`} class="bm-bar-fill h-full bg-lime-500"></div>
+                  </div>
+                </td>
+                <td class="py-3 px-4 font-mono text-ink-muted align-top">{Math.round(matShare * 100)}%</td>
+                <td class="py-3 px-4 font-mono text-ink-muted align-top">${Math.round(estimate.low * matShare).toLocaleString()}</td>
+                <td class="py-3 px-4 font-mono font-semibold text-ink align-top">${Math.round(estimate.materialCost * (m.sharePercent / 100)).toLocaleString()}</td>
+                <td class="py-3 px-4 font-mono text-ink-muted align-top">${Math.round(estimate.high * matShare).toLocaleString()}</td>
               </tr>
             );
           })}
@@ -206,7 +215,7 @@ const faqs = [
   </section>
 
   <!-- State-Specific Factors -->
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8" aria-labelledby="state-factors-heading">
+  <section class="bm-stagger-grid grid grid-cols-1 md:grid-cols-3 gap-4 my-8" aria-labelledby="state-factors-heading">
     <h2 id="state-factors-heading" class="sr-only">
       {state.name}-Specific Labor, Climate, and Licensing Factors
     </h2>

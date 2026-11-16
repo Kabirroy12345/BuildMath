@@ -97,11 +97,11 @@ export default function WorkspaceShowcase() {
           </div>
 
           <div class="mt-6 pt-5 border-t border-hairline flex flex-wrap items-center gap-2.5">
-            <a href="/my-project/" class="bm-btn-lime text-xs sm:text-sm font-bold">
+            <a href="/my-project/" class="bm-btn-lime bm-magnetic text-xs sm:text-sm font-bold">
               <span>{hasSaved ? `Open Workspace (${entries.length})` : 'Open Project Workspace'}</span>
               <LucideIcon name="arrow-right" size={15} />
             </a>
-            <a href="/calculators/concrete-slab-calculator/" class="bm-btn-secondary text-xs sm:text-sm">
+            <a href="/calculators/concrete-slab-calculator/" class="bm-btn-secondary bm-magnetic text-xs sm:text-sm">
               Try a Calculation
             </a>
           </div>

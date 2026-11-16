@@ -101,14 +101,14 @@ function computeHeroDefaults(slug: string) {
 }
 
 const slabRes = computeHeroDefaults('concrete-slab-calculator');
-const paintRes = computeHeroDefaults('paint-calculator');
 const roofRes = computeHeroDefaults('roofing-calculator');
-const drywallRes = computeHeroDefaults('drywall-calculator');
+const floorRes = computeHeroDefaults('flooring-calculator');
+const paintRes = computeHeroDefaults('paint-calculator');
 
 const heroSpecimens: HeroSpecimenItem[] = [
   {
-    id: 'slab',
-    tabLabel: '01 Slab',
+    id: 'concrete',
+    tabLabel: '01 Concrete',
     eyebrow: 'CONCRETE SLAB',
     standardTag: 'ACI 302 · QUIKRETE',
     slug: 'concrete-slab-calculator',
@@ -118,53 +118,53 @@ const heroSpecimens: HeroSpecimenItem[] = [
     primaryMeta: `Net ${slabRes.primaryResult.exactValue} yd³ · ${slabRes.secondaryResults[4]?.value || '$268.95'} truck`,
     secondaryLabel: 'Store Bag Equivalent',
     secondaryValue: `${slabRes.secondaryResults[0]?.value ?? 74} × 80-lb`,
-    secondaryMeta: `Or ${slabRes.secondaryResults[1]?.value ?? 98} × 60-lb · Est. $${slabRes.costEstimate.typical.toFixed(2)}`,
-    copySummary: `BuildMath Concrete Slab Takeoff (12×10 ft × 4 in, 10% waste): ${slabRes.primaryResult.value} cu yd ready-mix OR ${slabRes.secondaryResults[0]?.value} × 80-lb bags (Est. $${slabRes.costEstimate.typical.toFixed(2)})`,
+    secondaryMeta: `Or ${slabRes.secondaryResults[1]?.value ?? 98} × 60-lb · $${slabRes.costEstimate.typical.toFixed(2)}`,
+    copySummary: `BuildMath Concrete Slab Takeoff (12×10 ft × 4 in, 10% waste): ${slabRes.primaryResult.value} cu yd ready-mix OR ${slabRes.secondaryResults[0]?.value} × 80-lb bags ($${slabRes.costEstimate.typical.toFixed(2)})`,
   },
   {
-    id: 'paint',
-    tabLabel: '02 Paint',
-    eyebrow: 'INTERIOR PAINT',
-    standardTag: 'MPI · ASTM COV',
-    slug: 'paint-calculator',
-    dimensionsLabel: '12×12×8 ft · 2 doors, 2 windows · 2 coats',
-    primaryLabel: 'Paint Quantity',
-    primaryValue: `${paintRes.primaryResult.value} ${paintRes.primaryResult.unit}`,
-    primaryMeta: `Exact: ${paintRes.primaryResult.exactValue} gal · 5% waste`,
-    secondaryLabel: 'Net Paintable Area',
-    secondaryValue: `${paintRes.secondaryResults[0]?.value ?? 312} sq ft`,
-    secondaryMeta: `Est. $${Math.round(paintRes.costEstimate.typical)} (incl. roller kit)`,
-    copySummary: `BuildMath Interior Paint Takeoff (12×12×8 ft, 2 coats): ${paintRes.primaryResult.value} gallons for ${paintRes.secondaryResults[0]?.value} net sq ft (Est. $${Math.round(paintRes.costEstimate.typical)} incl. kit)`,
-  },
-  {
-    id: 'roof',
-    tabLabel: '03 Roof',
+    id: 'roofing',
+    tabLabel: '02 Roofing',
     eyebrow: 'ROOF SHINGLES',
     standardTag: 'ARMA · NRCA',
     slug: 'roofing-calculator',
     dimensionsLabel: '50×40 ft footprint · 6/12 pitch + 10% waste',
     primaryLabel: 'Shingle Bundles',
     primaryValue: `${roofRes.primaryResult.value} bundles`,
-    primaryMeta: `${roofRes.secondaryResults[0]?.value} sq · ${roofRes.secondaryResults[1]?.value} sq ft slope`,
+    primaryMeta: `${roofRes.secondaryResults[0]?.value} sq · ${roofRes.secondaryResults[1]?.value} sq ft`,
     secondaryLabel: 'Full Roof BOM',
     secondaryValue: `$${Math.round(roofRes.costEstimate.typical).toLocaleString()}`,
     secondaryMeta: 'Shingles, felt, edge & cap',
     copySummary: `BuildMath Roofing Takeoff (50×40 ft, 6/12 pitch, 10% waste): ${roofRes.primaryResult.value} shingle bundles (${roofRes.secondaryResults[0]?.value} squares) + felt/cap (Est. $${Math.round(roofRes.costEstimate.typical).toLocaleString()})`,
   },
   {
-    id: 'drywall',
-    tabLabel: '04 Drywall',
-    eyebrow: 'DRYWALL SHEETS',
-    standardTag: 'USG HANDBOOK',
-    slug: 'drywall-calculator',
-    dimensionsLabel: '12×12×8 ft + ceiling · 10% waste',
-    primaryLabel: '4×8 Panels Needed',
-    primaryValue: `${drywallRes.primaryResult.value} sheets`,
-    primaryMeta: `${drywallRes.secondaryResults[0]?.value} sq ft · ${drywallRes.materials[1]?.quantity ?? 2} mud pails`,
-    secondaryLabel: 'Hardware & Fasteners',
-    secondaryValue: `${drywallRes.secondaryResults[3]?.value ?? 512} screws`,
-    secondaryMeta: `1 roll tape · Est. $${drywallRes.costEstimate.typical.toFixed(2)}`,
-    copySummary: `BuildMath Drywall Takeoff (12×12×8 ft + ceiling, 10% waste): ${drywallRes.primaryResult.value} × 4×8 sheets, 2 × 4.5-gal mud buckets, ${drywallRes.secondaryResults[3]?.value} screws (Est. $${drywallRes.costEstimate.typical.toFixed(2)})`,
+    id: 'flooring',
+    tabLabel: '03 Flooring',
+    eyebrow: 'FLOOR PLANKS',
+    standardTag: 'NWFA · LVP/HARDWOOD',
+    slug: 'flooring-calculator',
+    dimensionsLabel: '15×12 ft room · 20 sq ft/box + 10% waste',
+    primaryLabel: 'Carton Boxes',
+    primaryValue: `${floorRes.primaryResult.value} boxes`,
+    primaryMeta: `${floorRes.secondaryResults[0]?.value ?? 198} sq ft w/ 10% waste`,
+    secondaryLabel: 'Total Floor BOM',
+    secondaryValue: `$${Math.round(floorRes.costEstimate.typical).toLocaleString()}`,
+    secondaryMeta: `${floorRes.secondaryResults[3]?.value ?? 2} underlayment rolls`,
+    copySummary: `BuildMath Flooring Takeoff (15×12 ft, 10% waste): ${floorRes.primaryResult.value} boxes (${floorRes.secondaryResults[0]?.value} sq ft) + ${floorRes.secondaryResults[3]?.value ?? 2} rolls ($${Math.round(floorRes.costEstimate.typical)})`,
+  },
+  {
+    id: 'painting',
+    tabLabel: '04 Painting',
+    eyebrow: 'INTERIOR PAINT',
+    standardTag: 'MPI · ASTM COV',
+    slug: 'paint-calculator',
+    dimensionsLabel: '12×12×8 ft · 2 doors & windows excluded · 2 coats',
+    primaryLabel: 'Paint Quantity',
+    primaryValue: `${paintRes.primaryResult.value} ${paintRes.primaryResult.unit}`,
+    primaryMeta: `Exact: ${paintRes.primaryResult.exactValue} gal · 5% waste`,
+    secondaryLabel: 'Net Paintable Area',
+    secondaryValue: `${paintRes.secondaryResults[0]?.value ?? 312} sq ft`,
+    secondaryMeta: `Est. $${Math.round(paintRes.costEstimate.typical)} (incl. supplies)`,
+    copySummary: `BuildMath Interior Paint Takeoff (12×12×8 ft, 2 coats): ${paintRes.primaryResult.value} gallons for ${paintRes.secondaryResults[0]?.value} net sq ft (Est. $${Math.round(paintRes.costEstimate.typical)} incl. kit)`,
   },
 ];
 ---
@@ -174,8 +174,8 @@ const heroSpecimens: HeroSpecimenItem[] = [
   description="Get accurate DIY material quantities and local project cost estimates in under 10 seconds. 32 source-cited home improvement calculators for US homeowners."
   pathname="/"
 >
-  <!-- 1. HERO SECTION: Asymmetric Architectural Workbench + Live Switchable CAD Specimen -->
-  <section class="relative overflow-hidden rounded-2xl border border-hairline bg-surface bm-cad-grid bm-corner-ticks p-6 sm:p-10 lg:p-12 mb-12">
+  <!-- 1. HERO SECTION: Asymmetric Digital Architecture Workbench + Progressive CAD Assembly -->
+  <section class="relative overflow-hidden rounded-md border border-hairline bg-surface bm-cad-grid bm-corner-ticks p-6 sm:p-10 lg:p-12 mb-12">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
       <!-- Hero Left: Value Prop + Command Search + Primary CTAs -->
       <div class="lg:col-span-7 space-y-5">
@@ -281,7 +281,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
       </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+    <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
       {quickLaunchCalcs.map((calc) => {
         const meta = CALCULATOR_CATALOG_META[calc.slug];
         const sch = meta?.schematic ? SCHEMATIC_PATHS[meta.schematic] : null;
@@ -337,7 +337,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
       </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {categories.map((cat, idx) => {
         const catCalcs = calculators.filter((c) => c.category === cat.slug);
         return (
@@ -414,7 +414,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {popularCalculators.map((calc) => {
         const meta = CALCULATOR_CATALOG_META[calc.slug];
         const sch = meta?.schematic ? SCHEMATIC_PATHS[meta.schematic] : null;
@@ -480,7 +480,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-graphite-700">
         <div class="p-5 sm:p-6">
-          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums">100 Tests</div>
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-lime-500 tabular-nums" data-count-to="100" data-count-suffix=" Tests">100 Tests</div>
           <h3 id="credibility-heading" class="text-sm font-bold text-[#F8F8F5] mt-1">
             Automated Formula Suite
           </h3>
@@ -490,7 +490,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
         </div>
 
         <div class="p-5 sm:p-6">
-          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums">32 / 32</div>
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#F8F8F5] tabular-nums" data-count-to="32" data-count-suffix=" / 32">32 / 32</div>
           <h3 class="text-sm font-bold text-[#F8F8F5] mt-1">
             Visible, Editable Defaults
           </h3>
@@ -500,7 +500,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
         </div>
 
         <div class="p-5 sm:p-6">
-          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#6FA3D2] tabular-nums">3 Verified</div>
+          <div class="font-mono text-2xl sm:text-3xl font-extrabold text-[#6FA3D2] tabular-nums" data-count-to="3" data-count-suffix=" Verified">3 Verified</div>
           <h3 class="text-sm font-bold text-[#F8F8F5] mt-1">
             vs. 22 Preliminary Cost Drafts
           </h3>
@@ -671,7 +671,7 @@ const heroSpecimens: HeroSpecimenItem[] = [
           Preliminary Trade Drafts (Calc Baseline · Unverified)
         </h3>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {preliminaryJobs.map((job) => (
           <a
             href={`/cost/${job.slug}/`}

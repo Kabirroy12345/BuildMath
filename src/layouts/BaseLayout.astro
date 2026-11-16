@@ -455,7 +455,7 @@ const navLinks = [
       aria-label="Search BuildMath tools and cost guides"
       class="hidden fixed inset-0 z-50 bg-[#0D1013]/70 backdrop-blur-sm px-4 pt-16 sm:pt-24 flex items-start justify-center"
     >
-      <div class="w-full max-w-2xl rounded-xl bg-surface border border-hairline-strong shadow-2xl overflow-hidden">
+      <div id="global-search-panel" class="bm-dropdown-enter w-full max-w-2xl rounded-md bg-surface border border-hairline-strong shadow-2xl overflow-hidden">
         <div class="flex items-center gap-3 px-4 py-3 border-b border-hairline">
           <Icon name="search" size={18} class="text-blueprint" />
           <input
@@ -562,6 +562,14 @@ const navLinks = [
             .replace(/>/g, '&gt;');
         }
 
+        function highlightSafe(str, qStr) {
+          var escaped = escapeHtml(str);
+          var terms = (qStr || '').trim().split(/\s+/).filter(Boolean);
+          if (!terms.length) return escaped;
+          var re = new RegExp('(' + terms.map(function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'gi');
+          return escaped.replace(re, '<mark class="bm-highlight">$1</mark>');
+        }
+
         function renderGlobalResults(query) {
           if (!cachedIndex || !resultsEl) return;
           var q = (query || '').trim().toLowerCase();
@@ -583,8 +591,8 @@ const navLinks = [
             return (
               '<a href="' + item.href + '" data-gs-idx="' + idx + '" class="gs-item flex items-center justify-between gap-3 px-4 py-3 hover:bg-surface-subtle transition-colors ' + (idx === 0 ? 'bg-surface-subtle/70' : '') + '">' +
                 '<div class="min-w-0">' +
-                  '<div class="text-sm font-semibold text-ink truncate">' + escapeHtml(item.title) + '</div>' +
-                  '<div class="text-xs text-ink-muted truncate">' + escapeHtml(item.description) + '</div>' +
+                  '<div class="text-sm font-semibold text-ink truncate">' + highlightSafe(item.title, query) + '</div>' +
+                  '<div class="text-xs text-ink-muted truncate">' + highlightSafe(item.description, query) + '</div>' +
                 '</div>' +
                 '<span class="shrink-0 font-mono text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-blueprint-soft text-blueprint">' +
                   escapeHtml(item.type === 'calculator' ? item.categoryName : 'Cost Guide') +

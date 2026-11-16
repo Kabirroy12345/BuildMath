@@ -129,7 +129,10 @@ export default function StateCostEstimator({
                 {state.name} Estimate ({size.toLocaleString()} {job.unit})
               </span>
             </div>
-            <div class="mt-2 text-3xl sm:text-4xl font-extrabold text-lime-500 tabular-nums tracking-tight">
+            <div
+              key={result.typical}
+              class="animate-digit-roll mt-2 text-3xl sm:text-4xl font-extrabold text-lime-500 tabular-nums tracking-tight"
+            >
               ${result.typical.toLocaleString()}
             </div>
             <div class="mt-1 font-mono text-xs text-[#9BA1AA] tabular-nums">

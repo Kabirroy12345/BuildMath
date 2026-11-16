@@ -32,9 +32,9 @@
     --bg-canvas: 248 248 245; /* #F8F8F5 */
     --bg-surface: 255 255 255; /* #FFFFFF */
     --bg-surface-subtle: 242 242 238; /* #F2F2EE */
-    --bg-graphite: 23 27 32; /* #171B20 */
+    --bg-graphite: 23 25 28; /* #17191C */
     --text-primary: 23 25 28; /* #17191C */
-    --text-body: 62 67 75;
+    --text-body: 58 63 70;
     --text-secondary: 116 121 129; /* #747981 */
     --border-subtle: 229 231 229; /* #E5E7E5 */
     --border-strong: 207 211 207;
@@ -44,10 +44,10 @@
   }
 
   html.dark {
-    --bg-canvas: 17 20 24;
-    --bg-surface: 23 27 32; /* #171B20 */
-    --bg-surface-subtle: 30 35 42;
-    --bg-graphite: 13 16 19;
+    --bg-canvas: 16 18 21;
+    --bg-surface: 23 25 28; /* #17191C */
+    --bg-surface-subtle: 32 37 43; /* #20252B */
+    --bg-graphite: 16 18 21;
     --text-primary: 244 244 241;
     --text-body: 207 212 220;
     --text-secondary: 142 148 157;
@@ -130,7 +130,7 @@
   .bm-panel {
     background-color: rgb(var(--bg-surface));
     border: 1px solid rgb(var(--border-subtle));
-    border-radius: 10px;
+    border-radius: 6px;
     transition: border-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
       transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -146,10 +146,10 @@
   }
 
   .bm-instrument {
-    background-color: #171b20;
-    color: #f4f4f1;
-    border: 1px solid #282e37;
-    border-radius: 10px;
+    background-color: #17191c;
+    color: #f8f8f5;
+    border: 1px solid #2a3038;
+    border-radius: 6px;
   }
 
   .bm-cad-grid {
@@ -260,18 +260,18 @@
   /* Specular top-edge rim for dark graphite instruments (rive.app gradient trim, restrained BuildMath palette) */
   .bm-instrument-rim {
     position: relative;
-    background-color: #171b20;
-    color: #f4f4f1;
-    border-radius: 10px;
-    border: 1px solid #282e37;
-    box-shadow: 0 18px 40px -24px rgba(13, 16, 19, 0.72), inset 0 1px 0 rgba(248, 248, 245, 0.06);
+    background-color: #17191c;
+    color: #f8f8f5;
+    border-radius: 6px;
+    border: 1px solid #2a3038;
+    box-shadow: 0 16px 34px -24px rgba(16, 18, 21, 0.72), inset 0 1px 0 rgba(248, 248, 245, 0.06);
   }
 
   .bm-instrument-rim::before {
     content: '';
     position: absolute;
     inset: -1px;
-    border-radius: 11px;
+    border-radius: 7px;
     padding: 1px;
     background: linear-gradient(125deg, rgba(198, 243, 106, 0.36), rgba(111, 163, 210, 0.34) 42%, rgba(40, 46, 55, 0.85) 75%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -709,6 +709,111 @@ html.dark .bm-magnetic.bm-btn-lime:hover {
 .animate-digit-roll {
   display: inline-block;
   animation: numSlotRoll 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Search dropdown & modal smooth entrance + highlighted terms */
+@keyframes dropdownReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.bm-dropdown-enter {
+  animation: dropdownReveal 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+mark.bm-highlight {
+  background-color: rgba(198, 243, 106, 0.45);
+  color: #17191c;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+html.dark mark.bm-highlight {
+  background-color: rgba(198, 243, 106, 0.28);
+  color: #c6f36a;
+}
+
+/* Progressive SVG Stroke-Draw System for Blueprints & Field Manuals */
+[data-draw-svg] .bm-stroke-path {
+  transition: stroke-dashoffset 880ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms ease;
+}
+
+[data-draw-svg] .bm-stroke-annotation {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 420ms ease 420ms, transform 420ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
+}
+
+[data-draw-svg].is-drawn .bm-stroke-annotation {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered Grid Card Entrance (triggered cleanly once via IntersectionObserver) */
+.bm-stagger-grid > * {
+  transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms ease,
+    box-shadow 200ms ease;
+}
+
+.bm-stagger-grid[data-stagger-init='1']:not(.is-staggered) > * {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.bm-stagger-grid.is-staggered > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Horizontal Material & Budget Bar Fill */
+.bm-bar-fill {
+  transform-origin: left center;
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-bar-group]:not(.is-bars-active) .bm-bar-fill {
+  transform: scaleX(0);
+}
+
+[data-bar-group].is-bars-active .bm-bar-fill {
+  transform: scaleX(1);
+}
+
+/* Laser Calculation Scan Sweep along Output Console Header */
+@keyframes calcScanSweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(300%);
+    opacity: 0.1;
+  }
+}
+
+.bm-scan-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.bm-scan-sweep.is-scanning::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(198, 243, 106, 0.45), transparent);
+  animation: calcScanSweep 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 
 details[open] .faq-body {

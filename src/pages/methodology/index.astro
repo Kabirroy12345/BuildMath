@@ -18,14 +18,39 @@ import prices from '../../data/prices.json';
     </p>
   </section>
 
+  <!-- Animated Calculation Pipeline Workflow Schematic -->
+  <section class="my-8 bm-instrument-rim bm-corner-ticks p-5 sm:p-6 bm-cad-grid" aria-label="Deterministic calculation workflow schematic">
+    <div class="flex items-center justify-between mb-3 font-mono text-[10px] uppercase tracking-wider text-lime-500">
+      <span>DETERMINISTIC PIPELINE ARCHITECTURE // STEP SEQUENCE</span>
+      <span class="text-[#6FA3D2]">PURE TYPESCRIPT ENGINE</span>
+    </div>
+    <svg viewBox="0 0 680 110" class="w-full h-24 sm:h-28" data-draw-svg role="img" aria-label="BuildMath estimation flow diagram from dimensions to retail units and state wages">
+      <rect x="10" y="24" width="136" height="58" rx="4" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="1.6" />
+      <rect x="184" y="24" width="136" height="58" rx="4" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="1.6" />
+      <rect x="358" y="24" width="142" height="58" rx="4" fill="rgba(198,243,106,0.18)" stroke="#C6F36A" stroke-width="1.6" />
+      <rect x="538" y="24" width="132" height="58" rx="4" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="1.6" />
+      <line x1="146" y1="53" x2="184" y2="53" stroke="#C6F36A" stroke-width="1.8" />
+      <line x1="320" y1="53" x2="358" y2="53" stroke="#C6F36A" stroke-width="1.8" />
+      <line x1="500" y1="53" x2="538" y2="53" stroke="#C6F36A" stroke-width="1.8" />
+      <text x="78" y="48" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">01. MEASUREMENTS</text>
+      <text x="78" y="64" font-size="8.5" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle" class="bm-stroke-annotation">ft/in → decimal ft</text>
+      <text x="252" y="48" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">02. TRADE SPEC</text>
+      <text x="252" y="64" font-size="8.5" font-family="JetBrains Mono, monospace" fill="#9BA1AA" text-anchor="middle" class="bm-stroke-annotation">ACI / ARMA / USG + %</text>
+      <text x="429" y="48" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">03. STORE UNITS</text>
+      <text x="429" y="64" font-size="8.5" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">Math.ceil(bags/rolls)</text>
+      <text x="604" y="48" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">04. STATE INDEX</text>
+      <text x="604" y="64" font-size="8.5" font-family="JetBrains Mono, monospace" fill="#6FA3D2" text-anchor="middle" class="bm-stroke-annotation">BLS Wages + BEA RPP</text>
+    </svg>
+  </section>
+
   <section class="space-y-4 mt-8">
-    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+    <h2 data-split-reveal class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
       1. Material Quantity Formulas &amp; Trade Standards
     </h2>
     <p>
       Our 32 DIY calculators derive their default parameters from published manufacturer technical data sheets (TDS) and residential building codes:
     </p>
-    <div class="grid grid-cols-1 gap-3">
+    <div class="bm-stagger-grid grid grid-cols-1 gap-3">
       <div class="bm-panel p-4">
         <span class="font-mono text-xs font-semibold text-blueprint">ACI 318 / QUIKRETE / SAKRETE / BIA</span>
         <h3 class="text-sm font-bold text-ink mt-1">Concrete &amp; Masonry</h3>
@@ -71,7 +96,7 @@ import prices from '../../data/prices.json';
     <p>
       Our localized cost guides combine national bottom-up project pricing with state-level labor and material cost indices:
     </p>
-    <div class="p-4 sm:p-5 rounded-lg bg-graphite-900 text-[#F8F8F5] border border-graphite-700 font-mono text-xs sm:text-sm overflow-x-auto">
+    <div class="bm-instrument-rim p-4 sm:p-5 text-[#F8F8F5] font-mono text-xs sm:text-sm overflow-x-auto">
       <span class="text-lime-500 text-[10px] font-semibold uppercase tracking-wider block mb-1.5">
         Weighted State Multiplier Equation
       </span>

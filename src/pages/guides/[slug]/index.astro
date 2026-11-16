@@ -29,8 +29,85 @@ const relatedCalcs = (guide.relatedCalculators || [])
     { name: guide.title, href: `/guides/${guide.slug}/` },
   ]}
 >
-  <div class="p-5 rounded-xl bg-surface border border-hairline border-l-4 border-l-blueprint text-sm sm:text-base font-medium text-ink leading-relaxed">
+  <div class="p-5 rounded bg-surface border border-hairline border-l-4 border-l-blueprint text-sm sm:text-base font-medium text-ink leading-relaxed mb-6">
     {guide.excerpt}
+  </div>
+
+  <!-- Field Manual Architectural Reference Schematic (data-draw-svg) -->
+  <div class="my-6 bm-instrument-rim bm-corner-ticks p-5 bm-cad-grid">
+    <div class="flex items-center justify-between mb-3 font-mono text-[10px] uppercase tracking-wider text-[#6FA3D2]">
+      <span>FIELD MEASUREMENT SCHEMATIC // VISUAL SPEC</span>
+      <span class="text-lime-500">{guide.readingTime}</span>
+    </div>
+
+    {guide.slug === 'how-to-measure-a-room-for-flooring' && (
+      <svg viewBox="0 0 420 120" class="w-full h-28" data-draw-svg role="img" aria-label="L-shape room box division measurement schematic">
+        <rect x="30" y="18" width="180" height="80" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="1.8" />
+        <rect x="210" y="46" width="140" height="52" fill="rgba(198,243,106,0.16)" stroke="#C6F36A" stroke-width="1.8" />
+        <line x1="210" y1="46" x2="210" y2="98" stroke="#C6F36A" stroke-width="1.5" stroke-dasharray="4 3" />
+        <text x="120" y="58" font-size="11" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">
+          ZONE A: L1 × W1
+        </text>
+        <text x="280" y="75" font-size="11" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">
+          ZONE B: +ALCOVE
+        </text>
+      </svg>
+    )}
+
+    {guide.slug === 'how-much-paint-for-a-bedroom' && (
+      <svg viewBox="0 0 420 120" class="w-full h-28" data-draw-svg role="img" aria-label="Bedroom wall elevation and opening deduction schematic">
+        <rect x="30" y="14" width="360" height="88" fill="rgba(71,121,168,0.16)" stroke="#6FA3D2" stroke-width="1.75" />
+        <rect x="75" y="34" width="44" height="68" fill="#101215" stroke="#C6F36A" stroke-width="1.4" stroke-dasharray="4 2" />
+        <rect x="210" y="26" width="90" height="44" fill="#101215" stroke="#C6F36A" stroke-width="1.4" stroke-dasharray="4 2" />
+        <text x="97" y="70" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">
+          -21 SF
+        </text>
+        <text x="255" y="52" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">
+          -15 SF WINDOW
+        </text>
+      </svg>
+    )}
+
+    {guide.slug === 'concrete-bags-vs-ready-mix' && (
+      <svg viewBox="0 0 420 120" class="w-full h-28" data-draw-svg role="img" aria-label="Cost crossover curve comparing 80-lb concrete bags vs ready-mix truck">
+        <line x1="40" y1="98" x2="380" y2="98" stroke="#6FA3D2" stroke-width="1.5" />
+        <line x1="40" y1="16" x2="40" y2="98" stroke="#6FA3D2" stroke-width="1.5" />
+        <polyline points="40,92 175,60 360,20" fill="none" stroke="#C6F36A" stroke-width="2" />
+        <polyline points="40,68 175,60 360,46" fill="none" stroke="#6FA3D2" stroke-width="2" stroke-dasharray="4 3" />
+        <circle cx="175" cy="60" r="5" fill="#C6F36A" />
+        <line x1="175" y1="54" x2="155" y2="26" stroke="#C6F36A" stroke-width="1" stroke-dasharray="2 2" />
+        <text x="155" y="20" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">
+          CROSSOVER ≈ 1.5–2.0 YD³ (68–90 BAGS)
+        </text>
+      </svg>
+    )}
+
+    {guide.slug === 'how-to-read-roof-pitch' && (
+      <svg viewBox="0 0 420 120" class="w-full h-28" data-draw-svg role="img" aria-label="Roof pitch plumb cut and level 12-inch run measurement diagram">
+        <polygon points="40,96 360,96 360,22" fill="rgba(71,121,168,0.18)" stroke="#6FA3D2" stroke-width="2" />
+        <rect x="348" y="84" width="12" height="12" fill="none" stroke="#6FA3D2" stroke-width="1.2" />
+        <text x="200" y="112" font-size="10" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">
+          12" LEVEL RUN
+        </text>
+        <text x="372" y="62" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" class="bm-stroke-annotation">
+          RISE
+        </text>
+      </svg>
+    )}
+
+    {guide.slug === 'planning-a-paver-patio-step-by-step' && (
+      <svg viewBox="0 0 420 120" class="w-full h-28" data-draw-svg role="img" aria-label="Compacted paver patio cross section layers">
+        <rect x="35" y="20" width="350" height="22" fill="rgba(198,243,106,0.2)" stroke="#C6F36A" stroke-width="1.5" />
+        <rect x="35" y="42" width="350" height="16" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.4" />
+        <rect x="35" y="58" width="350" height="36" fill="rgba(42,48,56,0.65)" stroke="#6FA3D2" stroke-width="1.4" stroke-dasharray="4 2" />
+        <text x="210" y="34" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle" class="bm-stroke-annotation">
+          CONCRETE PAVERS (2.375") + BEDDING SAND (1")
+        </text>
+        <text x="210" y="80" font-size="9.5" font-family="JetBrains Mono, monospace" fill="#F8F8F5" text-anchor="middle" class="bm-stroke-annotation">
+          COMPACTED CRUSHED AGGREGATE BASE (4–6")
+        </text>
+      </svg>
+    )}
   </div>
 
   {guide.sections.map((sec, idx) => (

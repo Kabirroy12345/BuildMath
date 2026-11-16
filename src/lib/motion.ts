@@ -205,4 +205,147 @@ export function initBuildMathMotion() {
     };
     requestAnimationFrame(spinLoop);
   }
+
+  // 5. Progressive SVG Stroke Self-Drawing ([data-draw-svg])
+  const drawSvgs = Array.from(document.querySelectorAll<SVGSVGElement>('[data-draw-svg]'));
+  drawSvgs.forEach((svg) => {
+    const paths = Array.from(
+      svg.querySelectorAll<SVGGeometryElement>('path, line, rect, polygon, polyline, circle')
+    );
+    paths.forEach((el, idx) => {
+      if (!el.classList.contains('bm-stroke-path')) {
+        el.classList.add('bm-stroke-path');
+      }
+      if (prefersReduced || typeof el.getTotalLength !== 'function') return;
+      try {
+        const len = Math.max(12, Math.ceil(el.getTotalLength()));
+        el.style.strokeDasharray = `${len}`;
+        el.style.strokeDashoffset = `${len}`;
+        el.style.transitionDelay = `${Math.min(idx * 55, 420)}ms`;
+      } catch {}
+    });
+  });
+
+  const triggerDrawSvg = (svg: Element) => {
+    const paths = svg.querySelectorAll<SVGGeometryElement>('.bm-stroke-path');
+    paths.forEach((p) => {
+      p.style.strokeDashoffset = '0';
+    });
+    svg.classList.add('is-drawn');
+  };
+
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    drawSvgs.forEach(triggerDrawSvg);
+  } else {
+    const drawObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            triggerDrawSvg(entry.target);
+            drawObs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    drawSvgs.forEach((svg) => {
+      const r = svg.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.96) {
+        requestAnimationFrame(() => triggerDrawSvg(svg));
+      } else {
+        drawObs.observe(svg);
+      }
+    });
+  }
+
+  // 6. Staggered Grid Card Entrance (.bm-stagger-grid) & Scroll Bars ([data-bar-group])
+  const staggerGrids = Array.from(document.querySelectorAll<HTMLElement>('.bm-stagger-grid'));
+  const barGroups = Array.from(document.querySelectorAll<HTMLElement>('[data-bar-group]'));
+
+  const revealGrid = (grid: HTMLElement) => {
+    Array.from(grid.children).forEach((child, idx) => {
+      (child as HTMLElement).style.transitionDelay = `${Math.min(idx * 42, 320)}ms`;
+    });
+    grid.classList.add('is-staggered');
+  };
+
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    staggerGrids.forEach((g) => g.classList.add('is-staggered'));
+    barGroups.forEach((b) => b.classList.add('is-bars-active'));
+  } else {
+    const uiObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          if (el.classList.contains('bm-stagger-grid')) revealGrid(el);
+          if (el.hasAttribute('data-bar-group')) el.classList.add('is-bars-active');
+          uiObs.unobserve(el);
+        });
+      },
+      { threshold: 0.06, rootMargin: '0px 0px -3% 0px' }
+    );
+
+    staggerGrids.forEach((g) => {
+      g.dataset.staggerInit = '1';
+      if (g.getBoundingClientRect().top < window.innerHeight * 0.98) {
+        requestAnimationFrame(() => revealGrid(g));
+      } else {
+        uiObs.observe(g);
+      }
+    });
+
+    barGroups.forEach((b) => {
+      if (b.getBoundingClientRect().top < window.innerHeight * 0.98) {
+        requestAnimationFrame(() => b.classList.add('is-bars-active'));
+      } else {
+        uiObs.observe(b);
+      }
+    });
+  }
+
+  // 7. Restrained Numeric Count-Up When Scrolled Into View ([data-count-to])
+  const countEls = Array.from(document.querySelectorAll<HTMLElement>('[data-count-to]'));
+  const animateCount = (el: HTMLElement) => {
+    const target = parseFloat(el.dataset.countTo || '');
+    if (isNaN(target)) return;
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    const useComma = el.dataset.countComma !== '0';
+
+    if (prefersReduced) {
+      el.textContent = `${prefix}${useComma ? Math.round(target).toLocaleString() : Math.round(target)}${suffix}`;
+      return;
+    }
+
+    const dur = 580;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const cur = Math.round(target * eased);
+      el.textContent = `${prefix}${useComma ? cur.toLocaleString() : cur}${suffix}`;
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = `${prefix}${useComma ? target.toLocaleString() : target}${suffix}`;
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if (countEls.length > 0) {
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      countEls.forEach(animateCount);
+    } else {
+      const cntObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            animateCount(entry.target as HTMLElement);
+            cntObs.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.25 }
+      );
+      countEls.forEach((el) => cntObs.observe(el));
+    }
+  }
 }

@@ -20,6 +20,28 @@ import { siteConfig } from '../../config/site';
     </p>
   </section>
 
+  <!-- Platform Architecture Spec Counters -->
+  <section class="bm-instrument-rim bm-corner-ticks my-8 overflow-hidden">
+    <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-graphite-700">
+      <div class="p-4 sm:p-5">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Calculators</span>
+        <strong class="font-mono text-2xl font-extrabold text-lime-500 tabular-nums mt-1 block" data-count-to="32">32</strong>
+      </div>
+      <div class="p-4 sm:p-5">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Unit Tests</span>
+        <strong class="font-mono text-2xl font-extrabold text-[#F8F8F5] tabular-nums mt-1 block" data-count-to="100">100</strong>
+      </div>
+      <div class="p-4 sm:p-5">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">US Jurisdictions</span>
+        <strong class="font-mono text-2xl font-extrabold text-[#6FA3D2] tabular-nums mt-1 block" data-count-to="51">51</strong>
+      </div>
+      <div class="p-4 sm:p-5">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">Client Privacy</span>
+        <strong class="font-mono text-2xl font-extrabold text-[#F8F8F5] tabular-nums mt-1 block">100% Local</strong>
+      </div>
+    </div>
+  </section>
+
   <section class="bm-instrument p-6 my-8">
     <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lime-500 mb-2">
       <Icon name="shield-check" size={14} />
@@ -40,29 +62,29 @@ import { siteConfig } from '../../config/site';
     <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
       4 Core Engineering Principles
     </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="bm-panel p-4 space-y-1.5">
+    <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="bm-panel bm-card-invert p-4 space-y-1.5">
         <span class="font-mono text-[11px] font-bold text-blueprint">01 // EDITABLE DEFAULTS</span>
         <h3 class="text-sm font-bold text-ink">Full Rate Transparency</h3>
         <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
           Every coverage rate, mortar joint thickness, waste factor, and unit price includes a clear explanation and can be overridden to match your product label.
         </p>
       </div>
-      <div class="bm-panel p-4 space-y-1.5">
+      <div class="bm-panel bm-card-invert p-4 space-y-1.5">
         <span class="font-mono text-[11px] font-bold text-blueprint">02 // VERSIONED DATASETS</span>
         <h3 class="text-sm font-bold text-ink">Explicit Verification Status</h3>
         <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
           Material benchmarks and regional labor indices carry explicit verification flags. Review our <a href="/methodology/" class="text-blueprint font-semibold underline">Methodology</a>.
         </p>
       </div>
-      <div class="bm-panel p-4 space-y-1.5">
+      <div class="bm-panel bm-card-invert p-4 space-y-1.5">
         <span class="font-mono text-[11px] font-bold text-blueprint">03 // CLIENT-SIDE PRIVACY</span>
         <h3 class="text-sm font-bold text-ink">Zero Backend Tracking</h3>
         <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">
           Every formula executes locally in your browser; your <a href="/my-project/" class="text-blueprint font-semibold underline">Project Shopping List</a> never leaves your device.
         </p>
       </div>
-      <div class="bm-panel p-4 space-y-1.5">
+      <div class="bm-panel bm-card-invert p-4 space-y-1.5">
         <span class="font-mono text-[11px] font-bold text-blueprint">04 // CLEAR DISCLOSURES</span>
         <h3 class="text-sm font-bold text-ink">Editorial Independence</h3>
         <p class="text-xs sm:text-sm text-ink-muted leading-relaxed">

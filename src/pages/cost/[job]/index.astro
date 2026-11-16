@@ -99,7 +99,7 @@ const faqs = [
   </header>
 
   <!-- National KPI Summary Strip -->
-  <section class="bm-instrument p-5 sm:p-6 mb-8" aria-label="National cost summary">
+  <section class="bm-instrument-rim bm-corner-ticks p-5 sm:p-6 mb-8" aria-label="National cost summary">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="p-4 rounded-lg bg-graphite-950 border border-graphite-700">
         <span class="font-mono text-[10px] uppercase tracking-wider text-[#9BA1AA] block">
@@ -154,7 +154,7 @@ const faqs = [
           Baseline ${nationalTypical.toLocaleString()} split ({Math.round(job.laborShare * 100)}% labor / {Math.round((1 - job.laborShare) * 100)}% materials)
         </p>
       </div>
-      <div class="p-5 overflow-x-auto">
+      <div class="p-5 overflow-x-auto" data-bar-group>
         <table class="w-full text-xs sm:text-sm border-collapse tabular-nums">
           <thead>
             <tr class="border-b border-hairline text-left font-mono text-[11px] uppercase text-ink-muted">
@@ -165,19 +165,30 @@ const faqs = [
           </thead>
           <tbody class="divide-y divide-hairline">
             <tr>
-              <td class="py-3 font-semibold text-ink">Trade Labor ({job.tradeName})</td>
-              <td class="py-3 font-mono text-ink-muted">{Math.round(job.laborShare * 100)}%</td>
-              <td class="py-3 text-right font-mono font-bold text-ink">
+              <td class="py-3">
+                <div class="font-semibold text-ink">Trade Labor ({job.tradeName})</div>
+                <div class="mt-1 h-1.5 w-full rounded bg-surface-subtle overflow-hidden" aria-hidden="true">
+                  <div style={`width:${Math.round(job.laborShare * 100)}%`} class="bm-bar-fill h-full bg-blueprint"></div>
+                </div>
+              </td>
+              <td class="py-3 font-mono text-ink-muted align-top">{Math.round(job.laborShare * 100)}%</td>
+              <td class="py-3 text-right font-mono font-bold text-ink align-top">
                 ${Math.round(nationalTypical * job.laborShare).toLocaleString()}
               </td>
             </tr>
             {job.materialsBreakdown.map((m) => {
               const matShare = (1 - job.laborShare) * (m.sharePercent / 100);
+              const pctInt = Math.max(2, Math.round(matShare * 100));
               return (
                 <tr>
-                  <td class="py-2.5 text-ink-body">{m.item}</td>
-                  <td class="py-2.5 font-mono text-ink-muted">{Math.round(matShare * 100)}%</td>
-                  <td class="py-2.5 text-right font-mono text-ink">
+                  <td class="py-2.5">
+                    <div class="text-ink-body">{m.item}</div>
+                    <div class="mt-1 h-1.5 w-full rounded bg-surface-subtle overflow-hidden" aria-hidden="true">
+                      <div style={`width:${pctInt}%`} class="bm-bar-fill h-full bg-lime-500"></div>
+                    </div>
+                  </td>
+                  <td class="py-2.5 font-mono text-ink-muted align-top">{Math.round(matShare * 100)}%</td>
+                  <td class="py-2.5 text-right font-mono text-ink align-top">
                     ${Math.round(nationalTypical * matShare).toLocaleString()}
                   </td>
                 </tr>

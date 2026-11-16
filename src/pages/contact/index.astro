@@ -22,7 +22,7 @@ import { siteConfig } from '../../config/site';
     <form
       action="https://api.web3forms.com/submit"
       method="POST"
-      class="md:col-span-7 bm-panel p-6 space-y-4"
+      class="md:col-span-7 bm-panel bm-corner-ticks p-6 space-y-4"
     >
       <input type="hidden" name="access_key" value={siteConfig.web3FormsAccessKey} />
       <input type="hidden" name="subject" value={`New Contact Message from ${siteConfig.name}`} />
@@ -83,7 +83,7 @@ import { siteConfig } from '../../config/site';
         ></textarea>
       </div>
 
-      <button type="submit" class="bm-btn-lime w-full font-bold">
+      <button type="submit" class="bm-btn-lime bm-magnetic w-full font-bold">
         <Icon name="mail" size={16} />
         <span>Send Message</span>
       </button>

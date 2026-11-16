@@ -29,7 +29,7 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     );
     expect(overflow).toBe(false);
 
-    // Interactive 4-mode Hero Specimen Console 3D Canvas + Live Slider + Tabs check
+    // Interactive 4-Discipline Progressive Blueprint Hero Console + Live Slider check
     await expect(page.locator('main')).toContainText('1.63 yd³');
     const canvasBox = await page.locator('main canvas').boundingBox();
     expect(canvasBox?.width).toBeGreaterThan(150);
@@ -37,20 +37,21 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     await page.locator('#hero-specimen-slider').fill('6');
     await page.locator('#hero-specimen-slider').dispatchEvent('input');
     await expect(page.locator('main')).toContainText('2.44 yd³');
-    await page.getByRole('tab', { name: '02 Paint' }).click();
-    await expect(page.locator('main')).toContainText('2 gallons');
-    await page.getByRole('tab', { name: '03 Roof' }).click();
+    await page.getByRole('tab', { name: '02 Roofing' }).click();
     await expect(page.locator('main')).toContainText('74 bundles');
-    await page.getByRole('tab', { name: '04 Drywall' }).click();
-    await expect(page.locator('main')).toContainText('16 sheets');
+    await page.getByRole('tab', { name: '03 Flooring' }).click();
+    await expect(page.locator('main')).toContainText('10 boxes');
+    await page.getByRole('tab', { name: '04 Painting' }).click();
+    await expect(page.locator('main')).toContainText('2 gallons');
     await expect(page.locator('#bm-back-to-top')).toBeAttached();
     await expect(page.locator('[data-scroll-pipeline]')).toBeAttached();
     await expect(page.locator('#bm-cursor-reticle')).toBeAttached();
 
-    // Search suggestion dropdown test
+    // Search suggestion dropdown & query term highlight test
     await page.fill('#hero-search-input', 'drywall');
     await expect(page.getByRole('listbox')).toBeVisible();
     await expect(page.getByRole('listbox')).toContainText('Drywall');
+    await expect(page.locator('#hero-search-input').locator('..').locator('..').locator('mark.bm-highlight').first()).toBeVisible();
 
     // Global Command Search Modal test (header button + /search-index.json)
     await page.click('#global-search-open-btn');
@@ -222,6 +223,7 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     expect(workspaceTabletOk).toBe(true);
     await expect(page.locator('main')).toContainText('Grouped Calculations by Trade');
     await expect(page.locator('main')).toContainText('Trade Subtotal:');
+    await expect(page.locator('main')).toContainText('Budget Allocation by Trade');
   });
 
   test('Info, cost, and guide routes load cleanly without overflow and keep SEO noindex rules', async ({
@@ -247,6 +249,14 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
       );
       expect(overflow, `Overflow on ${r}`).toBe(false);
     }
+
+    // Verify self-drawing architectural SVG schematics exist cleanly on guide, methodology, and category routes
+    await page.goto('/guides/how-to-measure-a-room-for-flooring/');
+    await expect(page.locator('svg[data-draw-svg]').first()).toBeVisible();
+    await page.goto('/methodology/');
+    await expect(page.locator('svg[data-draw-svg]').first()).toBeVisible();
+    await page.goto('/calculators/roofing/');
+    await expect(page.locator('svg[data-draw-svg]').first()).toBeVisible();
 
     await page.goto('/cost/roof-replacement/texas/');
     await expect(page.locator('h1')).toContainText('Cost of Roof Replacement in Texas');

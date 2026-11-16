@@ -44,6 +44,28 @@ const SUGGESTIONS = [
   'Roofing Shingles',
 ];
 
+function HighlightText({ text, query }: { text: string; query: string }) {
+  const q = query.trim();
+  if (!q) return <>{text}</>;
+  const tokens = q.split(/\s+/).filter(Boolean).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (!tokens.length) return <>{text}</>;
+  const regex = new RegExp(`(${tokens.join('|')})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <mark key={i} class="bm-highlight">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
 export default function SearchBox({
   items,
   categories = [],
@@ -363,18 +385,20 @@ export default function SearchBox({
         )}
 
         {/* Structured 3-Part Calculator Cards */}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bm-stagger-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredAndSorted.map((item) => {
             const sch = item.schematic && SCHEMATIC_PATHS[item.schematic] ? SCHEMATIC_PATHS[item.schematic] : null;
             return (
               <a
                 key={item.href}
                 href={item.href}
-                class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/75"
+                data-cursor="calc"
+                data-cursor-text="OPEN ↗"
+                class="bm-panel bm-card-invert p-5 group flex flex-col justify-between"
               >
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-3">
-                    <span class="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-1 rounded">
+                    <span class="bm-invert-badge inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-blueprint bg-blueprint-soft px-2 py-1 rounded border border-transparent transition-colors">
                       <LucideIcon name={getCategoryIconName(item.category)} size={12} />
                       {item.categoryName}
                     </span>
@@ -384,17 +408,17 @@ export default function SearchBox({
                         width="32"
                         height="22"
                         aria-hidden="true"
-                        class="text-blueprint opacity-75 group-hover:opacity-100 transition-opacity shrink-0"
+                        class="text-blueprint opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all shrink-0"
                         dangerouslySetInnerHTML={{ __html: sch }}
                       />
                     )}
                   </div>
 
                   <h3 class="text-base font-bold text-ink group-hover:text-blueprint transition-colors">
-                    {item.title}
+                    <HighlightText text={item.title} query={query} />
                   </h3>
                   <p class="mt-1 text-xs sm:text-[13px] text-ink-muted leading-snug line-clamp-2">
-                    {item.description}
+                    <HighlightText text={item.description} query={query} />
                   </p>
 
                   {(item.inputsLabel || item.outputsLabel) && (
@@ -499,7 +523,11 @@ export default function SearchBox({
       <form
         action="/calculators/"
         method="get"
-        class="relative flex items-center rounded-xl bg-surface border border-hairline-strong shadow-sm focus-within:border-blueprint focus-within:ring-4 focus-within:ring-blueprint-soft transition-all"
+        class={`relative flex items-center rounded-md bg-surface border shadow-sm transition-all duration-200 ${
+          isOpen
+            ? 'border-blueprint ring-4 ring-blueprint-soft shadow-md'
+            : 'border-hairline-strong'
+        }`}
       >
         <label htmlFor="hero-search-input" class="sr-only">
           Search calculators and cost guides
@@ -546,7 +574,7 @@ export default function SearchBox({
         <ul
           role="listbox"
           aria-label="Search suggestions"
-          class="absolute z-40 mt-2 w-full rounded-xl bg-surface border border-hairline-strong shadow-2xl divide-y divide-hairline overflow-hidden text-left"
+          class="bm-dropdown-enter absolute z-40 mt-2 w-full rounded-md bg-surface border border-hairline-strong shadow-2xl divide-y divide-hairline overflow-hidden text-left"
         >
           {dropdownMatches.map((item, idx) => (
             <li key={item.href}>
@@ -557,7 +585,7 @@ export default function SearchBox({
                 }`}
               >
                 <div class="flex items-start gap-3 min-w-0">
-                  <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-subtle border border-hairline text-blueprint">
+                  <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded bg-surface-subtle border border-hairline text-blueprint">
                     <LucideIcon
                       name={item.type === 'calculator' ? getCategoryIconName(item.category) : 'bar-chart-3'}
                       size={14}
@@ -565,10 +593,13 @@ export default function SearchBox({
                   </span>
                   <div class="min-w-0">
                     <div class="text-sm font-semibold text-ink truncate">
-                      {item.title}
+                      <HighlightText text={item.title} query={query} />
                     </div>
                     <div class="text-xs text-ink-muted line-clamp-1">
-                      {item.inputsLabel ? `Inputs: ${item.inputsLabel}` : item.description}
+                      <HighlightText
+                        text={item.inputsLabel ? `Inputs: ${item.inputsLabel}` : item.description}
+                        query={query}
+                      />
                     </div>
                   </div>
                 </div>

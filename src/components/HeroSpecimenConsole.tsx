@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import LucideIcon from './LucideIcon';
 import { calculateConcreteSlab } from '../lib/formulas/concrete-slab-calculator';
-import { calculatePaint } from '../lib/formulas/paint-calculator';
 import { calculateRoofing } from '../lib/formulas/roofing-calculator';
-import { calculateDrywall } from '../lib/formulas/drywall-calculator';
+import { calculateFlooring } from '../lib/formulas/flooring-calculator';
+import { calculatePaint } from '../lib/formulas/paint-calculator';
 
 export interface HeroSpecimenItem {
-  id: 'slab' | 'paint' | 'roof' | 'drywall';
+  id: 'concrete' | 'roofing' | 'flooring' | 'painting';
   tabLabel: string;
   eyebrow: string;
   standardTag: string;
@@ -38,10 +38,12 @@ interface LiveComputedView {
   max: number;
   step: number;
   currentParam: number;
-  normalizedRatio: number; // 0..1 for 3D canvas spring morph
+  normalizedRatio: number;
+  dimTop: string;
+  dimSide: string;
+  calloutBadge: string;
 }
 
-// 3D Isometric projection helper
 function isoProject(
   x: number,
   y: number,
@@ -69,7 +71,7 @@ function drawPolygon(
   pts: [number, number][],
   fill: string,
   stroke: string,
-  lineWidth = 1.5
+  lineWidth = 1.4
 ) {
   if (!pts.length) return;
   ctx.beginPath();
@@ -87,32 +89,91 @@ function drawPolygon(
   }
 }
 
+function drawPartialLine(
+  ctx: CanvasRenderingContext2D,
+  a: [number, number],
+  b: [number, number],
+  frac: number,
+  color: string,
+  width = 1.4,
+  dashed = false
+) {
+  if (frac <= 0) return;
+  const f = Math.min(1, Math.max(0, frac));
+  const ex = a[0] + (b[0] - a[0]) * f;
+  const ey = a[1] + (b[1] - a[1]) * f;
+  ctx.save();
+  if (dashed) ctx.setLineDash([4, 3]);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  ctx.moveTo(a[0], a[1]);
+  ctx.lineTo(ex, ey);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawCalloutTag(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  label: string,
+  alpha: number,
+  accent = false
+) {
+  if (alpha <= 0.05) return;
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, alpha);
+  ctx.font = '600 9.5px "JetBrains Mono", monospace';
+  const tw = ctx.measureText(label).width;
+  const padX = 6;
+  const bw = tw + padX * 2;
+  const bh = 17;
+  const rx = x - bw * 0.5;
+  const ry = y - bh * 0.5;
+
+  ctx.fillStyle = accent ? 'rgba(198, 243, 106, 0.14)' : 'rgba(16, 18, 21, 0.9)';
+  ctx.strokeStyle = accent ? 'rgba(198, 243, 106, 0.75)' : 'rgba(111, 163, 210, 0.65)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(rx, ry, bw, bh, 3);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = accent ? '#C6F36A' : '#F8F8F5';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, x, y + 0.5);
+  ctx.restore();
+}
+
 export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsoleProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Real-time interactive parameters per specimen (defaults match calculators.json!)
+  // Interactive per-trade parameter defaults matching calculators.json
   const [slabThickIn, setSlabThickIn] = useState(4);
-  const [paintCoats, setPaintCoats] = useState(2);
   const [roofPitch, setRoofPitch] = useState(6);
-  const [drywallLenFt, setDrywallLenFt] = useState(12);
+  const [floorLenFt, setFloorLenFt] = useState(15);
+  const [paintCoats, setPaintCoats] = useState(2);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointerTarget = useRef({ x: 0, y: 0, hover: false });
   const simState = useRef({
     camX: 0,
     camY: 0,
-    enterProg: 1,
+    assembleProg: 0, // Progressive blueprint assembly 0 -> 1 on load & switch!
     paramLerp: 0,
-    modeId: 'slab' as HeroSpecimenItem['id'],
+    modeId: 'concrete' as HeroSpecimenItem['id'],
     paramRatio: 0,
-    rawParam: 4,
+    dimTop: '12 FT × 10 FT',
+    dimSide: '4" SLAB',
+    calloutBadge: '+10% WASTE',
   });
 
   const baseSpec = specimens[activeIdx] || specimens[0];
 
-  // Auto-advance between tabs calmly unless user interacts or prefers reduced motion
   useEffect(() => {
     if (typeof window === 'undefined' || specimens.length <= 1) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -120,32 +181,14 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
 
     const timer = window.setInterval(() => {
       setActiveIdx((prev) => (prev + 1) % specimens.length);
-    }, 6400);
+    }, 6800);
     return () => window.clearInterval(timer);
   }, [paused, specimens.length]);
 
-  // Real-time deterministic calculation powered directly by BuildMath formulas
   const live = useMemo<LiveComputedView>(() => {
-    const id = baseSpec?.id || 'slab';
+    const id = baseSpec?.id || 'concrete';
 
-    if (id === 'slab') {
-      if (slabThickIn === 4 && baseSpec) {
-        return {
-          primaryValue: baseSpec.primaryValue,
-          primaryMeta: baseSpec.primaryMeta,
-          secondaryValue: baseSpec.secondaryValue,
-          secondaryMeta: baseSpec.secondaryMeta,
-          dimensionsLabel: baseSpec.dimensionsLabel,
-          copySummary: baseSpec.copySummary,
-          paramLabel: 'Slab Thickness',
-          paramValueDisplay: `${slabThickIn}"`,
-          min: 3.5,
-          max: 8,
-          step: 0.5,
-          currentParam: slabThickIn,
-          normalizedRatio: (slabThickIn - 3.5) / 4.5,
-        };
-      }
+    if (id === 'concrete') {
       const res = calculateConcreteSlab({
         lengthFeet: 12,
         widthFeet: 10,
@@ -159,10 +202,10 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
       const bags60 = Number(res.secondaryResults[1]?.value ?? 98);
       const truckVal = res.secondaryResults[4]?.value || '$268.95';
       return {
-        primaryValue: `${res.primaryResult.value} yd³`,
-        primaryMeta: `Net ${res.primaryResult.exactValue} yd³ · ${truckVal} truck`,
-        secondaryValue: `${bags80} × 80-lb`,
-        secondaryMeta: `Or ${bags60} × 60-lb · Est. $${res.costEstimate.typical.toFixed(2)}`,
+        primaryValue: slabThickIn === 4 && baseSpec ? baseSpec.primaryValue : `${res.primaryResult.value} yd³`,
+        primaryMeta: slabThickIn === 4 && baseSpec ? baseSpec.primaryMeta : `Net ${res.primaryResult.exactValue} yd³ · ${truckVal} truck`,
+        secondaryValue: slabThickIn === 4 && baseSpec ? baseSpec.secondaryValue : `${bags80} × 80-lb`,
+        secondaryMeta: slabThickIn === 4 && baseSpec ? baseSpec.secondaryMeta : `Or ${bags60} × 60-lb · $${res.costEstimate.typical.toFixed(2)}`,
         dimensionsLabel: `12 ft × 10 ft × ${slabThickIn} in + 10% waste → ${res.primaryResult.value} yd³`,
         copySummary: `BuildMath Concrete Slab (12×10 ft × ${slabThickIn} in, 10% waste): ${res.primaryResult.value} cu yd OR ${bags80} × 80-lb bags ($${res.costEstimate.typical.toFixed(2)})`,
         paramLabel: 'Slab Thickness',
@@ -172,77 +215,13 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         step: 0.5,
         currentParam: slabThickIn,
         normalizedRatio: (slabThickIn - 3.5) / 4.5,
+        dimTop: '12 FT × 10 FT',
+        dimSide: `${slabThickIn}" THICK`,
+        calloutBadge: `${res.primaryResult.value} YD³ · +10% WASTE`,
       };
     }
 
-    if (id === 'paint') {
-      if (paintCoats === 2 && baseSpec) {
-        return {
-          primaryValue: baseSpec.primaryValue,
-          primaryMeta: baseSpec.primaryMeta,
-          secondaryValue: baseSpec.secondaryValue,
-          secondaryMeta: baseSpec.secondaryMeta,
-          dimensionsLabel: baseSpec.dimensionsLabel,
-          copySummary: baseSpec.copySummary,
-          paramLabel: 'Finish Coats',
-          paramValueDisplay: `${paintCoats} coats`,
-          min: 1,
-          max: 3,
-          step: 1,
-          currentParam: paintCoats,
-          normalizedRatio: (paintCoats - 1) / 2,
-        };
-      }
-      const res = calculatePaint({
-        roomLength: 12,
-        roomWidth: 12,
-        wallHeight: 8,
-        doors: 2,
-        windows: 2,
-        includeCeiling: false,
-        coats: paintCoats,
-        includePrimer: false,
-        coveragePerGallon: 350,
-        primerCoveragePerGallon: 250,
-        wastePercent: 5,
-        pricePerGallon: 42,
-        primerPricePerGallon: 28,
-      });
-      return {
-        primaryValue: `${res.primaryResult.value} ${res.primaryResult.unit}`,
-        primaryMeta: `Exact: ${res.primaryResult.exactValue} gal · 5% waste`,
-        secondaryValue: `${res.secondaryResults[0]?.value ?? 312} sq ft`,
-        secondaryMeta: `Est. $${Math.round(res.costEstimate.typical)} (incl. roller kit)`,
-        dimensionsLabel: `12×12×8 ft · 2 doors, 2 windows · ${paintCoats} ${paintCoats === 1 ? 'coat' : 'coats'}`,
-        copySummary: `BuildMath Interior Paint (12×12×8 ft, ${paintCoats} coats): ${res.primaryResult.value} gallons ($${Math.round(res.costEstimate.typical)} incl. kit)`,
-        paramLabel: 'Finish Coats',
-        paramValueDisplay: `${paintCoats} ${paintCoats === 1 ? 'coat' : 'coats'}`,
-        min: 1,
-        max: 3,
-        step: 1,
-        currentParam: paintCoats,
-        normalizedRatio: (paintCoats - 1) / 2,
-      };
-    }
-
-    if (id === 'roof') {
-      if (roofPitch === 6 && baseSpec) {
-        return {
-          primaryValue: baseSpec.primaryValue,
-          primaryMeta: baseSpec.primaryMeta,
-          secondaryValue: baseSpec.secondaryValue,
-          secondaryMeta: baseSpec.secondaryMeta,
-          dimensionsLabel: baseSpec.dimensionsLabel,
-          copySummary: baseSpec.copySummary,
-          paramLabel: 'Gable Pitch',
-          paramValueDisplay: `${roofPitch}/12`,
-          min: 3,
-          max: 12,
-          step: 1,
-          currentParam: roofPitch,
-          normalizedRatio: (roofPitch - 3) / 9,
-        };
-      }
+    if (id === 'roofing') {
       const res = calculateRoofing({
         footprintLengthFeet: 50,
         footprintWidthFeet: 40,
@@ -254,12 +233,12 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         underlaymentRollSqFt: 1000,
       });
       return {
-        primaryValue: `${res.primaryResult.value} bundles`,
-        primaryMeta: `${res.secondaryResults[0]?.value} sq · ${res.secondaryResults[1]?.value} sq ft slope`,
-        secondaryValue: `$${Math.round(res.costEstimate.typical).toLocaleString()}`,
+        primaryValue: roofPitch === 6 && baseSpec ? baseSpec.primaryValue : `${res.primaryResult.value} bundles`,
+        primaryMeta: roofPitch === 6 && baseSpec ? baseSpec.primaryMeta : `${res.secondaryResults[0]?.value} sq · ${res.secondaryResults[1]?.value} sq ft`,
+        secondaryValue: roofPitch === 6 && baseSpec ? baseSpec.secondaryValue : `$${Math.round(res.costEstimate.typical).toLocaleString()}`,
         secondaryMeta: 'Shingles, felt, edge & cap',
         dimensionsLabel: `50×40 ft footprint · ${roofPitch}/12 pitch + 10% waste`,
-        copySummary: `BuildMath Roofing (50×40 ft, ${roofPitch}/12 pitch): ${res.primaryResult.value} bundles (${res.secondaryResults[0]?.value} squares, Est. $${Math.round(res.costEstimate.typical).toLocaleString()})`,
+        copySummary: `BuildMath Roofing (50×40 ft, ${roofPitch}/12 pitch): ${res.primaryResult.value} bundles (${res.secondaryResults[0]?.value} sq, $${Math.round(res.costEstimate.typical).toLocaleString()})`,
         paramLabel: 'Gable Pitch',
         paramValueDisplay: `${roofPitch}/12`,
         min: 3,
@@ -267,68 +246,92 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         step: 1,
         currentParam: roofPitch,
         normalizedRatio: (roofPitch - 3) / 9,
+        dimTop: '50 FT RIDGE',
+        dimSide: `${roofPitch}/12 PITCH`,
+        calloutBadge: `${res.primaryResult.value} BUNDLES`,
       };
     }
 
-    // Drywall
-    if (drywallLenFt === 12 && baseSpec) {
+    if (id === 'flooring') {
+      const res = calculateFlooring({
+        roomLength: floorLenFt,
+        roomWidth: 12,
+        secondAreaLength: 0,
+        secondAreaWidth: 0,
+        sqFtPerBox: 20,
+        wastePercent: 10,
+        underlaymentRollSqFt: 100,
+        pricePerSqFt: 3.49,
+        underlaymentPricePerRoll: 45,
+      });
       return {
-        primaryValue: baseSpec.primaryValue,
-        primaryMeta: baseSpec.primaryMeta,
-        secondaryValue: baseSpec.secondaryValue,
-        secondaryMeta: baseSpec.secondaryMeta,
-        dimensionsLabel: baseSpec.dimensionsLabel,
-        copySummary: baseSpec.copySummary,
+        primaryValue: floorLenFt === 15 && baseSpec ? baseSpec.primaryValue : `${res.primaryResult.value} boxes`,
+        primaryMeta: floorLenFt === 15 && baseSpec ? baseSpec.primaryMeta : `${res.secondaryResults[0]?.value} sq ft w/ 10% waste`,
+        secondaryValue: floorLenFt === 15 && baseSpec ? baseSpec.secondaryValue : `$${Math.round(res.costEstimate.typical).toLocaleString()}`,
+        secondaryMeta: `${res.secondaryResults[3]?.value ?? 2} underlayment rolls`,
+        dimensionsLabel: `${floorLenFt}×12 ft room · 20 sq ft/box + 10% waste`,
+        copySummary: `BuildMath Flooring (${floorLenFt}×12 ft, 10% waste): ${res.primaryResult.value} boxes (${res.secondaryResults[0]?.value} sq ft, $${Math.round(res.costEstimate.typical).toLocaleString()})`,
         paramLabel: 'Room Length',
-        paramValueDisplay: `${drywallLenFt} ft`,
+        paramValueDisplay: `${floorLenFt} ft`,
         min: 10,
         max: 24,
-        step: 2,
-        currentParam: drywallLenFt,
-        normalizedRatio: (drywallLenFt - 10) / 14,
+        step: 1,
+        currentParam: floorLenFt,
+        normalizedRatio: (floorLenFt - 10) / 14,
+        dimTop: `${floorLenFt} FT LENGTH`,
+        dimSide: '12 FT WIDE',
+        calloutBadge: `${res.primaryResult.value} BOXES · +10% CUTS`,
       };
     }
-    const res = calculateDrywall({
-      roomLengthFeet: drywallLenFt,
-      roomWidthFeet: 12,
-      wallHeightFeet: 8,
-      includeCeiling: true,
+
+    // 04 Painting
+    const res = calculatePaint({
+      roomLength: 12,
+      roomWidth: 12,
+      wallHeight: 8,
       doors: 2,
       windows: 2,
-      sheetLengthFeet: 8,
-      wastePercent: 10,
-      compoundGallonsPer100SqFt: 1.125,
-      screwsPerSheet: 32,
-      pricePerSheet: 15.8,
+      includeCeiling: false,
+      coats: paintCoats,
+      includePrimer: false,
+      coveragePerGallon: 350,
+      primerCoveragePerGallon: 250,
+      wastePercent: 5,
+      pricePerGallon: 42,
+      primerPricePerGallon: 28,
     });
     return {
-      primaryValue: `${res.primaryResult.value} sheets`,
-      primaryMeta: `${res.secondaryResults[0]?.value} sq ft · ${res.materials[1]?.quantity ?? 2} mud pails`,
-      secondaryValue: `${res.secondaryResults[3]?.value ?? 512} screws`,
-      secondaryMeta: `1 roll tape · Est. $${res.costEstimate.typical.toFixed(2)}`,
-      dimensionsLabel: `${drywallLenFt}×12×8 ft + ceiling · 10% waste`,
-      copySummary: `BuildMath Drywall (${drywallLenFt}×12×8 ft + ceiling): ${res.primaryResult.value} sheets, ${res.secondaryResults[3]?.value} screws ($${res.costEstimate.typical.toFixed(2)})`,
-      paramLabel: 'Room Length',
-      paramValueDisplay: `${drywallLenFt} ft`,
-      min: 10,
-      max: 24,
-      step: 2,
-      currentParam: drywallLenFt,
-      normalizedRatio: (drywallLenFt - 10) / 14,
+      primaryValue: paintCoats === 2 && baseSpec ? baseSpec.primaryValue : `${res.primaryResult.value} ${res.primaryResult.unit}`,
+      primaryMeta: paintCoats === 2 && baseSpec ? baseSpec.primaryMeta : `Exact: ${res.primaryResult.exactValue} gal · 5% waste`,
+      secondaryValue: `${res.secondaryResults[0]?.value ?? 312} sq ft`,
+      secondaryMeta: `Est. $${Math.round(res.costEstimate.typical)} (incl. supplies)`,
+      dimensionsLabel: `12×12×8 ft · 2 doors & windows excluded · ${paintCoats} ${paintCoats === 1 ? 'coat' : 'coats'}`,
+      copySummary: `BuildMath Interior Paint (12×12×8 ft, ${paintCoats} coats): ${res.primaryResult.value} gallons ($${Math.round(res.costEstimate.typical)})`,
+      paramLabel: 'Finish Coats',
+      paramValueDisplay: `${paintCoats} ${paintCoats === 1 ? 'coat' : 'coats'}`,
+      min: 1,
+      max: 3,
+      step: 1,
+      currentParam: paintCoats,
+      normalizedRatio: (paintCoats - 1) / 2,
+      dimTop: '12×12×8 FT ROOM',
+      dimSide: '-72 SF OPENINGS',
+      calloutBadge: `${res.primaryResult.value} GAL (${paintCoats} COATS)`,
     };
-  }, [baseSpec, slabThickIn, paintCoats, roofPitch, drywallLenFt]);
+  }, [baseSpec, slabThickIn, roofPitch, floorLenFt, paintCoats]);
 
-  // Sync target simulation parameters whenever mode or slider updates
   useEffect(() => {
     if (simState.current.modeId !== baseSpec.id) {
-      simState.current.enterProg = 0;
+      simState.current.assembleProg = 0; // Retrigger progressive drafting assembly!
       simState.current.modeId = baseSpec.id;
     }
     simState.current.paramRatio = live.normalizedRatio;
-    simState.current.rawParam = live.currentParam;
-  }, [baseSpec.id, live.normalizedRatio, live.currentParam]);
+    simState.current.dimTop = live.dimTop;
+    simState.current.dimSide = live.dimSide;
+    simState.current.calloutBadge = live.calloutBadge;
+  }, [baseSpec.id, live]);
 
-  // 60fps Interactive 3D CAD Physics Canvas Loop (rive.app interactive vector engine feel)
+  // 60fps Progressive Architectural Blueprint Assembly + Interactive 3D CAD Physics
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || typeof window === 'undefined') return;
@@ -336,8 +339,10 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
     if (!ctx) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let width = 320;
-    let height = 148;
+    if (reducedMotion) simState.current.assembleProg = 1;
+
+    let width = 340;
+    let height = 166;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -364,32 +369,39 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
       const t = (now - start) / 1000;
       const s = simState.current;
 
-      // Damped spring interpolation on pointer orbit, mode entry, and slider geometry
-      const idleOrbitX = reducedMotion || pointerTarget.current.hover ? 0 : Math.sin(t * 0.9) * 0.16;
-      const idleOrbitY = reducedMotion || pointerTarget.current.hover ? 0 : Math.cos(t * 0.7) * 0.08;
-      const tx = pointerTarget.current.hover ? pointerTarget.current.x : idleOrbitX;
-      const ty = pointerTarget.current.hover ? pointerTarget.current.y : idleOrbitY;
+      // Smooth damped camera tracking & progressive blueprint assembly progress
+      const idleX = reducedMotion || pointerTarget.current.hover ? 0 : Math.sin(t * 0.75) * 0.14;
+      const idleY = reducedMotion || pointerTarget.current.hover ? 0 : Math.cos(t * 0.6) * 0.07;
+      const tx = pointerTarget.current.hover ? pointerTarget.current.x : idleX;
+      const ty = pointerTarget.current.hover ? pointerTarget.current.y : idleY;
 
       s.camX += (tx - s.camX) * (reducedMotion ? 1 : 0.14);
       s.camY += (ty - s.camY) * (reducedMotion ? 1 : 0.14);
-      s.enterProg += (1 - s.enterProg) * (reducedMotion ? 1 : 0.12);
       s.paramLerp += (s.paramRatio - s.paramLerp) * (reducedMotion ? 1 : 0.16);
+      s.assembleProg = reducedMotion ? 1 : Math.min(1, s.assembleProg + 0.022);
+
+      // Four distinct construction assembly stages
+      const outlineFrac = Math.min(1, s.assembleProg / 0.34);
+      const fillFrac = Math.min(1, Math.max(0, (s.assembleProg - 0.24) / 0.38));
+      const dimFrac = Math.min(1, Math.max(0, (s.assembleProg - 0.52) / 0.3));
+      const tagAlpha = Math.min(1, Math.max(0, (s.assembleProg - 0.72) / 0.28));
 
       ctx.clearRect(0, 0, width, height);
 
-      // Subtle animated CAD grid aligned with pointer parallax
+      // Animated blueprint coordinate grid fading subtly outward from center
+      const gridAlpha = 0.08 * Math.min(1, outlineFrac * 1.4);
+      ctx.strokeStyle = `rgba(111, 163, 210, ${gridAlpha.toFixed(3)})`;
+      ctx.lineWidth = 1;
+      const gStep = 24;
       const gxOff = s.camX * -8;
       const gyOff = s.camY * -6;
-      ctx.strokeStyle = 'rgba(111, 163, 210, 0.075)';
-      ctx.lineWidth = 1;
-      const step = 22;
-      for (let gx = (gxOff % step + step) % step; gx < width; gx += step) {
+      for (let gx = (gxOff % gStep + gStep) % gStep; gx < width; gx += gStep) {
         ctx.beginPath();
         ctx.moveTo(gx, 0);
         ctx.lineTo(gx, height);
         ctx.stroke();
       }
-      for (let gy = (gyOff % step + step) % step; gy < height; gy += step) {
+      for (let gy = (gyOff % gStep + gStep) % gStep; gy < height; gy += gStep) {
         ctx.beginPath();
         ctx.moveTo(0, gy);
         ctx.lineTo(width, gy);
@@ -397,18 +409,32 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
       }
 
       const cx = width * 0.5;
-      const cy = height * 0.56;
-      const yaw = 0.62 + s.camX * 0.24;
+      const cy = height * 0.51;
+      const yaw = 0.62 + s.camX * 0.22;
       const pitch = 0.44 + s.camY * 0.14;
-      const unitScale = Math.min(width / 320, 1.12);
+      const unitScale = Math.min(width / 340, 1.08);
+      const topTagAnchor: [number, number] = [Math.max(58, width * 0.19), height - 16];
+      const sideTagAnchor: [number, number] = [width - 54, 20];
+      const badgeAnchor: [number, number] = [Math.min(width - 78, width * 0.79), height - 16];
 
-      if (s.modeId === 'slab') {
+      if (s.modeId === 'concrete') {
         const hw = 74 * unitScale;
         const hd = 52 * unitScale;
         const baseH = (12 + s.paramLerp * 18) * unitScale;
-        const curH = Math.max(2, baseH * s.enterProg);
+        const curH = baseH * fillFrac;
         const topY = -curH * 0.5;
         const botY = curH * 0.5;
+
+        // Dashed +10% waste margin perimeter bounding the slab
+        const wPad = 10 * unitScale;
+        const w0 = isoProject(-hw - wPad, botY, -hd - wPad, yaw, pitch, cx, cy, 1);
+        const w1 = isoProject(hw + wPad, botY, -hd - wPad, yaw, pitch, cx, cy, 1);
+        const w2 = isoProject(hw + wPad, botY, hd + wPad, yaw, pitch, cx, cy, 1);
+        const w3 = isoProject(-hw - wPad, botY, hd + wPad, yaw, pitch, cx, cy, 1);
+        drawPartialLine(ctx, w0, w1, dimFrac, 'rgba(198, 243, 106, 0.4)', 1, true);
+        drawPartialLine(ctx, w1, w2, dimFrac, 'rgba(198, 243, 106, 0.4)', 1, true);
+        drawPartialLine(ctx, w2, w3, dimFrac, 'rgba(198, 243, 106, 0.4)', 1, true);
+        drawPartialLine(ctx, w3, w0, dimFrac, 'rgba(198, 243, 106, 0.4)', 1, true);
 
         const p0 = isoProject(-hw, topY, -hd, yaw, pitch, cx, cy, 1);
         const p1 = isoProject(hw, topY, -hd, yaw, pitch, cx, cy, 1);
@@ -419,175 +445,166 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         const b2 = isoProject(hw, botY, hd, yaw, pitch, cx, cy, 1);
         const b3 = isoProject(-hw, botY, hd, yaw, pitch, cx, cy, 1);
 
-        // Front & side extrusions
-        drawPolygon(ctx, [p3, p2, b2, b3], 'rgba(71, 121, 168, 0.22)', '#6FA3D2', 1.4);
-        drawPolygon(ctx, [p2, p1, b1, b2], 'rgba(198, 243, 106, 0.2)', '#C6F36A', 1.4);
-        drawPolygon(ctx, [p0, p1, p2, p3], 'rgba(111, 163, 210, 0.24)', '#6FA3D2', 1.7);
-
-        // Flowing animated concrete screed wave & rebar mesh across top face
-        const sweep = ((t * 0.55) % 1);
-        ctx.strokeStyle = 'rgba(198, 243, 106, 0.35)';
-        ctx.lineWidth = 1;
-        for (let r = -0.6; r <= 0.6; r += 0.4) {
-          const rStart = isoProject(-hw * 0.85, topY, hd * r, yaw, pitch, cx, cy, 1);
-          const rEnd = isoProject(hw * 0.85, topY, hd * r, yaw, pitch, cx, cy, 1);
-          ctx.beginPath();
-          ctx.moveTo(rStart[0], rStart[1]);
-          ctx.lineTo(rEnd[0], rEnd[1]);
-          ctx.stroke();
+        if (fillFrac > 0.05) {
+          ctx.save();
+          ctx.globalAlpha = fillFrac;
+          drawPolygon(ctx, [p3, p2, b2, b3], 'rgba(71, 121, 168, 0.24)', 'rgba(111, 163, 210, 0.6)', 1);
+          drawPolygon(ctx, [p2, p1, b1, b2], 'rgba(198, 243, 106, 0.22)', 'rgba(198, 243, 106, 0.65)', 1);
+          drawPolygon(ctx, [p0, p1, p2, p3], 'rgba(71, 121, 168, 0.22)', 'transparent', 0);
+          ctx.restore();
         }
-        const waveX = -hw + sweep * (hw * 2);
-        const wA = isoProject(waveX, topY, -hd, yaw, pitch, cx, cy, 1);
-        const wB = isoProject(waveX, topY, hd, yaw, pitch, cx, cy, 1);
-        ctx.strokeStyle = 'rgba(198, 243, 106, 0.85)';
-        ctx.lineWidth = 1.6;
-        ctx.beginPath();
-        ctx.moveTo(wA[0], wA[1]);
-        ctx.lineTo(wB[0], wB[1]);
-        ctx.stroke();
-      } else if (s.modeId === 'paint') {
-        // 3D L-corner room elevation with animated rising paint coat level & punched openings
-        const rw = 66 * unitScale;
-        const rd = 54 * unitScale;
-        const rh = 44 * unitScale;
-        const yBot = 24 * unitScale;
-        const yTop = yBot - rh;
 
-        const wBL = isoProject(-rw, yBot, -rd, yaw, pitch, cx, cy, 1);
-        const wBC = isoProject(rw * 0.2, yBot, -rd, yaw, pitch, cx, cy, 1);
-        const wBR = isoProject(rw * 0.2, yBot, rd, yaw, pitch, cx, cy, 1);
-        const wTL = isoProject(-rw, yTop, -rd, yaw, pitch, cx, cy, 1);
-        const wTC = isoProject(rw * 0.2, yTop, -rd, yaw, pitch, cx, cy, 1);
-        const wTR = isoProject(rw * 0.2, yTop, rd, yaw, pitch, cx, cy, 1);
+        // Edge-by-edge blueprint outline tracing
+        drawPartialLine(ctx, p0, p1, outlineFrac * 2, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, p1, p2, outlineFrac * 2 - 0.35, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, p2, p3, outlineFrac * 2 - 0.7, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, p3, p0, outlineFrac * 2 - 1.0, '#6FA3D2', 1.65);
 
-        // Back wall + side wall outlines
-        drawPolygon(ctx, [wTL, wTC, wBC, wBL], 'rgba(71, 121, 168, 0.14)', '#6FA3D2', 1.5);
-        drawPolygon(ctx, [wTC, wTR, wBR, wBC], 'rgba(71, 121, 168, 0.1)', '#6FA3D2', 1.5);
-
-        // Animated paint coat level rising dynamically by coat count (1..3)
-        const coatFillRatio = Math.min(1, (0.33 + s.paramLerp * 0.67) * s.enterProg);
-        const yCoat = yBot - rh * coatFillRatio;
-        const cTL = isoProject(-rw, yCoat, -rd, yaw, pitch, cx, cy, 1);
-        const cTC = isoProject(rw * 0.2, yCoat, -rd, yaw, pitch, cx, cy, 1);
-        const cTR = isoProject(rw * 0.2, yCoat, rd, yaw, pitch, cx, cy, 1);
-
-        drawPolygon(ctx, [cTL, cTC, wBC, wBL], 'rgba(198, 243, 106, 0.22)', 'rgba(198, 243, 106, 0.7)', 1.2);
-        drawPolygon(ctx, [cTC, cTR, wBR, wBC], 'rgba(198, 243, 106, 0.15)', 'rgba(198, 243, 106, 0.65)', 1.2);
-
-        // Deducted door cutout on left wall + window on right wall
-        const d1 = isoProject(-rw * 0.72, yBot - rh * 0.74, -rd, yaw, pitch, cx, cy, 1);
-        const d2 = isoProject(-rw * 0.42, yBot - rh * 0.74, -rd, yaw, pitch, cx, cy, 1);
-        const d3 = isoProject(-rw * 0.42, yBot, -rd, yaw, pitch, cx, cy, 1);
-        const d4 = isoProject(-rw * 0.72, yBot, -rd, yaw, pitch, cx, cy, 1);
-        drawPolygon(ctx, [d1, d2, d3, d4], '#0D1013', '#C6F36A', 1.2);
-
-        const win1 = isoProject(rw * 0.2, yTop + rh * 0.24, -rd * 0.35, yaw, pitch, cx, cy, 1);
-        const win2 = isoProject(rw * 0.2, yTop + rh * 0.24, rd * 0.35, yaw, pitch, cx, cy, 1);
-        const win3 = isoProject(rw * 0.2, yTop + rh * 0.62, rd * 0.35, yaw, pitch, cx, cy, 1);
-        const win4 = isoProject(rw * 0.2, yTop + rh * 0.62, -rd * 0.35, yaw, pitch, cx, cy, 1);
-        drawPolygon(ctx, [win1, win2, win3, win4], '#0D1013', '#C6F36A', 1.2);
-      } else if (s.modeId === 'roof') {
-        // 3D Pitched Gable Roof dynamically hinging with roofPitch (3/12 .. 12/12)
+        // Animated dimension leader callouts
+        const extStart = isoProject(hw + wPad, topY, -hd - wPad, yaw, pitch, cx, cy, 1);
+        const extEnd: [number, number] = [sideTagAnchor[0], sideTagAnchor[1] + 9];
+        drawPartialLine(ctx, extStart, extEnd, dimFrac, '#C6F36A', 1.1);
+      } else if (s.modeId === 'roofing') {
         const gl = 68 * unitScale;
         const gw = 48 * unitScale;
-        const curPitchRise = 3 + s.paramLerp * 9;
-        const ridgeH = ((curPitchRise / 12) * gw) * 0.82 * s.enterProg;
-        const baseY = 20 * unitScale;
+        const pitchVal = 3 + s.paramLerp * 9;
+        const ridgeH = ((pitchVal / 12) * gw) * 0.85 * Math.max(0.25, fillFrac);
+        const baseY = 24 * unitScale;
 
         const rFront = isoProject(-gl, baseY - ridgeH, 0, yaw, pitch, cx, cy, 1);
         const rBack = isoProject(gl, baseY - ridgeH, 0, yaw, pitch, cx, cy, 1);
-
         const eFL = isoProject(-gl, baseY, -gw, yaw, pitch, cx, cy, 1);
         const eFR = isoProject(-gl, baseY, gw, yaw, pitch, cx, cy, 1);
         const eBL = isoProject(gl, baseY, -gw, yaw, pitch, cx, cy, 1);
         const eBR = isoProject(gl, baseY, gw, yaw, pitch, cx, cy, 1);
 
-        // Far slope, Gable end triangle, Near illuminated slope
-        drawPolygon(ctx, [rFront, rBack, eBL, eFL], 'rgba(71, 121, 168, 0.14)', '#6FA3D2', 1.3);
-        drawPolygon(ctx, [eFL, rFront, eFR], 'rgba(13, 16, 19, 0.78)', '#6FA3D2', 1.5);
-        drawPolygon(ctx, [rFront, rBack, eBR, eFR], 'rgba(71, 121, 168, 0.25)', '#6FA3D2', 1.7);
-
-        // Shingle course contour lines sweeping up/down pitch slope
-        const courses = 4;
-        for (let c = 1; c < courses; c++) {
-          const f = c / courses;
-          const ca = isoProject(-gl, baseY - ridgeH * f, gw * (1 - f), yaw, pitch, cx, cy, 1);
-          const cb = isoProject(gl, baseY - ridgeH * f, gw * (1 - f), yaw, pitch, cx, cy, 1);
-          ctx.strokeStyle = c === 2 ? 'rgba(198, 243, 106, 0.75)' : 'rgba(111, 163, 210, 0.45)';
-          ctx.lineWidth = c === 2 ? 1.4 : 1;
-          ctx.beginPath();
-          ctx.moveTo(ca[0], ca[1]);
-          ctx.lineTo(cb[0], cb[1]);
-          ctx.stroke();
-        }
-        // Highlight glowing ridge spine
-        ctx.strokeStyle = '#C6F36A';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(rFront[0], rFront[1]);
-        ctx.lineTo(rBack[0], rBack[1]);
-        ctx.stroke();
-      } else {
-        // 04 Drywall: Staggered 4x8 panels snapping into 16" OC studs proportionally to roomLength
-        const wallSpan = (68 + s.paramLerp * 46) * unitScale;
-        const wallH = 54 * unitScale;
-        const x0 = -wallSpan * 0.5;
-        const yBot = 26 * unitScale;
-        const yTop = yBot - wallH;
-
-        // Vertical stud bay background frame
-        const f1 = isoProject(x0, yTop, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-        const f2 = isoProject(x0 + wallSpan, yTop, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-        const f3 = isoProject(x0 + wallSpan, yBot, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-        const f4 = isoProject(x0, yBot, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-        drawPolygon(ctx, [f1, f2, f3, f4], 'rgba(13, 16, 19, 0.6)', '#282E37', 1.2);
-
-        // Draw 16" OC framing studs
-        const studCount = Math.round(5 + s.paramLerp * 4);
-        ctx.strokeStyle = 'rgba(111, 163, 210, 0.35)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= studCount; i++) {
-          const sx = x0 + (wallSpan * i) / studCount;
-          const st = isoProject(sx, yTop, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-          const sb = isoProject(sx, yBot, 0, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-          ctx.beginPath();
-          ctx.moveTo(st[0], st[1]);
-          ctx.lineTo(sb[0], sb[1]);
-          ctx.stroke();
-        }
-
-        // Animated 2 staggered courses of drywall sheets snapping in sequentially
-        const panelCols = 3;
-        const totalSheets = panelCols * 2;
-        const revealCount = Math.max(1, s.enterProg * totalSheets);
-        for (let row = 0; row < 2; row++) {
-          const py0 = yTop + row * (wallH * 0.5);
-          const py1 = py0 + wallH * 0.5;
-          for (let col = 0; col < panelCols; col++) {
-            const sheetIdx = row * panelCols + col;
-            const localProg = Math.min(1, Math.max(0, revealCount - sheetIdx));
-            if (localProg <= 0) continue;
-
-            const shiftOffset = row === 1 ? wallSpan / (panelCols * 2) : 0;
-            const pxStart = Math.max(x0, x0 + (col * wallSpan) / panelCols - shiftOffset);
-            const pxEnd = Math.min(x0 + wallSpan, x0 + ((col + 1) * wallSpan) / panelCols - shiftOffset);
-            const yOffset = (1 - localProg) * -10;
-            const a = isoProject(pxStart, py0 + yOffset, 2, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-            const b = isoProject(pxEnd, py0 + yOffset, 2, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-            const c = isoProject(pxEnd, py1 + yOffset, 2, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-            const d = isoProject(pxStart, py1 + yOffset, 2, yaw * 0.45, pitch * 0.65, cx, cy, 1);
-
-            const isLimeHighlight = (row + col) % 2 === 1;
-            drawPolygon(
-              ctx,
-              [a, b, c, d],
-              isLimeHighlight ? 'rgba(198, 243, 106, 0.16)' : 'rgba(71, 121, 168, 0.2)',
-              isLimeHighlight ? '#C6F36A' : '#6FA3D2',
-              1.35
-            );
+        if (fillFrac > 0.05) {
+          ctx.save();
+          ctx.globalAlpha = fillFrac;
+          drawPolygon(ctx, [rFront, rBack, eBL, eFL], 'rgba(71, 121, 168, 0.14)', 'rgba(111, 163, 210, 0.5)', 1.2);
+          drawPolygon(ctx, [eFL, rFront, eFR], 'rgba(16, 18, 21, 0.82)', 'transparent', 0);
+          drawPolygon(ctx, [rFront, rBack, eBR, eFR], 'rgba(71, 121, 168, 0.25)', 'transparent', 0);
+          // Progressive shingle courses across front slope
+          for (let c = 1; c <= 4; c++) {
+            const f = c / 5;
+            const ca = isoProject(-gl, baseY - ridgeH * f, gw * (1 - f), yaw, pitch, cx, cy, 1);
+            const cb = isoProject(gl, baseY - ridgeH * f, gw * (1 - f), yaw, pitch, cx, cy, 1);
+            drawPartialLine(ctx, ca, cb, dimFrac, c === 3 ? '#C6F36A' : 'rgba(111, 163, 210, 0.45)', c === 3 ? 1.4 : 1);
           }
+          ctx.restore();
         }
+
+        drawPartialLine(ctx, eFR, rFront, outlineFrac * 2, '#6FA3D2', 1.7);
+        drawPartialLine(ctx, rFront, eFL, outlineFrac * 2 - 0.3, '#6FA3D2', 1.7);
+        drawPartialLine(ctx, rFront, rBack, outlineFrac * 2 - 0.5, '#C6F36A', 2);
+        drawPartialLine(ctx, eFR, eBR, outlineFrac * 2 - 0.7, '#6FA3D2', 1.5);
+        drawPartialLine(ctx, rBack, eBR, outlineFrac * 2 - 0.9, '#6FA3D2', 1.5);
+      } else if (s.modeId === 'flooring') {
+        // 3D Architectural Floor Plan with Progressive Tile/Plank Rows + Waste Cut Allowance Strip
+        const rw = (64 + s.paramLerp * 34) * unitScale;
+        const rd = 50 * unitScale;
+        const fy = 12 * unitScale;
+
+        const c0 = isoProject(-rw, fy, -rd, yaw, pitch * 1.15, cx, cy, 1);
+        const c1 = isoProject(rw, fy, -rd, yaw, pitch * 1.15, cx, cy, 1);
+        const c2 = isoProject(rw, fy, rd, yaw, pitch * 1.15, cx, cy, 1);
+        const c3 = isoProject(-rw, fy, rd, yaw, pitch * 1.15, cx, cy, 1);
+
+        if (fillFrac > 0.05) {
+          ctx.save();
+          ctx.globalAlpha = fillFrac;
+          drawPolygon(ctx, [c0, c1, c2, c3], 'rgba(71, 121, 168, 0.14)', 'transparent', 0);
+
+          // Highlight rightmost 10% strip as Waste Cut Allowance band
+          const wX = rw * 0.8;
+          const ws0 = isoProject(wX, fy, -rd, yaw, pitch * 1.15, cx, cy, 1);
+          const ws3 = isoProject(wX, fy, rd, yaw, pitch * 1.15, cx, cy, 1);
+          drawPolygon(ctx, [ws0, c1, c2, ws3], 'rgba(198, 243, 106, 0.18)', 'rgba(198, 243, 106, 0.55)', 1);
+
+          // Progressive plank grid rows assembling left-to-right
+          const rows = 4;
+          const cols = 5;
+          const totalTiles = rows * cols;
+          const visibleTiles = totalTiles * fillFrac;
+          for (let r = 0; r < rows; r++) {
+            const zA = -rd + (r * (rd * 2)) / rows;
+            const zB = -rd + ((r + 1) * (rd * 2)) / rows;
+            for (let col = 0; col < cols; col++) {
+              const tIdx = r * cols + col;
+              if (tIdx > visibleTiles) continue;
+              const xA = -rw + (col * (rw + wX)) / cols;
+              const xB = -rw + ((col + 1) * (rw + wX)) / cols;
+              const t0 = isoProject(xA, fy, zA, yaw, pitch * 1.15, cx, cy, 1);
+              const t1 = isoProject(xB, fy, zA, yaw, pitch * 1.15, cx, cy, 1);
+              const t2 = isoProject(xB, fy, zB, yaw, pitch * 1.15, cx, cy, 1);
+              const t3 = isoProject(xA, fy, zB, yaw, pitch * 1.15, cx, cy, 1);
+              drawPolygon(ctx, [t0, t1, t2, t3], 'rgba(111, 163, 210, 0.1)', 'rgba(111, 163, 210, 0.45)', 0.9);
+            }
+          }
+          ctx.restore();
+        }
+
+        drawPartialLine(ctx, c0, c1, outlineFrac * 2, '#6FA3D2', 1.7);
+        drawPartialLine(ctx, c1, c2, outlineFrac * 2 - 0.3, '#C6F36A', 1.7);
+        drawPartialLine(ctx, c2, c3, outlineFrac * 2 - 0.6, '#6FA3D2', 1.7);
+        drawPartialLine(ctx, c3, c0, outlineFrac * 2 - 0.9, '#6FA3D2', 1.7);
+      } else {
+        // 04 Painting: 3D Room Corner Walls Filling Coat-by-Coat w/ Excluded Door & Window Openings
+        const rw = 66 * unitScale;
+        const rd = 54 * unitScale;
+        const rh = 46 * unitScale;
+        const yBot = 26 * unitScale;
+        const yTop = yBot - rh;
+
+        const wBL = isoProject(-rw, yBot, -rd, yaw, pitch, cx, cy, 1);
+        const wBC = isoProject(rw * 0.22, yBot, -rd, yaw, pitch, cx, cy, 1);
+        const wBR = isoProject(rw * 0.22, yBot, rd, yaw, pitch, cx, cy, 1);
+        const wTL = isoProject(-rw, yTop, -rd, yaw, pitch, cx, cy, 1);
+        const wTC = isoProject(rw * 0.22, yTop, -rd, yaw, pitch, cx, cy, 1);
+        const wTR = isoProject(rw * 0.22, yTop, rd, yaw, pitch, cx, cy, 1);
+
+        if (fillFrac > 0.05) {
+          ctx.save();
+          ctx.globalAlpha = fillFrac;
+          drawPolygon(ctx, [wTL, wTC, wBC, wBL], 'rgba(71, 121, 168, 0.14)', 'transparent', 0);
+          drawPolygon(ctx, [wTC, wTR, wBR, wBC], 'rgba(71, 121, 168, 0.1)', 'transparent', 0);
+
+          const coatFill = Math.min(1, (0.35 + s.paramLerp * 0.65) * fillFrac);
+          const yCoat = yBot - rh * coatFill;
+          const cTL = isoProject(-rw, yCoat, -rd, yaw, pitch, cx, cy, 1);
+          const cTC = isoProject(rw * 0.22, yCoat, -rd, yaw, pitch, cx, cy, 1);
+          const cTR = isoProject(rw * 0.22, yCoat, rd, yaw, pitch, cx, cy, 1);
+
+          drawPolygon(ctx, [cTL, cTC, wBC, wBL], 'rgba(198, 243, 106, 0.22)', '#C6F36A', 1.1);
+          drawPolygon(ctx, [cTC, cTR, wBR, wBC], 'rgba(198, 243, 106, 0.14)', '#C6F36A', 1.1);
+
+          // Excluded Door & Window Cutouts
+          const d1 = isoProject(-rw * 0.72, yBot - rh * 0.72, -rd, yaw, pitch, cx, cy, 1);
+          const d2 = isoProject(-rw * 0.42, yBot - rh * 0.72, -rd, yaw, pitch, cx, cy, 1);
+          const d3 = isoProject(-rw * 0.42, yBot, -rd, yaw, pitch, cx, cy, 1);
+          const d4 = isoProject(-rw * 0.72, yBot, -rd, yaw, pitch, cx, cy, 1);
+          drawPolygon(ctx, [d1, d2, d3, d4], '#101215', '#C6F36A', 1.2);
+
+          const win1 = isoProject(rw * 0.22, yTop + rh * 0.24, -rd * 0.36, yaw, pitch, cx, cy, 1);
+          const win2 = isoProject(rw * 0.22, yTop + rh * 0.24, rd * 0.36, yaw, pitch, cx, cy, 1);
+          const win3 = isoProject(rw * 0.22, yTop + rh * 0.62, rd * 0.36, yaw, pitch, cx, cy, 1);
+          const win4 = isoProject(rw * 0.22, yTop + rh * 0.62, -rd * 0.36, yaw, pitch, cx, cy, 1);
+          drawPolygon(ctx, [win1, win2, win3, win4], '#101215', '#C6F36A', 1.2);
+          ctx.restore();
+        }
+
+        drawPartialLine(ctx, wTL, wTC, outlineFrac * 2, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, wTC, wTR, outlineFrac * 2 - 0.3, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, wBL, wBC, outlineFrac * 2 - 0.5, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, wBC, wBR, outlineFrac * 2 - 0.7, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, wTL, wBL, outlineFrac * 2 - 0.9, '#6FA3D2', 1.65);
+        drawPartialLine(ctx, wTC, wBC, outlineFrac * 2 - 1.0, '#C6F36A', 1.4);
       }
+
+      const isLimeSide = s.modeId === 'concrete' || s.modeId === 'roofing';
+      drawCalloutTag(ctx, topTagAnchor[0], topTagAnchor[1], s.dimTop, tagAlpha, false);
+      drawCalloutTag(ctx, sideTagAnchor[0], sideTagAnchor[1], s.dimSide, tagAlpha, isLimeSide);
+      drawCalloutTag(ctx, badgeAnchor[0], badgeAnchor[1], s.calloutBadge, tagAlpha, true);
 
       if (!reducedMotion) {
         rafId = requestAnimationFrame(drawFrame);
@@ -605,10 +622,10 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
 
   const handleParamChange = (val: number) => {
     setPaused(true);
-    if (baseSpec.id === 'slab') setSlabThickIn(val);
-    else if (baseSpec.id === 'paint') setPaintCoats(val);
-    else if (baseSpec.id === 'roof') setRoofPitch(val);
-    else setDrywallLenFt(val);
+    if (baseSpec.id === 'concrete') setSlabThickIn(val);
+    else if (baseSpec.id === 'roofing') setRoofPitch(val);
+    else if (baseSpec.id === 'flooring') setFloorLenFt(val);
+    else setPaintCoats(val);
   };
 
   const handleCopySpec = async () => {
@@ -629,11 +646,11 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         pointerTarget.current.hover = false;
       }}
     >
-      {/* Top Specimen Telemetry Header + 4-State Switcher */}
+      {/* Top Blueprint Telemetry Header + 4-Discipline Selector */}
       <div class="px-4 py-3 border-b border-graphite-700 bg-graphite-950/75 space-y-2.5">
         <div class="flex items-center justify-between gap-2">
           <span class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#D2D6DC]">
-            <span class="h-1.5 w-1.5 rounded-full bg-lime-500 animate-pulse"></span>
+            <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
             <span>
               {String(activeIdx + 1).padStart(2, '0')} / {String(specimens.length).padStart(2, '0')} · {baseSpec.eyebrow}
             </span>
@@ -641,7 +658,7 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
           <span class="font-mono text-[10px] text-[#6FA3D2] shrink-0">{baseSpec.standardTag}</span>
         </div>
 
-        <div class="grid grid-cols-4 gap-1.5" role="tablist" aria-label="Switch worked construction specimen">
+        <div class="grid grid-cols-4 gap-1.5" role="tablist" aria-label="Select architectural blueprint specimen">
           {specimens.map((item, idx) => {
             const active = idx === activeIdx;
             return (
@@ -660,7 +677,7 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
                     : 'bg-graphite-950/60 text-[#8E949D] border border-graphite-700/80 hover:text-[#D2D6DC]'
                 }`}
               >
-                <span class={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 ${active ? 'bg-lime-500' : 'bg-graphite-700'}`}></span>
+                <span class={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${active ? 'bg-lime-500' : 'bg-graphite-700'}`}></span>
                 {item.tabLabel}
               </button>
             );
@@ -668,10 +685,10 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
         </div>
       </div>
 
-      {/* Main Interactive 3D Simulation Canvas + Real-Time Parametric Slider */}
+      {/* Main Progressive Blueprint CAD Canvas + Interactive Parameter Scrubber */}
       <div class="p-4 sm:p-5 space-y-3.5">
         <div
-          class="bm-corner-ticks relative rounded-lg bg-graphite-950 border border-graphite-700 overflow-hidden cursor-crosshair"
+          class="bm-corner-ticks relative rounded bg-graphite-950 border border-graphite-700 overflow-hidden cursor-crosshair"
           onPointerMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
@@ -683,14 +700,14 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
           }}
         >
           <span class="pointer-events-none absolute top-2 left-2.5 font-mono text-[9px] uppercase tracking-wider text-[#6FA3D2]/85">
-            INTERACTIVE 3D CAD · MOVE POINTER
+            BLUEPRINT ASSEMBLY<span class="hidden sm:inline"> · ORBIT CURSOR</span>
           </span>
           <canvas
             ref={canvasRef}
-            class="w-full h-[132px] block"
-            aria-label={`Interactive 3D architectural model for ${baseSpec.eyebrow}`}
+            class="w-full h-[156px] block"
+            aria-label={`Progressive 3D engineering blueprint for ${baseSpec.eyebrow}`}
           />
-          <div class="px-3 py-1.5 border-t border-graphite-700/70 bg-graphite-900/70 flex items-center justify-between gap-3">
+          <div class="px-3 py-1.5 border-t border-graphite-700/70 bg-graphite-800/80 flex items-center justify-between gap-3">
             <label
               for="hero-specimen-slider"
               class="font-mono text-[10px] uppercase tracking-wider text-[#D2D6DC] shrink-0"
@@ -713,7 +730,7 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
 
         {/* Live Outputs Driven by Real BuildMath Formulas */}
         <div class="grid grid-cols-2 gap-2.5">
-          <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
+          <div class="p-3 rounded bg-graphite-950 border border-graphite-700">
             <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block truncate">
               {baseSpec.primaryLabel}
             </span>
@@ -728,7 +745,7 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
             </span>
           </div>
 
-          <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
+          <div class="p-3 rounded bg-graphite-950 border border-graphite-700">
             <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block truncate">
               {baseSpec.secondaryLabel}
             </span>
@@ -744,8 +761,8 @@ export default function HeroSpecimenConsole({ specimens }: HeroSpecimenConsolePr
           </div>
         </div>
 
-        {/* Copyable CLI/BOM Spec Strip + Magnetic Launch Button */}
-        <div class="p-2.5 rounded-lg bg-graphite-950 border border-graphite-700 flex items-center justify-between gap-2">
+        {/* Copyable BOM Spec Strip + Direct Instrument Link */}
+        <div class="p-2.5 rounded bg-graphite-950 border border-graphite-700 flex items-center justify-between gap-2">
           <span class="font-mono text-[10px] text-[#D2D6DC] truncate">
             {live.dimensionsLabel}
           </span>

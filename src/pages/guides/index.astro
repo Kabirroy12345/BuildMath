@@ -26,16 +26,18 @@ import calculators from '../../data/calculators.json';
     </p>
   </header>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+  <div class="bm-stagger-grid grid grid-cols-1 md:grid-cols-2 gap-5">
     {guides.map((guide, idx) => {
       const relatedCalcs = (guide.relatedCalculators || [])
         .map((slug) => calculators.find((c) => c.slug === slug))
         .filter(Boolean);
       return (
-        <article class="bm-panel bm-panel-hover p-6 flex flex-col justify-between hover:border-blueprint/70">
+        <article class="bm-panel bm-card-invert p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between gap-2 text-xs font-mono text-ink-muted mb-3">
-              <span class="text-blueprint font-semibold">GUIDE #{String(idx + 1).padStart(2, '0')}</span>
+              <span class="bm-invert-badge px-2 py-0.5 rounded bg-blueprint-soft text-blueprint font-semibold border border-transparent transition-colors">
+                FIELD MANUAL #{String(idx + 1).padStart(2, '0')}
+              </span>
               <span class="inline-flex items-center gap-1.5">
                 <Icon name="clock" size={12} />
                 {guide.readingTime} · Updated {guide.lastReviewed}

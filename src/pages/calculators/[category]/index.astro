@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import TradeCategoryBlueprint from '../../../components/TradeCategoryBlueprint.astro';
 import Icon from '../../../components/Icon.astro';
 import { getCategoryIconName } from '../../../lib/lucide-icons';
 import { CALCULATOR_CATALOG_META } from '../../../lib/calculator-catalog';
@@ -110,14 +111,14 @@ const recommendedCrossCalcs = spec.crossSlugs
           <span class="bm-eyebrow">{spec.standard}</span>
         </div>
 
-        <h1 class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        <h1 data-split-reveal class="text-2xl sm:text-4xl font-extrabold text-ink tracking-tight">
           {category.name} Calculators
         </h1>
         <p class="mt-2.5 text-sm sm:text-base text-ink-body max-w-2xl leading-relaxed">
           {category.description}
         </p>
 
-        <div class="mt-5 p-3.5 rounded-lg bg-canvas border border-hairline flex items-start gap-2.5 text-xs text-ink-body">
+        <div class="mt-5 p-3.5 rounded bg-canvas border border-hairline flex items-start gap-2.5 text-xs text-ink-body">
           <Icon name="info" size={15} class="text-blueprint mt-0.5 shrink-0" />
           <span>
             <strong class="text-ink">Field Rule:</strong> {spec.fieldTip}
@@ -125,18 +126,16 @@ const recommendedCrossCalcs = spec.crossSlugs
         </div>
       </div>
 
-      <div class="lg:col-span-4 bg-graphite-900 text-[#F8F8F5] p-6 sm:p-7 border-t lg:border-t-0 lg:border-l border-graphite-700 flex flex-col justify-between gap-4">
-        <div class="space-y-3">
-          <div class="font-mono text-[10px] uppercase tracking-wider text-lime-500">
-            Trade Specification Summary
-          </div>
+      <div class="lg:col-span-4 bg-graphite-900 text-[#F8F8F5] p-5 sm:p-6 border-t lg:border-t-0 lg:border-l border-graphite-700 flex flex-col justify-between gap-4">
+        <TradeCategoryBlueprint categorySlug={category.slug} />
+        <div class="space-y-2.5">
           <div>
             <span class="font-mono text-[10px] uppercase text-[#8E949D] block">Store Packaging Outputs</span>
-            <span class="text-sm font-semibold text-[#F8F8F5]">{spec.primaryUnits}</span>
+            <span class="text-xs sm:text-sm font-semibold text-[#F8F8F5]">{spec.primaryUnits}</span>
           </div>
           <div>
             <span class="font-mono text-[10px] uppercase text-[#8E949D] block">Recommended Allowance</span>
-            <span class="text-sm font-semibold text-[#F8F8F5]">{spec.typicalWaste}</span>
+            <span class="text-xs sm:text-sm font-semibold text-[#F8F8F5]">{spec.typicalWaste}</span>
           </div>
         </div>
         <a href="/calculators/" class="inline-flex items-center gap-1.5 font-mono text-xs text-[#6FA3D2] hover:underline">
@@ -149,15 +148,19 @@ const recommendedCrossCalcs = spec.crossSlugs
 
   <!-- Category Calculator Grid -->
   <section class="mb-14" aria-label={`${category.name} calculators`}>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">DISCIPLINE INSTRUMENTS // {String(categoryCalculators.length).padStart(2, '0')} TOOLS</span>
+      <div class="bm-section-line"></div>
+    </div>
+    <div class="bm-stagger-grid grid grid-cols-1 md:grid-cols-2 gap-5">
       {categoryCalculators.map((calc, idx) => {
         const cMeta = CALCULATOR_CATALOG_META[calc.slug];
         const sch = cMeta?.schematic ? SCHEMATIC_PATHS[cMeta.schematic] : null;
         return (
-          <article class="bm-panel bm-panel-hover p-6 flex flex-col justify-between hover:border-blueprint/70">
+          <article class="bm-panel bm-card-invert p-6 flex flex-col justify-between group">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="font-mono text-[11px] font-semibold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded">
+                <span class="bm-invert-badge font-mono text-[11px] font-semibold text-blueprint bg-blueprint-soft px-2 py-0.5 rounded border border-transparent transition-colors">
                   TOOL #{String(idx + 1).padStart(2, '0')}
                 </span>
                 {sch && (
@@ -196,7 +199,7 @@ const recommendedCrossCalcs = spec.crossSlugs
             <div class="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
               <a
                 href={`/calculators/${calc.slug}/`}
-                class="bm-btn-lime text-xs min-h-[36px] px-3.5 py-1.5 font-bold"
+                class="bm-btn-lime bm-magnetic text-xs min-h-[36px] px-3.5 py-1.5 font-bold"
               >
                 <span>Open Calculator</span>
                 <Icon name="arrow-right" size={14} />
