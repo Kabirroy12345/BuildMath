@@ -3,10 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBox, { type SearchableItem } from '../components/SearchBox';
 import RecentCalculators from '../components/RecentCalculators';
 import WorkspaceShowcase from '../components/WorkspaceShowcase';
+import HeroSpecimenConsole, { type HeroSpecimenItem } from '../components/HeroSpecimenConsole';
 import Icon from '../components/Icon.astro';
 import { getCategoryIconName } from '../lib/lucide-icons';
 import { CALCULATOR_CATALOG_META } from '../lib/calculator-catalog';
 import { SCHEMATIC_PATHS } from '../lib/schematics';
+import { runCalculatorFormula } from '../lib/formulas/index';
 import { siteConfig } from '../config/site';
 import categories from '../data/categories.json';
 import calculators from '../data/calculators.json';
@@ -90,6 +92,81 @@ const popularCalculators = popularSlugs
 const verifiedJobs = jobs.filter((j) => j.verified);
 const preliminaryJobs = jobs.filter((j) => !j.verified).slice(0, 4);
 const topStates = states.slice(0, 12);
+
+// Deterministic Hero Workbench Specimens (computed live from BuildMath's exact formulas)
+function computeHeroDefaults(slug: string) {
+  const c = calculators.find((item) => item.slug === slug)!;
+  const defaults = Object.fromEntries(c.inputs.map((inp) => [inp.name, inp.defaultValue]));
+  return runCalculatorFormula(slug, defaults);
+}
+
+const slabRes = computeHeroDefaults('concrete-slab-calculator');
+const paintRes = computeHeroDefaults('paint-calculator');
+const roofRes = computeHeroDefaults('roofing-calculator');
+const drywallRes = computeHeroDefaults('drywall-calculator');
+
+const heroSpecimens: HeroSpecimenItem[] = [
+  {
+    id: 'slab',
+    tabLabel: '01 Slab',
+    eyebrow: 'CONCRETE SLAB',
+    standardTag: 'ACI 302 · QUIKRETE',
+    slug: 'concrete-slab-calculator',
+    dimensionsLabel: '12 ft × 10 ft × 4 in + 10% waste → 1.63 yd³',
+    primaryLabel: 'Ready-Mix Volume',
+    primaryValue: `${slabRes.primaryResult.value} yd³`,
+    primaryMeta: `Net ${slabRes.primaryResult.exactValue} yd³ · ${slabRes.secondaryResults[4]?.value || '$268.95'} truck`,
+    secondaryLabel: 'Store Bag Equivalent',
+    secondaryValue: `${slabRes.secondaryResults[0]?.value ?? 74} × 80-lb`,
+    secondaryMeta: `Or ${slabRes.secondaryResults[1]?.value ?? 98} × 60-lb · Est. $${slabRes.costEstimate.typical.toFixed(2)}`,
+    copySummary: `BuildMath Concrete Slab Takeoff (12×10 ft × 4 in, 10% waste): ${slabRes.primaryResult.value} cu yd ready-mix OR ${slabRes.secondaryResults[0]?.value} × 80-lb bags (Est. $${slabRes.costEstimate.typical.toFixed(2)})`,
+  },
+  {
+    id: 'paint',
+    tabLabel: '02 Paint',
+    eyebrow: 'INTERIOR PAINT',
+    standardTag: 'MPI · ASTM COV',
+    slug: 'paint-calculator',
+    dimensionsLabel: '12×12×8 ft · 2 doors, 2 windows · 2 coats',
+    primaryLabel: 'Paint Quantity',
+    primaryValue: `${paintRes.primaryResult.value} ${paintRes.primaryResult.unit}`,
+    primaryMeta: `Exact: ${paintRes.primaryResult.exactValue} gal · 5% waste`,
+    secondaryLabel: 'Net Paintable Area',
+    secondaryValue: `${paintRes.secondaryResults[0]?.value ?? 312} sq ft`,
+    secondaryMeta: `Est. $${Math.round(paintRes.costEstimate.typical)} (incl. roller kit)`,
+    copySummary: `BuildMath Interior Paint Takeoff (12×12×8 ft, 2 coats): ${paintRes.primaryResult.value} gallons for ${paintRes.secondaryResults[0]?.value} net sq ft (Est. $${Math.round(paintRes.costEstimate.typical)} incl. kit)`,
+  },
+  {
+    id: 'roof',
+    tabLabel: '03 Roof',
+    eyebrow: 'ROOF SHINGLES',
+    standardTag: 'ARMA · NRCA',
+    slug: 'roofing-calculator',
+    dimensionsLabel: '50×40 ft footprint · 6/12 pitch + 10% waste',
+    primaryLabel: 'Shingle Bundles',
+    primaryValue: `${roofRes.primaryResult.value} bundles`,
+    primaryMeta: `${roofRes.secondaryResults[0]?.value} sq · ${roofRes.secondaryResults[1]?.value} sq ft slope`,
+    secondaryLabel: 'Full Roof BOM',
+    secondaryValue: `$${Math.round(roofRes.costEstimate.typical).toLocaleString()}`,
+    secondaryMeta: 'Shingles, felt, edge & cap',
+    copySummary: `BuildMath Roofing Takeoff (50×40 ft, 6/12 pitch, 10% waste): ${roofRes.primaryResult.value} shingle bundles (${roofRes.secondaryResults[0]?.value} squares) + felt/cap (Est. $${Math.round(roofRes.costEstimate.typical).toLocaleString()})`,
+  },
+  {
+    id: 'drywall',
+    tabLabel: '04 Drywall',
+    eyebrow: 'DRYWALL SHEETS',
+    standardTag: 'USG HANDBOOK',
+    slug: 'drywall-calculator',
+    dimensionsLabel: '12×12×8 ft + ceiling · 10% waste',
+    primaryLabel: '4×8 Panels Needed',
+    primaryValue: `${drywallRes.primaryResult.value} sheets`,
+    primaryMeta: `${drywallRes.secondaryResults[0]?.value} sq ft · ${drywallRes.materials[1]?.quantity ?? 2} mud pails`,
+    secondaryLabel: 'Hardware & Fasteners',
+    secondaryValue: `${drywallRes.secondaryResults[3]?.value ?? 512} screws`,
+    secondaryMeta: `1 roll tape · Est. $${drywallRes.costEstimate.typical.toFixed(2)}`,
+    copySummary: `BuildMath Drywall Takeoff (12×12×8 ft + ceiling, 10% waste): ${drywallRes.primaryResult.value} × 4×8 sheets, 2 × 4.5-gal mud buckets, ${drywallRes.secondaryResults[3]?.value} screws (Est. $${drywallRes.costEstimate.typical.toFixed(2)})`,
+  },
+];
 ---
 
 <BaseLayout
@@ -97,8 +174,8 @@ const topStates = states.slice(0, 12);
   description="Get accurate DIY material quantities and local project cost estimates in under 10 seconds. 32 source-cited home improvement calculators for US homeowners."
   pathname="/"
 >
-  <!-- 1. HERO SECTION: Asymmetric Architectural Workbench + Live CAD Specimen -->
-  <section class="relative overflow-hidden rounded-2xl border border-hairline bg-surface bm-cad-grid p-6 sm:p-10 lg:p-12 mb-12">
+  <!-- 1. HERO SECTION: Asymmetric Architectural Workbench + Live Switchable CAD Specimen -->
+  <section class="relative overflow-hidden rounded-2xl border border-hairline bg-surface bm-cad-grid bm-corner-ticks p-6 sm:p-10 lg:p-12 mb-12">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
       <!-- Hero Left: Value Prop + Command Search + Primary CTAs -->
       <div class="lg:col-span-7 space-y-5">
@@ -151,58 +228,8 @@ const topStates = states.slice(0, 12);
         </div>
       </div>
 
-      <!-- Hero Right: Authentic CAD Calculation Specimen Panel -->
-      <div class="lg:col-span-5 bm-instrument overflow-hidden">
-        <div class="px-4 py-3 border-b border-graphite-700 bg-graphite-950/70 flex items-center justify-between gap-2">
-          <span class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#D2D6DC]">
-            <span class="h-1.5 w-1.5 rounded-full bg-lime-500"></span>
-            Worked Specimen // Concrete Slab
-          </span>
-          <span class="font-mono text-[10px] text-[#6FA3D2]">ACI 302 · QUIKRETE</span>
-        </div>
-
-        <div class="p-5 space-y-4">
-          <!-- Scaled Isometric CAD Blueprint Illustration -->
-          <div class="p-3.5 rounded-lg bg-graphite-950 border border-graphite-700 bm-cad-grid">
-            <svg viewBox="0 0 280 105" class="w-full h-24" role="img" aria-label="Technical concrete slab dimension diagram">
-              <polygon points="38,38 194,20 242,46 86,64" fill="rgba(71,121,168,0.22)" stroke="#6FA3D2" stroke-width="1.75" />
-              <polygon points="38,38 86,64 86,80 38,54" fill="rgba(198,243,106,0.22)" stroke="#C6F36A" stroke-width="1.5" />
-              <polygon points="86,64 242,46 242,62 86,80" fill="rgba(71,121,168,0.12)" stroke="#6FA3D2" stroke-width="1.5" />
-              <text x="140" y="97" font-size="10" font-family="JetBrains Mono, monospace" fill="#C6F36A" text-anchor="middle">
-                12 FT (L) × 10 FT (W) × 4 IN (THICK) + 10% WASTE
-              </text>
-            </svg>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2.5">
-            <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
-              <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block">Ready-Mix Output</span>
-              <strong class="text-xl font-extrabold text-lime-500 tabular-nums mt-0.5 block">
-                1.63 yd³
-              </strong>
-              <span class="font-mono text-[10px] text-[#9BA1AA]">Net: 1.48 yd³ · Est. $269</span>
-            </div>
-            <div class="p-3 rounded-lg bg-graphite-950 border border-graphite-700">
-              <span class="font-mono text-[10px] uppercase text-[#9BA1AA] block">Store Bag Equivalent</span>
-              <strong class="text-xl font-extrabold text-[#F8F8F5] tabular-nums mt-0.5 block">
-                74 × 80-lb
-              </strong>
-              <span class="font-mono text-[10px] text-[#6FA3D2]">Or 98 × 60-lb · Est. $507</span>
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-graphite-700 flex items-center justify-between text-xs">
-            <span class="font-mono text-[11px] text-[#9BA1AA]">Inputs, waste &amp; prices editable live</span>
-            <a
-              href="/calculators/concrete-slab-calculator/"
-              class="inline-flex items-center gap-1 font-semibold text-lime-500 hover:underline"
-            >
-              <span>Launch Tool</span>
-              <Icon name="arrow-right" size={13} />
-            </a>
-          </div>
-        </div>
-      </div>
+      <!-- Hero Right: 4-Mode Interactive Switchable CAD Workbench (rive.app specimen console) -->
+      <HeroSpecimenConsole client:load specimens={heroSpecimens} />
     </div>
   </section>
 
@@ -210,14 +237,17 @@ const topStates = states.slice(0, 12);
   <RecentCalculators client:idle />
 
   <section class="mb-16" aria-labelledby="quick-access-heading">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">01 // DIRECT LAUNCH</span>
+      <div class="bm-section-line"></div>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
       <div>
-        <span class="bm-eyebrow mb-2">Fast Takeoff // Direct Launch</span>
         <h2 id="quick-access-heading" class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
           Quick-Access Calculators
         </h2>
       </div>
-      <a href="/calculators/" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blueprint hover:underline shrink-0">
+      <a href="/calculators/" class="bm-pill-cta shrink-0">
         <span>Filter &amp; Sort All 32</span>
         <Icon name="arrow-right" size={14} />
       </a>
@@ -230,7 +260,7 @@ const topStates = states.slice(0, 12);
         return (
           <a
             href={`/calculators/${calc.slug}/`}
-            class="bm-panel bm-panel-hover p-3.5 flex flex-col justify-between group hover:border-blueprint/75"
+            class="bm-panel bm-card-invert p-3.5 flex flex-col justify-between group"
           >
             <div>
               <div class="flex items-center justify-between gap-2 mb-2">
@@ -246,7 +276,7 @@ const topStates = states.slice(0, 12);
                 {meta?.outputsLabel}
               </p>
             </div>
-            <div class="mt-3 pt-2 border-t border-hairline flex items-center justify-between font-mono text-[10px] font-semibold text-blueprint">
+            <div class="bm-arrow-glide mt-3 pt-2 border-t border-hairline flex items-center justify-between font-mono text-[10px] font-semibold text-blueprint">
               <span>Calculate</span>
               <Icon name="arrow-up-right" size={12} />
             </div>
@@ -258,9 +288,12 @@ const topStates = states.slice(0, 12);
 
   <!-- 3. ALL 8 TRADE CATEGORIES: Engineering Matrix -->
   <section class="mb-16" aria-labelledby="categories-heading">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">02 // TRADE MATRIX · 08 DISCIPLINES</span>
+      <div class="bm-section-line"></div>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow-blue mb-2">Trade Matrix // 08 Disciplines</span>
         <h2 id="categories-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           Residential Construction Trades
         </h2>
@@ -268,9 +301,9 @@ const topStates = states.slice(0, 12);
           Every trade module includes source-cited defaults, store packaging math, and direct cost guide links.
         </p>
       </div>
-      <a href="/calculators/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
+      <a href="/calculators/" class="bm-pill-cta shrink-0">
         <span>Browse Directory</span>
-        <Icon name="arrow-right" size={15} />
+        <Icon name="arrow-right" size={14} />
       </a>
     </div>
 
@@ -278,14 +311,14 @@ const topStates = states.slice(0, 12);
       {categories.map((cat, idx) => {
         const catCalcs = calculators.filter((c) => c.category === cat.slug);
         return (
-          <div class="bm-panel bm-panel-hover p-5 flex flex-col justify-between hover:border-blueprint/75">
+          <div class="bm-panel bm-card-invert p-5 flex flex-col justify-between group">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
                 <div class="flex items-center gap-2">
                   <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-subtle border border-hairline text-blueprint">
                     <Icon name={getCategoryIconName(cat.slug)} size={16} />
                   </span>
-                  <span class="font-mono text-[10px] font-semibold text-ink-muted">
+                  <span class="bm-invert-badge font-mono text-[10px] font-semibold px-2 py-0.5 rounded bg-surface-subtle text-ink-muted border border-hairline transition-colors">
                     TRADE // {String(idx + 1).padStart(2, '0')}
                   </span>
                 </div>
@@ -336,9 +369,12 @@ const topStates = states.slice(0, 12);
 
   <!-- 4. 12 POPULAR CALCULATORS: Structured 3-Part Discovery Cards -->
   <section class="mb-16" aria-labelledby="popular-calcs-heading">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">03 // CORE INSTRUMENTS</span>
+      <div class="bm-section-line"></div>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow mb-2">Most Launched // Structured Preview</span>
         <h2 id="popular-calcs-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           12 Essential Estimation Calculators
         </h2>
@@ -355,7 +391,7 @@ const topStates = states.slice(0, 12);
         return (
           <a
             href={`/calculators/${calc.slug}/`}
-            class="bm-panel bm-panel-hover p-5 group flex flex-col justify-between hover:border-blueprint/75"
+            class="bm-panel bm-card-invert p-5 group flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between gap-2 mb-2.5">
@@ -401,7 +437,7 @@ const topStates = states.slice(0, 12);
   <!-- 5. TECHNICAL CREDIBILITY LEDGER & 6. SYSTEM METHODOLOGY -->
   <section class="mb-16 space-y-6" aria-labelledby="credibility-heading">
     <!-- Audited Verification Ledger -->
-    <div class="bm-instrument overflow-hidden">
+    <div class="bm-instrument-rim overflow-hidden">
       <div class="px-6 py-4 border-b border-graphite-700 bg-graphite-950/70 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lime-500">
           <Icon name="shield-check" size={14} />
@@ -518,9 +554,12 @@ const topStates = states.slice(0, 12);
 
   <!-- 8. COST-GUIDE DISCOVERY & VERIFICATION CLARITY -->
   <section class="mb-16" aria-labelledby="cost-guides-heading">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">04 // BENCHMARK COSTING</span>
+      <div class="bm-section-line"></div>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow mb-2">Labor &amp; Material Benchmarks</span>
         <h2 id="cost-guides-heading" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
           Home Improvement Cost Guides by State
         </h2>
@@ -528,9 +567,9 @@ const topStates = states.slice(0, 12);
           Bottom-up verified flagship models are explicitly separated from preliminary trade drafts.
         </p>
       </div>
-      <a href="/cost/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
+      <a href="/cost/" class="bm-pill-cta shrink-0">
         <span>All 25 Cost Guides</span>
-        <Icon name="arrow-right" size={15} />
+        <Icon name="arrow-right" size={14} />
       </a>
     </div>
 
@@ -651,9 +690,12 @@ const topStates = states.slice(0, 12);
 
   <!-- 9. FIELD GUIDES SECTION -->
   <section aria-labelledby="guides-heading">
+    <div class="bm-section-rule">
+      <span class="bm-section-index">05 // FIELD DOCUMENTATION</span>
+      <div class="bm-section-line"></div>
+    </div>
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
       <div>
-        <span class="bm-eyebrow mb-2">Field Documentation</span>
         <h2 id="guides-heading" class="text-2xl font-extrabold text-ink tracking-tight">
           Measurement &amp; Estimation Guides
         </h2>
@@ -661,15 +703,15 @@ const topStates = states.slice(0, 12);
           Practical field procedures for measuring rooms, roof slope geometry, and waste allowances compiled by {siteConfig.author.name}.
         </p>
       </div>
-      <a href="/guides/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blueprint hover:underline shrink-0">
+      <a href="/guides/" class="bm-pill-cta shrink-0">
         <span>All {guides.length} Field Guides</span>
-        <Icon name="arrow-right" size={15} />
+        <Icon name="arrow-right" size={14} />
       </a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       {guides.slice(0, 3).map((g, idx) => (
-        <a href={`/guides/${g.slug}/`} class="bm-panel bm-panel-hover p-5 flex flex-col justify-between group hover:border-blueprint/75">
+        <a href={`/guides/${g.slug}/`} class="bm-panel bm-card-invert p-5 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between gap-2 mb-3 font-mono text-[11px] text-ink-muted">
               <span class="text-blueprint font-semibold">GUIDE // {String(idx + 1).padStart(2, '0')}</span>

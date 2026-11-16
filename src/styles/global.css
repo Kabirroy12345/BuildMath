@@ -95,6 +95,34 @@
     outline: 2px solid rgb(var(--accent-blue));
     outline-offset: 2px;
   }
+
+  /* Custom 6px architectural scrollbar (epic.net precision rhythm) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border-strong)) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--border-strong));
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--accent-blue));
+  }
+
+  html.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #c6f36a;
+  }
 }
 
 @layer components {
@@ -228,6 +256,165 @@
   html.dark .bm-range {
     accent-color: #c6f36a;
   }
+
+  /* Specular top-edge rim for dark graphite instruments (rive.app gradient trim, restrained BuildMath palette) */
+  .bm-instrument-rim {
+    position: relative;
+    background-color: #171b20;
+    color: #f4f4f1;
+    border-radius: 10px;
+    border: 1px solid #282e37;
+    box-shadow: 0 18px 40px -24px rgba(13, 16, 19, 0.72), inset 0 1px 0 rgba(248, 248, 245, 0.06);
+  }
+
+  .bm-instrument-rim::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 11px;
+    padding: 1px;
+    background: linear-gradient(125deg, rgba(198, 243, 106, 0.36), rgba(111, 163, 210, 0.34) 42%, rgba(40, 46, 55, 0.85) 75%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Architectural CAD corner registration ticks (bdsn.club / drafting crosshair craft) */
+  .bm-corner-ticks {
+    position: relative;
+  }
+
+  .bm-corner-ticks::before,
+  .bm-corner-ticks::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .bm-corner-ticks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid rgb(var(--accent-blue) / 0.55);
+    border-left: 2px solid rgb(var(--accent-blue) / 0.55);
+    border-top-left-radius: 4px;
+  }
+
+  .bm-corner-ticks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid rgba(198, 243, 106, 0.65);
+    border-right: 2px solid rgba(198, 243, 106, 0.65);
+    border-bottom-right-radius: 4px;
+  }
+
+  /* Outline-to-solid directional pill action CTA (epic.net tactile inversion) */
+  .bm-pill-cta {
+    @apply inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 select-none;
+    border-color: rgb(var(--border-strong));
+    color: rgb(var(--text-primary));
+    background-color: rgb(var(--bg-surface));
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bm-pill-cta:hover {
+    background-color: #171b20;
+    border-color: #171b20;
+    color: #f8f8f5;
+  }
+
+  html.dark .bm-pill-cta:hover {
+    background-color: #c6f36a;
+    border-color: #c6f36a;
+    color: #17191c;
+  }
+
+  .bm-pill-cta svg,
+  .bm-arrow-glide svg {
+    transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bm-pill-cta:hover svg,
+  .bm-arrow-glide:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* Dual-layer vertical rolling link text (eszterbial.com staggered hover craft) */
+  .bm-roll-link {
+    @apply relative inline-flex items-center overflow-hidden;
+  }
+
+  .bm-roll-text {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    line-height: 1.25;
+  }
+
+  .bm-roll-text > span {
+    display: block;
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bm-roll-text > span[aria-hidden='true'] {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+  }
+
+  .bm-roll-link:hover .bm-roll-text > span,
+  .bm-roll-link:focus-visible .bm-roll-text > span {
+    transform: translateY(-100%);
+  }
+
+  /* Trade card sharp inversion highlight (bdsn.club editorial contrast shift) */
+  .bm-card-invert {
+    transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bm-card-invert:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--text-primary) / 0.45);
+    box-shadow: 0 10px 26px -14px rgba(23, 25, 28, 0.2);
+  }
+
+  html.dark .bm-card-invert:hover {
+    border-color: rgba(198, 243, 106, 0.45);
+    box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.65);
+  }
+
+  .bm-card-invert:hover .bm-invert-badge {
+    background-color: #171b20;
+    color: #c6f36a;
+    border-color: #171b20;
+  }
+
+  html.dark .bm-card-invert:hover .bm-invert-badge {
+    background-color: #c6f36a;
+    color: #17191c;
+    border-color: #c6f36a;
+  }
+
+  /* Hairline structural section rule (epic.net editorial bands) */
+  .bm-section-rule {
+    @apply flex items-center gap-3 mb-2;
+  }
+
+  .bm-section-index {
+    @apply font-mono text-[10px] font-semibold uppercase text-blueprint shrink-0;
+    letter-spacing: 0.16em;
+  }
+
+  .bm-section-line {
+    @apply h-px flex-1;
+    background-color: rgb(var(--border-subtle));
+  }
 }
 
 .tabular-nums {
@@ -248,6 +435,44 @@
 
 .animate-result-pulse {
   animation: resultSettle 550ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Subtle fixed 4-column architectural structural grid (eszterbial.com alignment guides) */
+.bm-datum-lines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bm-datum-inner {
+  max-width: 80rem;
+  height: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.bm-datum-col {
+  border-right: 1px solid var(--grid-line);
+}
+
+.bm-datum-col:first-child {
+  border-left: 1px solid var(--grid-line);
+}
+
+#bm-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #4779a8 0%, #c6f36a 100%);
+  transition: transform 60ms linear;
 }
 
 details[open] .faq-body {
@@ -273,7 +498,9 @@ details[open] .faq-body {
   .no-print,
   .ad-slot,
   .consent-banner,
-  .sticky-mobile-calc-bar {
+  .sticky-mobile-calc-bar,
+  .bm-datum-lines,
+  #bm-scroll-progress {
     display: none !important;
   }
 

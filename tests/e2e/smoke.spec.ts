@@ -29,6 +29,16 @@ test.describe('BuildMath Comprehensive E2E & UI Audit Suite', () => {
     );
     expect(overflow).toBe(false);
 
+    // Interactive 4-mode Hero Specimen Console switcher check
+    await expect(page.locator('main')).toContainText('1.63 yd³');
+    await page.getByRole('tab', { name: '02 Paint' }).click();
+    await expect(page.locator('main')).toContainText('2 gallons');
+    await page.getByRole('tab', { name: '03 Roof' }).click();
+    await expect(page.locator('main')).toContainText('74 bundles');
+    await page.getByRole('tab', { name: '04 Drywall' }).click();
+    await expect(page.locator('main')).toContainText('16 sheets');
+    await expect(page.locator('#bm-back-to-top')).toBeAttached();
+
     // Search suggestion dropdown test
     await page.fill('#hero-search-input', 'drywall');
     await expect(page.getByRole('listbox')).toBeVisible();

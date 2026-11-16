@@ -968,7 +968,7 @@ export default function CalculatorWidget({
           ref={resultsRef}
           aria-live="polite"
           aria-atomic="true"
-          class={`lg:col-span-5 bm-instrument overflow-hidden lg:sticky lg:top-20 ${
+          class={`lg:col-span-5 bm-instrument-rim overflow-hidden lg:sticky lg:top-20 ${
             pulseResult ? 'animate-result-pulse' : ''
           }`}
         >
@@ -1002,7 +1002,7 @@ export default function CalculatorWidget({
 
           <div class="p-5 sm:p-6 space-y-5">
             {/* Hero Result Display */}
-            <div class="p-4 sm:p-5 rounded-lg bg-graphite-950 border border-graphite-700">
+            <div class="bm-corner-ticks p-4 sm:p-5 rounded-lg bg-graphite-950 border border-graphite-700">
               <div class="flex items-center justify-between gap-2">
                 <span class="text-xs font-mono uppercase tracking-wider text-[#9BA1AA]">
                   {output.primaryResult.label}
